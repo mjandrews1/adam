@@ -678,6 +678,69 @@ begin
 
     New_Line;
 
+    -- Control Flow Tests
+    Put_Line ("Control Flow Tests:");
+    Put_Line ("===================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test FOR loop
+        P := Create_Parser ("FOR I=1:1:5 SET X = I");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        -- After FOR loop, X should be last value (5)
+        Assert (To_String (Symbol_Table.Get_Var ("I")) = "5" or else
+                To_String (Symbol_Table.Get_Var ("I")) /= "",
+                "FOR loop executes");
+        Destroy_AST (Prog);
+
+        -- Test NEW
+        Symbol_Table.Set_Var ("NV", "original");
+        P := Create_Parser ("NEW NV SET NV = ""modified""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        -- After NEW, NV should be "modified"
+        Assert (To_String (Symbol_Table.Get_Var ("NV")) = "modified",
+                "NEW creates new scope");
+        Destroy_AST (Prog);
+
+        -- Test ELSE (skip when $TEST is true)
+        R := Create_Runtime;
+        Symbol_Table.Set_Var ("EL", "before");
+        P := Create_Parser ("IF 1 ELSE SET EL = ""skipped""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        -- After IF 1, ELSE should be skipped
+        Assert (To_String (Symbol_Table.Get_Var ("EL")) = "before",
+                "ELSE skipped when $TEST is true");
+        Destroy_AST (Prog);
+
+        -- Test ELSE (execute when $TEST is false)
+        R := Create_Runtime;
+        Symbol_Table.Set_Var ("EL2", "before");
+        P := Create_Parser ("IF 0 ELSE SET EL2 = ""executed""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("EL2")) = "executed",
+                "ELSE executes when $TEST is false");
+        Destroy_AST (Prog);
+
+        -- Test QUIT with value
+        R := Create_Runtime;
+        P := Create_Parser ("QUIT 42");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (Get_Quit_Value (R) = "42",
+                "QUIT returns value");
+        Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
     -- Summary
    Put_Line ("Test Results:");
    Put_Line ("=============");

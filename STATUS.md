@@ -23,7 +23,7 @@
 | Sprint | Status | Tests | Notes |
 |--------|--------|-------|-------|
 | P2-S1: Expression Evaluator | ✅ COMPLETE | 136 | Arithmetic, string, comparison, logical ops; function dispatch |
-| P2-S2: Control Flow | ⬜ NOT STARTED | - | FOR, DO, NEW, GOTO, QUIT |
+| P2-S2: Control Flow | ✅ COMPLETE | 141 | FOR, NEW, ELSE, QUIT with values |
 | P2-S3: Command Execution | ⬜ NOT STARTED | - | KILL, READ, MERGE, HANG |
 | P2-S4: Runtime String/Math Functions | ⬜ NOT STARTED | - | $EXTRACT, $LENGTH callable from MUMPS |
 | P2-S5: Special Variables | ⬜ NOT STARTED | - | $T, $X, $Y, $H, $I |

@@ -7,15 +7,17 @@ RV NO_EXCEPTION_PROPAGATION
 RV NO_EXCEPTIONS
 RV NO_FLOATING_POINT
 RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
 RV NO_NESTED_FINALIZATION
 RV NO_RECURSION
 RV NO_SECONDARY_STACK
 RV NO_STANDARD_STORAGE_POOLS
 RV NO_DEFAULT_INITIALIZATION
 RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLICIT_LOOPS
 RV NO_ELABORATION_CODE
 
-U runtime%b		runtime.adb		4de6d07f OO PK
+U runtime%b		runtime.adb		eea821bf OO PK
 W ada%s			ada.ads			ada.ali
 Z ada.exceptions%s	a-except.adb		a-except.ali
 W ada.numerics%s	a-numeri.ads		a-numeri.ali
@@ -45,13 +47,15 @@ Z system.standard_library%s  s-stalib.adb	s-stalib.ali
 Z system.val_flt%s	s-valflt.ads		s-valflt.ali
 Z system.val_int%s	s-valint.ads		s-valint.ali
 
-U runtime%s		runtime.ads		a79d6ec8 EE NE OO PK
+U runtime%s		runtime.ads		a7f8684c EE NE OO PK
 W ada%s			ada.ads			ada.ali
 Z ada.exceptions%s	a-except.adb		a-except.ali
 W ada.strings%s		a-string.ads		a-string.ali
 W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
 W parser%s		parser.adb		parser.ali
 Z system%s		system.ads		system.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
 
 D ada.ads		20260610194523 76789da1 ada%s
 D a-charac.ads		20260610194523 2d3ec45b ada.characters%s
@@ -83,8 +87,8 @@ D lexer.ads		20260808212940 d47ed521 lexer%s
 D mumps_types.ads	20260808205311 e39ad9e7 mumps_types%s
 D parser.ads		20260808212559 21103826 parser%s
 D pattern.ads		20260808202425 60461d7d pattern%s
-D runtime.ads		20260808205842 0be19d49 runtime%s
-D runtime.adb		20260808223944 2d5ae923 runtime%b
+D runtime.ads		20260808225544 0b849bcd runtime%s
+D runtime.adb		20260808231021 8e711e67 runtime%b
 D string_funcs.ads	20260808205321 c70c6d65 string_funcs%s
 D symbol_table.ads	20260808201336 5cf26813 symbol_table%s
 D system.ads		20260610194523 8a611ac3 system%s
@@ -137,16 +141,38 @@ G c Z s b [get_test_result runtime 28 13 none]
 G c Z s b [get_error_code runtime 31 13 none]
 G c Z s b [get_error_message runtime 34 13 none]
 G c Z s b [is_halted runtime 37 13 none]
-G c Z s s [runtime_stateDI runtime 41 9 none]
-G c Z s s [runtime_stateDA runtime 41 9 none]
-G c Z s s [runtime_stateDF runtime 41 9 none]
-G c Z s s [runtime_stateIP runtime 41 9 none]
-G c Z b b [to_float runtime 37 13 none]
-G c Z b b [from_float runtime 52 13 none]
-G c Z b b [eval_expr runtime 79 13 none]
-G c Z b b [exec_set runtime 665 14 none]
-G c Z b b [exec_write runtime 712 14 none]
-G c Z b b [execute_command runtime 729 14 none]
+G c Z s b [get_quit_value runtime 40 13 none]
+G c Z s s [label_entryDI runtime 45 9 none]
+G c Z s s [label_entryDA runtime 45 9 none]
+G c Z s s [label_entryDF runtime 45 9 none]
+G c Z s s [label_entryIP runtime 45 9 none]
+G c Z s s [Tlabel_arrayBIP runtime 53 4 none]
+G c Z s s [Tlabel_arrayBDI runtime 53 4 none]
+G c Z s s [Tlabel_arrayBDA runtime 53 4 none]
+G c Z s s [Tlabel_arrayBDF runtime 53 4 none]
+G c Z s s [scope_entryDI runtime 56 9 none]
+G c Z s s [scope_entryDA runtime 56 9 none]
+G c Z s s [scope_entryDF runtime 56 9 none]
+G c Z s s [scope_entryIP runtime 56 9 none]
+G c Z s s [Tscope_arrayBIP runtime 62 4 none]
+G c Z s s [Tscope_arrayBDI runtime 62 4 none]
+G c Z s s [Tscope_arrayBDA runtime 62 4 none]
+G c Z s s [Tscope_arrayBDF runtime 62 4 none]
+G c Z s s [runtime_stateDI runtime 64 9 none]
+G c Z s s [runtime_stateDA runtime 64 9 none]
+G c Z s s [runtime_stateDF runtime 64 9 none]
+G c Z s s [runtime_stateIP runtime 64 9 none]
+G c Z b b [to_float runtime 40 13 none]
+G c Z b b [from_float runtime 55 13 none]
+G c Z b b [add_label runtime 80 14 none]
+G c Z b b [find_label runtime 92 13 none]
+G c Z b b [push_scope runtime 104 14 none]
+G c Z b b [pop_scope runtime 119 14 none]
+G c Z b b [build_label_table runtime 136 14 none]
+G c Z b b [eval_expr runtime 157 13 none]
+G c Z b b [exec_set runtime 609 14 none]
+G c Z b b [exec_write runtime 654 14 none]
+G c Z b b [execute_command runtime 671 14 none]
 G r c none [execute runtime 20 14 none] [get_global_subscript database 38 13 none]
 G r c none [execute runtime 20 14 none] [get_subscript symbol_table 40 13 none]
 G r c none [execute runtime 20 14 none] [get_global database 16 13 none]
@@ -155,17 +181,10 @@ G r c none [execute runtime 20 14 none] [dollar_extract string_funcs 28 13 none]
 G r c none [execute runtime 20 14 none] [dollar_length string_funcs 24 13 none]
 G r c none [execute runtime 20 14 none] [dollar_length string_funcs 21 13 none]
 G r c none [execute runtime 20 14 none] [dollar_piece string_funcs 39 13 none]
-G r c none [execute runtime 20 14 none] [dollar_translate string_funcs 45 13 none]
 G r c none [execute runtime 20 14 none] [dollar_ascii string_funcs 15 13 none]
 G r c none [execute runtime 20 14 none] [dollar_char string_funcs 18 13 none]
-G r c none [execute runtime 20 14 none] [dollar_reverse string_funcs 50 13 none]
-G r c none [execute runtime 20 14 none] [dollar_justify string_funcs 57 13 none]
-G r c none [execute runtime 20 14 none] [dollar_justify string_funcs 53 13 none]
-G r c none [execute runtime 20 14 none] [dollar_find string_funcs 34 13 none]
 G r c none [execute runtime 20 14 none] [global_data database 26 13 none]
 G r c none [execute runtime 20 14 none] [var_data symbol_table 26 13 none]
-G r c none [execute runtime 20 14 none] [global_order database 29 13 none]
-G r c none [execute runtime 20 14 none] [var_order symbol_table 31 13 none]
 G r c none [execute runtime 20 14 none] [set_global_subscript database 33 14 none]
 G r c none [execute runtime 20 14 none] [set_subscript symbol_table 35 14 none]
 G r c none [execute runtime 20 14 none] [set_global database 13 14 none]
@@ -182,17 +201,10 @@ G r c none [execute_line runtime 24 14 none] [dollar_extract string_funcs 28 13 
 G r c none [execute_line runtime 24 14 none] [dollar_length string_funcs 24 13 none]
 G r c none [execute_line runtime 24 14 none] [dollar_length string_funcs 21 13 none]
 G r c none [execute_line runtime 24 14 none] [dollar_piece string_funcs 39 13 none]
-G r c none [execute_line runtime 24 14 none] [dollar_translate string_funcs 45 13 none]
 G r c none [execute_line runtime 24 14 none] [dollar_ascii string_funcs 15 13 none]
 G r c none [execute_line runtime 24 14 none] [dollar_char string_funcs 18 13 none]
-G r c none [execute_line runtime 24 14 none] [dollar_reverse string_funcs 50 13 none]
-G r c none [execute_line runtime 24 14 none] [dollar_justify string_funcs 57 13 none]
-G r c none [execute_line runtime 24 14 none] [dollar_justify string_funcs 53 13 none]
-G r c none [execute_line runtime 24 14 none] [dollar_find string_funcs 34 13 none]
 G r c none [execute_line runtime 24 14 none] [global_data database 26 13 none]
 G r c none [execute_line runtime 24 14 none] [var_data symbol_table 26 13 none]
-G r c none [execute_line runtime 24 14 none] [global_order database 29 13 none]
-G r c none [execute_line runtime 24 14 none] [var_order symbol_table 31 13 none]
 G r c none [execute_line runtime 24 14 none] [set_global_subscript database 33 14 none]
 G r c none [execute_line runtime 24 14 none] [set_subscript symbol_table 35 14 none]
 G r c none [execute_line runtime 24 14 none] [set_global database 13 14 none]
@@ -201,403 +213,422 @@ G r c none [execute_line runtime 24 14 none] [write io 39 14 none]
 G r c none [execute_line runtime 24 14 none] [kill_global database 22 14 none]
 G r c none [execute_line runtime 24 14 none] [kill_var symbol_table 22 14 none]
 G r c none [execute_line runtime 24 14 none] [read io 54 13 none]
-G r c none [eval_expr runtime 79 13 none] [get_global_subscript database 38 13 none]
-G r c none [eval_expr runtime 79 13 none] [get_subscript symbol_table 40 13 none]
-G r c none [eval_expr runtime 79 13 none] [get_global database 16 13 none]
-G r c none [eval_expr runtime 79 13 none] [get_var symbol_table 16 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_extract string_funcs 28 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_length string_funcs 24 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_length string_funcs 21 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_piece string_funcs 39 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_translate string_funcs 45 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_ascii string_funcs 15 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_char string_funcs 18 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_reverse string_funcs 50 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_justify string_funcs 57 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_justify string_funcs 53 13 none]
-G r c none [eval_expr runtime 79 13 none] [dollar_find string_funcs 34 13 none]
-G r c none [eval_expr runtime 79 13 none] [global_data database 26 13 none]
-G r c none [eval_expr runtime 79 13 none] [var_data symbol_table 26 13 none]
-G r c none [eval_expr runtime 79 13 none] [global_order database 29 13 none]
-G r c none [eval_expr runtime 79 13 none] [var_order symbol_table 31 13 none]
-G r c none [exec_set runtime 665 14 none] [get_global_subscript database 38 13 none]
-G r c none [exec_set runtime 665 14 none] [get_subscript symbol_table 40 13 none]
-G r c none [exec_set runtime 665 14 none] [get_global database 16 13 none]
-G r c none [exec_set runtime 665 14 none] [get_var symbol_table 16 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_extract string_funcs 28 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_length string_funcs 24 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_length string_funcs 21 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_piece string_funcs 39 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_translate string_funcs 45 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_ascii string_funcs 15 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_char string_funcs 18 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_reverse string_funcs 50 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_justify string_funcs 57 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_justify string_funcs 53 13 none]
-G r c none [exec_set runtime 665 14 none] [dollar_find string_funcs 34 13 none]
-G r c none [exec_set runtime 665 14 none] [global_data database 26 13 none]
-G r c none [exec_set runtime 665 14 none] [var_data symbol_table 26 13 none]
-G r c none [exec_set runtime 665 14 none] [global_order database 29 13 none]
-G r c none [exec_set runtime 665 14 none] [var_order symbol_table 31 13 none]
-G r c none [exec_set runtime 665 14 none] [set_global_subscript database 33 14 none]
-G r c none [exec_set runtime 665 14 none] [set_subscript symbol_table 35 14 none]
-G r c none [exec_set runtime 665 14 none] [set_global database 13 14 none]
-G r c none [exec_set runtime 665 14 none] [set_var symbol_table 13 14 none]
-G r c none [exec_write runtime 712 14 none] [get_global_subscript database 38 13 none]
-G r c none [exec_write runtime 712 14 none] [get_subscript symbol_table 40 13 none]
-G r c none [exec_write runtime 712 14 none] [get_global database 16 13 none]
-G r c none [exec_write runtime 712 14 none] [get_var symbol_table 16 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_extract string_funcs 28 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_length string_funcs 24 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_length string_funcs 21 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_piece string_funcs 39 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_translate string_funcs 45 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_ascii string_funcs 15 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_char string_funcs 18 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_reverse string_funcs 50 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_justify string_funcs 57 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_justify string_funcs 53 13 none]
-G r c none [exec_write runtime 712 14 none] [dollar_find string_funcs 34 13 none]
-G r c none [exec_write runtime 712 14 none] [global_data database 26 13 none]
-G r c none [exec_write runtime 712 14 none] [var_data symbol_table 26 13 none]
-G r c none [exec_write runtime 712 14 none] [global_order database 29 13 none]
-G r c none [exec_write runtime 712 14 none] [var_order symbol_table 31 13 none]
-G r c none [exec_write runtime 712 14 none] [write io 39 14 none]
-G r c none [execute_command runtime 729 14 none] [get_global_subscript database 38 13 none]
-G r c none [execute_command runtime 729 14 none] [get_subscript symbol_table 40 13 none]
-G r c none [execute_command runtime 729 14 none] [get_global database 16 13 none]
-G r c none [execute_command runtime 729 14 none] [get_var symbol_table 16 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_extract string_funcs 28 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_length string_funcs 24 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_length string_funcs 21 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_piece string_funcs 39 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_translate string_funcs 45 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_ascii string_funcs 15 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_char string_funcs 18 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_reverse string_funcs 50 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_justify string_funcs 57 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_justify string_funcs 53 13 none]
-G r c none [execute_command runtime 729 14 none] [dollar_find string_funcs 34 13 none]
-G r c none [execute_command runtime 729 14 none] [global_data database 26 13 none]
-G r c none [execute_command runtime 729 14 none] [var_data symbol_table 26 13 none]
-G r c none [execute_command runtime 729 14 none] [global_order database 29 13 none]
-G r c none [execute_command runtime 729 14 none] [var_order symbol_table 31 13 none]
-G r c none [execute_command runtime 729 14 none] [set_global_subscript database 33 14 none]
-G r c none [execute_command runtime 729 14 none] [set_subscript symbol_table 35 14 none]
-G r c none [execute_command runtime 729 14 none] [set_global database 13 14 none]
-G r c none [execute_command runtime 729 14 none] [set_var symbol_table 13 14 none]
-G r c none [execute_command runtime 729 14 none] [write io 39 14 none]
-G r c none [execute_command runtime 729 14 none] [kill_global database 22 14 none]
-G r c none [execute_command runtime 729 14 none] [kill_var symbol_table 22 14 none]
-G r c none [execute_command runtime 729 14 none] [read io 54 13 none]
+G r c none [push_scope runtime 104 14 none] [get_var symbol_table 16 13 none]
+G r c none [push_scope runtime 104 14 none] [set_var symbol_table 13 14 none]
+G r c none [pop_scope runtime 119 14 none] [set_var symbol_table 13 14 none]
+G r c none [eval_expr runtime 157 13 none] [get_global_subscript database 38 13 none]
+G r c none [eval_expr runtime 157 13 none] [get_subscript symbol_table 40 13 none]
+G r c none [eval_expr runtime 157 13 none] [get_global database 16 13 none]
+G r c none [eval_expr runtime 157 13 none] [get_var symbol_table 16 13 none]
+G r c none [eval_expr runtime 157 13 none] [dollar_extract string_funcs 28 13 none]
+G r c none [eval_expr runtime 157 13 none] [dollar_length string_funcs 24 13 none]
+G r c none [eval_expr runtime 157 13 none] [dollar_length string_funcs 21 13 none]
+G r c none [eval_expr runtime 157 13 none] [dollar_piece string_funcs 39 13 none]
+G r c none [eval_expr runtime 157 13 none] [dollar_ascii string_funcs 15 13 none]
+G r c none [eval_expr runtime 157 13 none] [dollar_char string_funcs 18 13 none]
+G r c none [eval_expr runtime 157 13 none] [global_data database 26 13 none]
+G r c none [eval_expr runtime 157 13 none] [var_data symbol_table 26 13 none]
+G r c none [exec_set runtime 609 14 none] [get_global_subscript database 38 13 none]
+G r c none [exec_set runtime 609 14 none] [get_subscript symbol_table 40 13 none]
+G r c none [exec_set runtime 609 14 none] [get_global database 16 13 none]
+G r c none [exec_set runtime 609 14 none] [get_var symbol_table 16 13 none]
+G r c none [exec_set runtime 609 14 none] [dollar_extract string_funcs 28 13 none]
+G r c none [exec_set runtime 609 14 none] [dollar_length string_funcs 24 13 none]
+G r c none [exec_set runtime 609 14 none] [dollar_length string_funcs 21 13 none]
+G r c none [exec_set runtime 609 14 none] [dollar_piece string_funcs 39 13 none]
+G r c none [exec_set runtime 609 14 none] [dollar_ascii string_funcs 15 13 none]
+G r c none [exec_set runtime 609 14 none] [dollar_char string_funcs 18 13 none]
+G r c none [exec_set runtime 609 14 none] [global_data database 26 13 none]
+G r c none [exec_set runtime 609 14 none] [var_data symbol_table 26 13 none]
+G r c none [exec_set runtime 609 14 none] [set_global_subscript database 33 14 none]
+G r c none [exec_set runtime 609 14 none] [set_subscript symbol_table 35 14 none]
+G r c none [exec_set runtime 609 14 none] [set_global database 13 14 none]
+G r c none [exec_set runtime 609 14 none] [set_var symbol_table 13 14 none]
+G r c none [exec_write runtime 654 14 none] [get_global_subscript database 38 13 none]
+G r c none [exec_write runtime 654 14 none] [get_subscript symbol_table 40 13 none]
+G r c none [exec_write runtime 654 14 none] [get_global database 16 13 none]
+G r c none [exec_write runtime 654 14 none] [get_var symbol_table 16 13 none]
+G r c none [exec_write runtime 654 14 none] [dollar_extract string_funcs 28 13 none]
+G r c none [exec_write runtime 654 14 none] [dollar_length string_funcs 24 13 none]
+G r c none [exec_write runtime 654 14 none] [dollar_length string_funcs 21 13 none]
+G r c none [exec_write runtime 654 14 none] [dollar_piece string_funcs 39 13 none]
+G r c none [exec_write runtime 654 14 none] [dollar_ascii string_funcs 15 13 none]
+G r c none [exec_write runtime 654 14 none] [dollar_char string_funcs 18 13 none]
+G r c none [exec_write runtime 654 14 none] [global_data database 26 13 none]
+G r c none [exec_write runtime 654 14 none] [var_data symbol_table 26 13 none]
+G r c none [exec_write runtime 654 14 none] [write io 39 14 none]
+G r c none [execute_command runtime 671 14 none] [get_global_subscript database 38 13 none]
+G r c none [execute_command runtime 671 14 none] [get_subscript symbol_table 40 13 none]
+G r c none [execute_command runtime 671 14 none] [get_global database 16 13 none]
+G r c none [execute_command runtime 671 14 none] [get_var symbol_table 16 13 none]
+G r c none [execute_command runtime 671 14 none] [dollar_extract string_funcs 28 13 none]
+G r c none [execute_command runtime 671 14 none] [dollar_length string_funcs 24 13 none]
+G r c none [execute_command runtime 671 14 none] [dollar_length string_funcs 21 13 none]
+G r c none [execute_command runtime 671 14 none] [dollar_piece string_funcs 39 13 none]
+G r c none [execute_command runtime 671 14 none] [dollar_ascii string_funcs 15 13 none]
+G r c none [execute_command runtime 671 14 none] [dollar_char string_funcs 18 13 none]
+G r c none [execute_command runtime 671 14 none] [global_data database 26 13 none]
+G r c none [execute_command runtime 671 14 none] [var_data symbol_table 26 13 none]
+G r c none [execute_command runtime 671 14 none] [set_global_subscript database 33 14 none]
+G r c none [execute_command runtime 671 14 none] [set_subscript symbol_table 35 14 none]
+G r c none [execute_command runtime 671 14 none] [set_global database 13 14 none]
+G r c none [execute_command runtime 671 14 none] [set_var symbol_table 13 14 none]
+G r c none [execute_command runtime 671 14 none] [write io 39 14 none]
+G r c none [execute_command runtime 671 14 none] [kill_global database 22 14 none]
+G r c none [execute_command runtime 671 14 none] [kill_var symbol_table 22 14 none]
+G r c none [execute_command runtime 671 14 none] [read io 54 13 none]
 X 1 ada.ads
 18K9*Ada 22e8 31|8r6 8r33 32|8r6 8r33 9r6 9r33 10r6 10r33 11r6 11r45 12r6
-. 23r10 32r7 632r40
+. 23r10 35r7
 X 7 a-numeri.ads
-20K13*Numerics 36e17 32|11r10 11r49 12r10 23r14 32r11 632r44
+20K13*Numerics 36e17 32|11r10 11r49 12r10 23r14 35r11
 X 8 a-nuelfu.ads
 18K22*Elementary_Functions[10|39] 32|11w19 11r58
 X 9 a-nuflra.ads
-41K22*Float_Random 90e30 32|12w19 23r23 32r20 632r53
+41K22*Float_Random 90e30 32|12w19 23r23 35r20
 48R9*Generator<58|65R9> 32|23r36
-50F12*Uniformly_Distributed{float}
-52V13*Random{50F12}<58|73p13> 32|632s66
-56U14*Reset<58|103p14> 32|32s33
+56U14*Reset<58|103p14> 32|35s33
 X 12 a-string.ads
 16K13*Strings 35e16 31|8r10 8r37 32|9r10 9r37 10r10 10r37
 X 13 a-strfix.ads
 49K21*Fixed 1390e22 32|10w18 10r45
-252V13*Index{natural} 32|355s16
+252V13*Index{natural} 32|422s16
 X 17 a-strunb.ads
 91K21*Unbounded 1641e26 31|8w18 8r45 32|9w18 9r45
-105R9*Unbounded_String<5|43R9> 1620e15 31|44r21 32|543r33 567r33 597r33 598r33
-. 667r18
-109r4*Null_Unbounded_String{105R9} 32|30r26 613r34
-111V13*Length{natural} 32|551s28 554s48 581s28 584s48 606s28 609s48
-122V13*To_Unbounded_String{105R9} 32|549s37 575s37 604s37
-135V13*To_String{string} 32|97s20 99s20 104s46 112s32 115s32 122s26 125s26
-. 130s20 130s52 417s47 557s31 583s35 586s35 587s31 611s57 614s27 620s33 685s22
-. 686s21 688s25 688s52 692s25 697s19 698s18 700s22 700s49 704s22 758s46 772s41
-. 823s14
-217V13*Element{character} 32|552s27 582s27 607s27
-236V13*Slice{string} 32|554s31 584s31 609s31
-269V14*"="{boolean} 32|613s32
+105R9*Unbounded_String<5|43R9> 1620e15 31|46r17 57r19 58r19 67r23 69r23 32|550r33
+. 573r33 574r33 611r18
+109r4*Null_Unbounded_String{105R9} 32|30r26 32r27 148r30 589r34 714r30 768r30
+. 782r30 803r30
+111V13*Length{natural} 32|558s28 561s48 582s28 585s48
+122V13*To_Unbounded_String{105R9} 32|86s51 110s12 556s37 580s37 687s36
+135V13*To_String{string} 32|96s13 125s15 127s15 149s34 175s20 177s20 182s46
+. 189s32 192s32 198s26 201s26 206s20 206s52 479s47 564s31 587s57 590s27 596s32
+. 628s22 629s21 631s25 631s52 635s25 639s19 640s18 642s22 642s49 646s22 717s49
+. 770s46 784s49 805s46 822s46 836s41 896s14 906s14
+217V13*Element{character} 32|559s27 583s27
+236V13*Slice{string} 32|561s31 585s31
+269V14*"="{boolean} 32|148s27 589s32 714s27 768s27 782s27 803s27
 X 20 a-textio.ads
 58K13*Text_IO 785e16 32|8w10 8r37
 X 22 database.ads
-10K9*Database 73e13 32|15w6 112r43 122r37 130r31 553r50 583r46 608r35 687r22
-. 699r19 761r22
-13U14*Set_Global 32|699s28
-16V13*Get_Global{17|105R9} 32|122s46 130s40 608s44
-22U14*Kill_Global 32|761s31
-26V13*Global_Data{natural} 32|553s59
-29V13*Global_Order{17|105R9} 32|583s55
-33U14*Set_Global_Subscript 32|687s31
-38V13*Get_Global_Subscript{17|105R9} 32|112s52
+10K9*Database 73e13 32|15w6 189r43 198r37 206r31 560r50 584r35 630r22 641r19
+. 825r22
+13U14*Set_Global 32|641s28
+16V13*Get_Global{17|105R9} 32|198s46 206s40 584s44
+22U14*Kill_Global 32|825s31
+26V13*Global_Data{natural} 32|560s59
+33U14*Set_Global_Subscript 32|630s31
+38V13*Get_Global_Subscript{17|105R9} 32|189s52
 X 26 io.ads
-8K9*IO 74e7 32|16w6 724r10 770r46
-39U14*Write 32|724s13
-54V13*Read{string} 32|770s49
+8K9*IO 74e7 32|16w6 666r10 834r46
+39U14*Write 32|666s13
+54V13*Read{string} 32|834s49
 X 29 parser.ads
 11K9*Parser 104e11 31|9w6 9r34 32|13w6 13r34
-16n7*N_Program{14E9} 32|801r43
-21n7*N_Set{14E9} 32|736r15
-21n14*N_Write{14E9} 32|738r15
-21n23*N_Read{14E9} 32|767r15
-21n31*N_Kill{14E9} 32|755r15
-21n45*N_Quit{14E9} 32|742r15
-22n7*N_If{14E9} 32|744r15
-22n28*N_Halt{14E9} 32|740r15
-22n36*N_Hang{14E9} 32|752r15
-27n7*N_String_Lit{14E9} 32|96r15
-28n7*N_Number_Lit{14E9} 32|98r15
-29n7*N_Variable{14E9} 32|102r15 546r47 572r47 601r47 671r54 756r60 768r60
-30n7*N_Global{14E9} 32|129r15
-34n7*N_Add{14E9} 32|133r15
-35n7*N_Sub{14E9} 32|145r15
-36n7*N_Mul{14E9} 32|157r15
-37n7*N_Div{14E9} 32|169r15
-38n7*N_IntDiv{14E9} 32|185r15
-39n7*N_Mod{14E9} 32|200r15
-40n7*N_Pow{14E9} 32|215r15
-41n7*N_Concat{14E9} 32|228r15
-42n7*N_Eql{14E9} 32|238r15
-43n7*N_Neql{14E9} 32|256r15
-44n7*N_Lt{14E9} 32|268r15
-45n7*N_Gt{14E9} 32|282r15
-46n7*N_Lte{14E9} 32|296r15
-47n7*N_Gte{14E9} 32|310r15
-48n7*N_Follows{14E9} 32|324r15
-49n7*N_SortsAfter{14E9} 32|336r15
-50n7*N_Contains{14E9} 32|348r15
-51n7*N_And{14E9} 32|361r15
-52n7*N_Or{14E9} 32|377r15
-55n7*N_UnaryMinus{14E9} 32|394r15
-56n7*N_UnaryPlus{14E9} 32|401r15
-57n7*N_Not{14E9} 32|404r15
-60n7*N_Function_Call{14E9} 32|415r15
-68P9*AST_Node_Ptr(67R9) 31|21r31 25r36 32|80r32 421r28 542r49 566r49 596r49
-. 666r32 713r34 730r39 782r36 783r13 798r31 799r14
-71e7*Kind{14E9} 32|94r17 546r40 572r40 601r40 671r47 735r17 756r53 768r53
-. 801r35
-72r7*Value{17|105R9} 32|97r36 99r36 104r62 130r68 417r63 547r50 573r50 602r50
-. 672r32 758r67 772r62
-73p7*Left{68P9} 32|107r24 109r70 134r51 135r38 136r48 146r51 147r38 148r48
-. 158r51 159r38 160r48 170r51 171r38 172r48 186r51 187r38 188r48 201r51 202r38
-. 203r48 216r51 217r38 218r48 229r51 230r38 231r48 239r51 240r38 241r48 257r51
-. 258r38 259r48 269r51 270r38 271r48 283r51 284r38 285r48 297r51 298r38 299r48
-. 311r51 312r38 313r48 325r51 326r38 327r48 337r51 338r38 339r48 349r51 350r38
-. 351r48 362r51 363r38 364r48 378r51 379r38 380r48 395r51 396r38 397r48 402r43
-. 405r51 406r38 407r48 424r33 542r70 566r70 596r70 671r15 671r42 672r27 681r21
-. 681r26 683r67 683r72 717r15 719r61 745r21 747r68 756r21 756r48 758r62 768r21
-. 768r48 772r57 789r19 804r20
-74p7*Right{68P9} 32|137r52 138r38 139r49 149r52 150r38 151r49 161r52 162r38
-. 163r49 173r52 174r38 175r49 189r52 190r38 191r49 204r52 205r38 206r49 219r52
-. 220r38 221r49 232r52 233r38 234r49 242r52 243r38 244r49 260r52 261r38 262r49
-. 272r52 273r38 274r49 286r52 287r38 288r49 300r52 301r38 302r49 314r52 315r38
-. 316r49 328r52 329r38 330r49 340r52 341r38 342r49 352r52 353r38 354r49 365r52
-. 366r38 367r49 381r52 382r38 383r49 673r18 675r64
-75p7*Next{68P9} 32|433r40 792r21 807r23
+16n7*N_Program{14E9} 32|141r43 871r43
+17n7*N_Line{14E9} 32|146r25
+21n7*N_Set{14E9} 32|678r15
+21n14*N_Write{14E9} 32|680r15
+21n23*N_Read{14E9} 32|831r15
+21n31*N_Kill{14E9} 32|819r15
+21n39*N_Do{14E9} 32|766r15
+21n45*N_Quit{14E9} 32|684r15
+22n7*N_If{14E9} 32|693r15
+22n13*N_Else{14E9} 32|701r15
+22n21*N_For{14E9} 32|707r15 855r24
+22n28*N_Halt{14E9} 32|682r15
+22n36*N_Hang{14E9} 32|816r15
+22n44*N_Goto{14E9} 32|801r15
+23n16*N_New{14E9} 32|780r15
+27n7*N_String_Lit{14E9} 32|174r15
+28n7*N_Number_Lit{14E9} 32|176r15
+29n7*N_Variable{14E9} 32|180r15 553r47 577r47 615r54 820r60 832r60
+30n7*N_Global{14E9} 32|205r15
+34n7*N_Add{14E9} 32|209r15
+35n7*N_Sub{14E9} 32|220r15
+36n7*N_Mul{14E9} 32|231r15
+37n7*N_Div{14E9} 32|242r15
+38n7*N_IntDiv{14E9} 32|256r15
+39n7*N_Mod{14E9} 32|270r15
+40n7*N_Pow{14E9} 32|284r15
+41n7*N_Concat{14E9} 32|296r15
+42n7*N_Eql{14E9} 32|306r15
+43n7*N_Neql{14E9} 32|323r15
+44n7*N_Lt{14E9} 32|335r15
+45n7*N_Gt{14E9} 32|349r15
+46n7*N_Lte{14E9} 32|363r15
+47n7*N_Gte{14E9} 32|377r15
+48n7*N_Follows{14E9} 32|391r15
+49n7*N_SortsAfter{14E9} 32|403r15
+50n7*N_Contains{14E9} 32|415r15
+51n7*N_And{14E9} 32|428r15
+52n7*N_Or{14E9} 32|442r15
+55n7*N_UnaryMinus{14E9} 32|457r15
+56n7*N_UnaryPlus{14E9} 32|463r15
+57n7*N_Not{14E9} 32|466r15
+60n7*N_Function_Call{14E9} 32|477r15
+68P9*AST_Node_Ptr(67R9) 31|21r31 25r36 47r18 32|82r33 93r48 137r41 138r14
+. 139r14 158r32 483r28 549r49 572r49 610r32 655r34 672r39 722r31 771r28 806r28
+. 846r36 847r13 868r31 869r14
+71e7*Kind{14E9} 32|141r35 146r18 172r17 553r40 577r40 615r47 677r17 820r53
+. 832r53 855r17 871r35
+72r7*Value{17|105R9} 32|148r21 149r50 175r36 177r36 182r62 206r68 479r63
+. 554r50 578r50 616r32 714r21 717r65 768r21 770r62 782r21 784r65 803r21 805r62
+. 822r67 836r62
+73p7*Left{68P9} 32|144r20 146r46 184r24 186r70 210r51 211r38 212r48 221r51
+. 222r38 223r48 232r51 233r38 234r48 243r51 244r38 245r48 257r51 258r38 259r48
+. 271r51 272r38 273r48 285r51 286r38 287r48 297r51 298r38 299r48 307r51 308r38
+. 309r48 324r51 325r38 326r48 336r51 337r38 338r48 350r51 351r38 352r48 364r51
+. 365r38 366r48 378r51 379r38 380r48 392r51 393r38 394r48 404r51 405r38 406r48
+. 416r51 417r38 418r48 429r51 430r38 431r48 443r51 444r38 445r48 458r51 459r38
+. 460r48 464r43 467r51 468r38 469r48 486r33 549r70 572r70 615r15 615r42 616r27
+. 624r21 624r26 626r67 626r72 659r15 661r61 686r21 688r42 694r21 696r68 715r20
+. 725r65 733r59 734r71 820r21 820r48 822r62 832r21 832r48 836r57 852r19 877r20
+74p7*Right{68P9} 32|213r52 214r38 215r49 224r52 225r38 226r49 235r52 236r38
+. 237r49 246r52 247r38 248r49 260r52 261r38 262r49 274r52 275r38 276r49 288r52
+. 289r38 290r49 300r52 301r38 302r49 310r52 311r38 312r49 327r52 328r38 329r49
+. 339r52 340r38 341r49 353r52 354r38 355r49 367r52 368r38 369r49 381r52 382r38
+. 383r49 395r52 396r38 397r49 407r52 408r38 409r49 419r52 420r38 421r49 432r52
+. 433r38 434r49 446r52 447r38 448r49 617r18 619r64 727r27 728r67 740r44
+75p7*Next{68P9} 32|152r23 495r40 733r27 733r54 734r66 739r27 740r39 862r21
+. 880r23
 X 30 pattern.ads
 8K9*Pattern 18e12 32|18w6 18r33
 X 31 runtime.ads
-11K9*Runtime 41E9 48l5 48e12 32|20b14 831l5 831t12
-14R9*Runtime_State 17r35 20r38 24r43 28r38 31r37 34r40 37r32 41c9 46e14 32|25r35
-. 26r15 79r39 665r39 712r41 729r46 781r43 797r38 811r38 816r37 821r40 826r32
-17V13*Create_Runtime{14R9} 32|25b13 34l8 34t22
-20U14*Execute 20=23 21>23 32|797b14 809l8 809t15
-20r23 State{14R9} 32|797b23 805r39 806m24
-21p23 Prog{29|68P9} 32|798b23 801r10 801r30 804r15
-24U14*Execute_Line 24=28 25>28 32|781b14 794l8 794t20 806s10
-24r28 State{14R9} 32|781b28 785r30 790r38 791m27
-25p28 Line{29|68P9} 32|782b28 785r10 789r14
-28V13*Get_Test_Result{boolean} 28>30 32|811b13 814l8 814t23
-28r30 State{14R9} 32|811b30 813r14
-31V13*Get_Error_Code{integer} 31>29 32|816b13 819l8 819t22
-31r29 State{14R9} 32|816b29 818r14
-34V13*Get_Error_Message{string} 34>32 32|821b13 824l8 824t25
-34r32 State{14R9} 32|821b32 823r25
-37V13*Is_Halted{boolean} 37>24 32|826b13 829l8 829t17
-37r24 State{14R9} 32|826b24 828r14
-42b7*Test_Result{boolean} 32|28m13 749m25 813r20
-43i7*Error_Code{integer} 32|29m13 818r20
-44r7*Error_Msg{17|105R9} 32|30m13 823r31
-45b7*Halted{boolean} 32|31m13 732r36 741m19 743m19 785r36 790r44 805r45 828r20
+11K9*Runtime 45E9 76l5 76e12 32|20b14 909l5 909t12
+14R9*Runtime_State 17r35 20r38 24r43 28r38 31r37 34r40 37r32 40r37 64c9 74e14
+. 32|25r35 26r15 80r40 92r33 104r44 119r40 136r48 157r39 609r39 654r41 671r46
+. 845r43 867r38 884r38 889r37 894r40 899r32 904r37
+17V13*Create_Runtime{14R9} 32|25b13 37l8 37t22
+20U14*Execute 20=23 21>23 32|867b14 882l8 882t15
+20r23 State{14R9} 32|867b23 875m26 878r39 879m24
+21p23 Prog{29|68P9} 32|868b23 871r10 871r30 875r33 877r15
+24U14*Execute_Line 24=28 25>28 32|776s22 845b14 864l8 864t20 879s10
+24r28 State{14R9} 32|845b28 849r30 853r38 856m30 860m30
+25p28 Line{29|68P9} 32|846b28 849r10 852r14
+28V13*Get_Test_Result{boolean} 28>30 32|884b13 887l8 887t23
+28r30 State{14R9} 32|884b30 886r14
+31V13*Get_Error_Code{integer} 31>29 32|889b13 892l8 892t22
+31r29 State{14R9} 32|889b29 891r14
+34V13*Get_Error_Message{string} 34>32 32|894b13 897l8 897t25
+34r32 State{14R9} 32|894b32 896r25
+37V13*Is_Halted{boolean} 37>24 32|899b13 902l8 902t17
+37r24 State{14R9} 32|899b24 901r14
+40V13*Get_Quit_Value{string} 40>29 32|904b13 907l8 907t22
+40r29 State{14R9} 32|904b29 906r25
+45R9 Label_Entry 48e14 53r51
+46r7*Name{17|105R9} 32|86m43 96r41
+47p7*Line_Ptr{29|68P9} 32|87m43 97r37
+51i4 Max_Labels{natural} 53r36 32|84r30
+53A9 Label_Array(45R9)<integer> 70r23
+56R9 Scope_Entry 59e14 62r56
+57r7*Var_Name{17|105R9} 32|109m46 125r62
+58r7*Old_Value{17|105R9} 32|111m46 127r62
+61i4 Max_Scope_Depth{natural} 62r36 32|107r28
+62A9 Scope_Array(56R9)<integer> 72r23
+65b7*Test_Result{boolean} 32|28m13 698m25 703r22 886r20
+66i7*Error_Code{integer} 32|29m13 891r20
+67r7*Error_Msg{17|105R9} 32|30m13 896r31
+68b7*Halted{boolean} 32|31m13 674r36 683m19 692m19 747r66 756r66 812m28 849r36
+. 853r44 878r45 901r20
+69r7*Quit_Value{17|105R9} 32|32m13 687m22 906r31
+70a7*Labels{53A9} 32|86m16 87m16 96r30 97r26
+71i7*Label_Count{natural} 32|33m13 84r16 85m16 85r37 86r30 87r30 95r27
+72a7*Scope_Stack{62A9} 32|109m16 111m16 125r32 127r32
+73i7*Scope_Top{natural} 32|34m13 107r16 108m16 108r35 109r35 111r35 121r16
+. 125r51 127r51 131m16 131r35
 X 32 runtime.adb
-23r4 Gen{9|48R9} 32r40 632r74
-26r7 State{31|14R9} 28m7 29m7 30m7 31m7 33r14
-37V13 To_Float{float} 37b13 37>23 49l8 49t16 140s25 141s26 152s25 153s26
-. 164s25 165s26 176s25 177s26 194s28 195s28 209s28 210s28 222s25 223s26 249s25
-. 250s26 275s25 276s26 289s25 290s26 303s25 304s26 317s25 318s26 398s25
-37a23 Str{string} 40r10 42r36
-38f7 Result{float} 42m13 45m16 48r14
-52V13 From_Float{string} 52b13 52>25 76l8 76t18 143s20 155s20 167s20 183s20
-. 225s20 399s20
-52f25 Val{float} 56r27 57r28 69r48
-53i7 Int_Val{integer} 56m7 57r17 59r57
-59a13 Int_Str{string} 61r16 61r25 62r23 62r32 62r53 64r20
-69a10 Str{string} 71r13 71r18 72r20 72r25 72r42 74r17
-79V13 Eval_Expr{string} 79b13 79=24 80>24 109s47 134s28 135s15 136s25 137s29
-. 138s15 139s26 146s28 147s15 148s25 149s29 150s15 151s26 158s28 159s15 160s25
-. 161s29 162s15 163s26 170s28 171s15 172s25 173s29 174s15 175s26 186s28 187s15
-. 188s25 189s29 190s15 191s26 201s28 202s15 203s25 204s29 205s15 206s26 216s28
-. 217s15 218s25 219s29 220s15 221s26 229s28 230s15 231s25 232s29 233s15 234s26
-. 239s28 240s15 241s25 242s29 243s15 244s26 257s28 258s15 259s25 260s29 261s15
-. 262s26 269s28 270s15 271s25 272s29 273s15 274s26 283s28 284s15 285s25 286s29
-. 287s15 288s26 297s28 298s15 299s25 300s29 301s15 302s26 311s28 312s15 313s25
-. 314s29 315s15 316s26 325s28 326s15 327s25 328s29 329s15 330s26 337s28 338s15
-. 339s25 340s29 341s15 342s26 349s28 350s15 351s25 352s29 353s15 354s26 362s28
-. 363s15 364s25 365s29 366s15 367s26 378s28 379s15 380s25 381s29 382s15 383s26
-. 395s28 396s15 397s25 402s20 405s28 406s15 407s25 428s51 662l8 662t17 675s41
-. 683s44 719s38 747s45
-79r24 State{31|14R9} 109m58 109r58 134m39 134r39 135m26 135r26 136m36 136r36
-. 137m40 137r40 138m26 138r26 139m37 139r37 146m39 146r39 147m26 147r26 148m36
-. 148r36 149m40 149r40 150m26 150r26 151m37 151r37 158m39 158r39 159m26 159r26
-. 160m36 160r36 161m40 161r40 162m26 162r26 163m37 163r37 170m39 170r39 171m26
-. 171r26 172m36 172r36 173m40 173r40 174m26 174r26 175m37 175r37 186m39 186r39
-. 187m26 187r26 188m36 188r36 189m40 189r40 190m26 190r26 191m37 191r37 201m39
-. 201r39 202m26 202r26 203m36 203r36 204m40 204r40 205m26 205r26 206m37 206r37
-. 216m39 216r39 217m26 217r26 218m36 218r36 219m40 219r40 220m26 220r26 221m37
-. 221r37 229m39 229r39 230m26 230r26 231m36 231r36 232m40 232r40 233m26 233r26
-. 234m37 234r37 239m39 239r39 240m26 240r26 241m36 241r36 242m40 242r40 243m26
-. 243r26 244m37 244r37 257m39 257r39 258m26 258r26 259m36 259r36 260m40 260r40
-. 261m26 261r26 262m37 262r37 269m39 269r39 270m26 270r26 271m36 271r36 272m40
-. 272r40 273m26 273r26 274m37 274r37 283m39 283r39 284m26 284r26 285m36 285r36
-. 286m40 286r40 287m26 287r26 288m37 288r37 297m39 297r39 298m26 298r26 299m36
-. 299r36 300m40 300r40 301m26 301r26 302m37 302r37 311m39 311r39 312m26 312r26
-. 313m36 313r36 314m40 314r40 315m26 315r26 316m37 316r37 325m39 325r39 326m26
-. 326r26 327m36 327r36 328m40 328r40 329m26 329r26 330m37 330r37 337m39 337r39
-. 338m26 338r26 339m36 339r36 340m40 340r40 341m26 341r26 342m37 342r37 349m39
-. 349r39 350m26 350r26 351m36 351r36 352m40 352r40 353m26 353r26 354m37 354r37
-. 362m39 362r39 363m26 363r26 364m36 364r36 365m40 365r40 366m26 366r26 367m37
-. 367r37 378m39 378r39 379m26 379r26 380m36 380r36 381m40 381r40 382m26 382r26
-. 383m37 383r37 395m39 395r39 396m26 396r26 397m36 397r36 402m31 402r31 405m39
-. 405r39 406m26 406r26 407m36 407r36 428m62 428r62
-80p24 Node{29|68P9} 90r10 94r12 97r31 99r31 104r57 107r19 109r65 130r63 134r46
-. 135r33 136r43 137r47 138r33 139r44 146r46 147r33 148r43 149r47 150r33 151r44
-. 158r46 159r33 160r43 161r47 162r33 163r44 170r46 171r33 172r43 173r47 174r33
-. 175r44 186r46 187r33 188r43 189r47 190r33 191r44 201r46 202r33 203r43 204r47
-. 205r33 206r44 216r46 217r33 218r43 219r47 220r33 221r44 229r46 230r33 231r43
-. 232r47 233r33 234r44 239r46 240r33 241r43 242r47 243r33 244r44 257r46 258r33
-. 259r43 260r47 261r33 262r44 269r46 270r33 271r43 272r47 273r33 274r44 283r46
-. 284r33 285r43 286r47 287r33 288r44 297r46 298r33 299r43 300r47 301r33 302r44
-. 311r46 312r33 313r43 314r47 315r33 316r44 325r46 326r33 327r43 328r47 329r33
-. 330r44 337r46 338r33 339r43 340r47 341r33 342r44 349r46 350r33 351r43 352r47
-. 353r33 354r44 362r46 363r33 364r43 365r47 366r33 367r44 378r46 379r33 380r43
-. 381r47 382r33 383r44 395r46 396r33 397r43 402r38 405r46 406r33 407r43 417r58
-. 424r28 542r65 566r65 596r65
-81a7 Left_Val{string} 134m13 140r35 146m13 152r35 158m13 164r35 170m13 176r35
-. 186m13 194r38 201m13 209r38 216m13 222r35 229m13 235r20 239m13 245r16 249r35
-. 257m13 263r16 269m13 275r35 283m13 289r35 297m13 303r35 311m13 317r35 325m13
-. 331r16 337m13 343r16 349m13 355r23 362m13 368r29 369r28 378m13 384r29 385r28
-. 395m13 398r35 405m13 408r16 409r15
-82i7 Left_Len{natural} 136m13 140r50 148m13 152r50 160m13 164r50 172m13 176r50
-. 188m13 194r53 203m13 209r53 218m13 222r50 231m13 235r35 241m13 245r31 249r50
-. 259m13 263r31 271m13 275r50 285m13 289r50 299m13 303r50 313m13 317r50 327m13
-. 331r31 339m13 343r31 351m13 355r38 364m13 368r44 369r43 380m13 384r44 385r43
-. 397m13 398r50 407m13 408r31 409r30
-83a7 Right_Val{string} 137m13 141r36 149m13 153r36 161m13 165r36 173m13 177r36
-. 189m13 192r16 195r38 204m13 207r16 210r38 219m13 223r36 232m13 235r47 242m13
-. 245r43 250r36 260m13 263r44 272m13 276r36 286m13 290r36 300m13 304r36 314m13
-. 318r36 328m13 331r43 340m13 343r43 352m13 355r49 365m13 370r28 371r28 381m13
-. 386r28 387r28
-84i7 Right_Len{natural} 139m13 141r52 151m13 153r52 163m13 165r52 175m13
-. 177r52 191m13 192r32 195r54 206m13 207r32 210r54 221m13 223r52 234m13 235r63
-. 244m13 245r59 250r52 262m13 263r60 274m13 276r52 288m13 290r52 302m13 304r52
-. 316m13 318r52 330m13 331r59 342m13 343r59 354m13 355r65 367m13 370r44 371r44
-. 383m13 386r44 387r44
-85f7 Left_Num{float} 140m13 142r23 152m13 154r23 164m13 166r23 176m13 179r26
-. 222m13 224r23 249m13 251r16 275m13 277r16 289m13 291r16 303m13 305r16 317m13
-. 319r16 398m13 399r33
-86f7 Right_Num{float} 141m13 142r34 153m13 154r34 165m13 166r34 177m13 178r16
-. 179r37 223m13 224r44 250m13 251r27 276m13 277r27 290m13 291r27 304m13 305r28
-. 318m13 319r28
-87f7 Result{float} 142m13 143r32 154m13 155r32 166m13 167r32 179m16 181m16
-. 183r32 224m13 225r32
-88b7 Bool_Result{boolean} 368m13 372r16 384m13 388r16
-104a16 Var_Name{string} 111r25 111r54 113r28 113r43 116r28 121r19 121r48
-. 123r22 123r37 125r59
-109a22 Sub{string} 113r59 116r38
-417a16 Func_Name{string} 437r19 437r49 438r18 438r42 451r22 451r51 451r80
-. 451r104 462r22 462r50 462r78 462r102 477r22 477r54 477r86 477r110 490r22
-. 490r50 490r78 490r102 501r22 501r49 501r76 501r100 506r22 506r52 511r22
-. 511r52 511r82 511r106 524r22 524r49 524r76 524r100 537r22 537r49 538r18
-. 538r42 561r22 561r50 562r18 562r42 591r22 591r48 592r18 592r42 623r23 623r52
-. 624r19 624r43 638r22 638r51 638r80 638r104
-418a16 Args(string) 430m22 442r28 443r43 444r43 447r28 448r43 455r28 456r28
-. 459r28 466r28 467r28 468r43 469r43 472r28 473r28 474r43 481r28 482r28 483r28
-. 486r28 487r28 494r28 495r43 498r28 504r40 509r25 515r28 516r43 517r43 520r28
-. 521r43 528r28 529r28 530r43 533r28 534r28 549r58 575r58 578r55 604r58 616r38
-. 628r42 646r28 647r27 648r35
-419a16 Arg_Lens(natural) 431m22 442r43 443r58 444r58 447r43 448r58 455r43
-. 456r43 459r43 466r43 467r43 468r58 469r58 472r43 473r43 474r58 481r43 482r43
-. 483r43 486r43 487r43 494r43 495r58 498r43 504r55 509r40 515r43 516r58 517r58
-. 520r43 521r58 528r43 529r43 530r58 533r43 534r43 549r73 575r73 578r38 578r70
-. 579r39 604r73 616r53 628r57 646r43 647r42 648r54
-420i16 Arg_Count{natural} 425r48 426m19 426r32 430r28 431r32 439r22 440r25
-. 452r22 453r25 463r22 464r25 478r22 479r25 491r22 492r25 502r22 507r22 512r22
-. 513r25 525r22 526r25 539r22 563r22 577r28 593r22 615r31 625r22 645r37
-421p16 Arg_Node{29|68P9} 424m16 425r22 428r69 433m19 433r31
-428a22 Arg_Val{string} 430r45 430r64 431r46
-542p25 Arg_Node_Ref{29|68P9} 545r28 546r27 547r37
-543r25 Vname{17|105R9} 547m28 549m28 551r36 552r36 554r38 554r56 557r42
-566p25 Arg_Node_Ref{29|68P9} 571r28 572r27 573r37
-567r25 Vname{17|105R9} 573m28 575m28 581r36 582r36 584r38 584r56 587r42
-568a25 Cur{string} 578m28 584r65 587r50
-569i25 Cur_Len{natural} 579m28 584r75 587r60
-596p25 Arg_Node_Ref{29|68P9} 600r28 601r27 602r37
-597r25 Vname{17|105R9} 602m28 604m28 606r36 607r36 609r38 609r56 611r68
-598r25 Val{17|105R9} 608m28 611m28 613r28 614r38 620r44
-627i25 Max{integer} 630r28 633r38
-643i22 I{natural} 645r28 646r34 646r53 647r33 647r52 648r41 648r64 650m25
-. 650r30
-665U14 Exec_Set 665b14 665=24 666>24 709l8 709t16 737s13
-665r24 State{31|14R9} 675m52 675r52 683m55 683r55
-666p24 Node{29|68P9} 671r10 671r37 672r22 673r13 675r59 681r16 683r62
-667r7 Var_Name{17|105R9} 672m10 685r33 686r32 688r36 688r63 692r36 697r30
-. 698r29 700r33 700r60 704r33
-668a7 Value{string} 677m16 689r30 692r52 701r22 704r44
-669i7 Val_Len{natural} 678m16 689r42 692r64 701r34 704r56
-675a16 Val{string} 677r28 677r43 678r27
-683a19 Sub{string} 689r25 692r47
-712U14 Exec_Write 712b14 712=26 713>26 726l8 726t18 739s13
-712r26 State{31|14R9} 719m49 719r49
-713p26 Node{29|68P9} 717r10 719r56
-714a7 Value{string} 721m13 724r20
-715i7 VLen{natural} 722m13 724r32
-719a13 Val{string} 721r25 721r40 722r21
-729U14 Execute_Command 729b14 729=31 730>31 778l8 778t23 791s10
-729r31 State{31|14R9} 732r30 737m23 739m25 741m13 743m13 747m56 747r56 749m19
-730p31 Node{29|68P9} 732r10 735r12 737r30 739r32 745r16 747r63 756r16 756r43
-. 758r57 768r16 768r43 772r52
-747a19 Cond{string} 749r40 749r60
-758a19 Vname{string} 760r22 760r48 761r44 761r56 763r45
-770a19 Input{string} 772r70
-783p7 Cmd{29|68P9} 789m7 790r13 791r34 792m10 792r17
-799p7 Line{29|68P9} 804m7 805r13 806r31 807m10 807r18
+23r4 Gen{9|48R9} 35r40
+26r7 State{31|14R9} 28m7 29m7 30m7 31m7 32m7 33m7 34m7 36r14
+40V13 To_Float{float} 40b13 40>23 52l8 52t16 216s25 217s26 227s25 228s26
+. 238s25 239s26 249s25 250s26 265s28 266s28 279s28 280s28 291s25 292s26 316s25
+. 317s26 342s25 343s26 356s25 357s26 370s25 371s26 384s25 385s26 461s33 725s32
+. 728s34 734s33
+40a23 Str{string} 43r10 45r36
+41f7 Result{float} 45m13 48m16 51r14
+55V13 From_Float{string} 55b13 55>25 77l8 77t18 218s20 229s20 240s20 252s23
+. 293s20 461s20 748s57 757s57
+55f25 Val{float} 58r27 59r28 70r48
+56i7 Int_Val{integer} 58m7 59r17 61r57
+61a13 Int_Str{string} 63r16 63r25 64r23 64r32 64r53 66r20
+70a10 Str{string} 72r13 72r18 73r20 73r25 73r42 75r17
+80U14 Add_Label 80b14 80=25 81>25 82>25 89l8 89t17 149s16
+80r25 State{31|14R9} 84r10 85m10 85r31 86m10 86r24 87m10 87r24
+81a25 Name{string} 86r72
+82p25 Line{29|68P9} 87r55
+92V13 Find_Label{29|68P9} 92b13 92>25 93>25 101l8 101t18 773s29 808s29
+92r25 State{31|14R9} 95r21 96r24 97r20
+93a25 Name{string} 96r49
+95i11 I{integer} 96r38 97r34
+104U14 Push_Scope 104b14 104=26 105>26 116l8 116t18 795s22
+104r26 State{31|14R9} 107r10 108m10 108r29 109m10 109r29 111m10 111r29
+105a26 Var_Name{string} 110r33 112r34 114r32
+119U14 Pop_Scope 119b14 119=25 133l8 133t17 691s13
+119r25 State{31|14R9} 121r10 125r26 125r45 127r26 127r45 131m10 131r29
+124a13 Var_Name{string} 129r35
+126a13 Old_Val{string} 129r45
+136U14 Build_Label_Table 136b14 136=33 137>33 154l8 154t25 875s7
+136r33 State{31|14R9} 149m27
+137p33 Prog{29|68P9} 141r10 141r30 144r15
+138p7 Line{29|68P9} 144m7 145r13 146r13 146r41 148r16 149r45 149r58 152m10
+. 152r18
+139p7 Cmd{29|68P9}
+157V13 Eval_Expr{string} 157b13 157=24 158>24 186s47 210s28 211s15 212s25
+. 213s29 214s15 215s26 221s28 222s15 223s25 224s29 225s15 226s26 232s28 233s15
+. 234s25 235s29 236s15 237s26 243s28 244s15 245s25 246s29 247s15 248s26 257s28
+. 258s15 259s25 260s29 261s15 262s26 271s28 272s15 273s25 274s29 275s15 276s26
+. 285s28 286s15 287s25 288s29 289s15 290s26 297s28 298s15 299s25 300s29 301s15
+. 302s26 307s28 308s15 309s25 310s29 311s15 312s26 324s28 325s15 326s25 327s29
+. 328s15 329s26 336s28 337s15 338s25 339s29 340s15 341s26 350s28 351s15 352s25
+. 353s29 354s15 355s26 364s28 365s15 366s25 367s29 368s15 369s26 378s28 379s15
+. 380s25 381s29 382s15 383s26 392s28 393s15 394s25 395s29 396s15 397s26 404s28
+. 405s15 406s25 407s29 408s15 409s26 416s28 417s15 418s25 419s29 420s15 421s26
+. 429s28 430s15 431s25 432s29 433s15 434s26 443s28 444s15 445s25 446s29 447s15
+. 448s26 458s28 459s15 460s25 464s20 467s28 468s15 469s25 490s51 606l8 606t17
+. 619s41 626s44 661s38 688s19 696s45 725s42 728s44 734s43
+157r24 State{31|14R9} 186m58 186r58 210m39 210r39 211m26 211r26 212m36 212r36
+. 213m40 213r40 214m26 214r26 215m37 215r37 221m39 221r39 222m26 222r26 223m36
+. 223r36 224m40 224r40 225m26 225r26 226m37 226r37 232m39 232r39 233m26 233r26
+. 234m36 234r36 235m40 235r40 236m26 236r26 237m37 237r37 243m39 243r39 244m26
+. 244r26 245m36 245r36 246m40 246r40 247m26 247r26 248m37 248r37 257m39 257r39
+. 258m26 258r26 259m36 259r36 260m40 260r40 261m26 261r26 262m37 262r37 271m39
+. 271r39 272m26 272r26 273m36 273r36 274m40 274r40 275m26 275r26 276m37 276r37
+. 285m39 285r39 286m26 286r26 287m36 287r36 288m40 288r40 289m26 289r26 290m37
+. 290r37 297m39 297r39 298m26 298r26 299m36 299r36 300m40 300r40 301m26 301r26
+. 302m37 302r37 307m39 307r39 308m26 308r26 309m36 309r36 310m40 310r40 311m26
+. 311r26 312m37 312r37 324m39 324r39 325m26 325r26 326m36 326r36 327m40 327r40
+. 328m26 328r26 329m37 329r37 336m39 336r39 337m26 337r26 338m36 338r36 339m40
+. 339r40 340m26 340r26 341m37 341r37 350m39 350r39 351m26 351r26 352m36 352r36
+. 353m40 353r40 354m26 354r26 355m37 355r37 364m39 364r39 365m26 365r26 366m36
+. 366r36 367m40 367r40 368m26 368r26 369m37 369r37 378m39 378r39 379m26 379r26
+. 380m36 380r36 381m40 381r40 382m26 382r26 383m37 383r37 392m39 392r39 393m26
+. 393r26 394m36 394r36 395m40 395r40 396m26 396r26 397m37 397r37 404m39 404r39
+. 405m26 405r26 406m36 406r36 407m40 407r40 408m26 408r26 409m37 409r37 416m39
+. 416r39 417m26 417r26 418m36 418r36 419m40 419r40 420m26 420r26 421m37 421r37
+. 429m39 429r39 430m26 430r26 431m36 431r36 432m40 432r40 433m26 433r26 434m37
+. 434r37 443m39 443r39 444m26 444r26 445m36 445r36 446m40 446r40 447m26 447r26
+. 448m37 448r37 458m39 458r39 459m26 459r26 460m36 460r36 464m31 464r31 467m39
+. 467r39 468m26 468r26 469m36 469r36 490m62 490r62
+158p24 Node{29|68P9} 168r10 172r12 175r31 177r31 182r57 184r19 186r65 206r63
+. 210r46 211r33 212r43 213r47 214r33 215r44 221r46 222r33 223r43 224r47 225r33
+. 226r44 232r46 233r33 234r43 235r47 236r33 237r44 243r46 244r33 245r43 246r47
+. 247r33 248r44 257r46 258r33 259r43 260r47 261r33 262r44 271r46 272r33 273r43
+. 274r47 275r33 276r44 285r46 286r33 287r43 288r47 289r33 290r44 297r46 298r33
+. 299r43 300r47 301r33 302r44 307r46 308r33 309r43 310r47 311r33 312r44 324r46
+. 325r33 326r43 327r47 328r33 329r44 336r46 337r33 338r43 339r47 340r33 341r44
+. 350r46 351r33 352r43 353r47 354r33 355r44 364r46 365r33 366r43 367r47 368r33
+. 369r44 378r46 379r33 380r43 381r47 382r33 383r44 392r46 393r33 394r43 395r47
+. 396r33 397r44 404r46 405r33 406r43 407r47 408r33 409r44 416r46 417r33 418r43
+. 419r47 420r33 421r44 429r46 430r33 431r43 432r47 433r33 434r44 443r46 444r33
+. 445r43 446r47 447r33 448r44 458r46 459r33 460r43 464r38 467r46 468r33 469r43
+. 479r58 486r28 549r65 572r65
+159a7 Left_Val{string} 210m13 216r35 221m13 227r35 232m13 238r35 243m13 249r35
+. 257m13 265r38 271m13 279r38 285m13 291r35 297m13 303r20 307m13 313r16 316r35
+. 324m13 330r16 336m13 342r35 350m13 356r35 364m13 370r35 378m13 384r35 392m13
+. 398r16 404m13 410r16 416m13 422r23 429m13 435r29 436r28 443m13 449r29 450r28
+. 458m13 461r43 467m13 470r16 471r15
+160i7 Left_Len{natural} 212m13 216r50 223m13 227r50 234m13 238r50 245m13
+. 249r50 259m13 265r53 273m13 279r53 287m13 291r50 299m13 303r35 309m13 313r31
+. 316r50 326m13 330r31 338m13 342r50 352m13 356r50 366m13 370r50 380m13 384r50
+. 394m13 398r31 406m13 410r31 418m13 422r38 431m13 435r44 436r43 445m13 449r44
+. 450r43 460m13 461r58 469m13 470r31 471r30
+161a7 Right_Val{string} 213m13 217r36 224m13 228r36 235m13 239r36 246m13
+. 250r36 260m13 263r16 266r38 274m13 277r16 280r38 288m13 292r36 300m13 303r47
+. 310m13 313r43 317r36 327m13 330r44 339m13 343r36 353m13 357r36 367m13 371r36
+. 381m13 385r36 395m13 398r43 407m13 410r43 419m13 422r49 432m13 437r28 438r28
+. 446m13 451r28 452r28
+162i7 Right_Len{natural} 215m13 217r52 226m13 228r52 237m13 239r52 248m13
+. 250r52 262m13 263r32 266r54 276m13 277r32 280r54 290m13 292r52 302m13 303r63
+. 312m13 313r59 317r52 329m13 330r60 341m13 343r52 355m13 357r52 369m13 371r52
+. 383m13 385r52 397m13 398r59 409m13 410r59 421m13 422r65 434m13 437r44 438r44
+. 448m13 451r44 452r44
+163f7 Left_Num{float} 216m13 218r32 227m13 229r32 238m13 240r32 249m13 252r35
+. 291m13 293r32 316m13 318r16 342m13 344r16 356m13 358r16 370m13 372r16 384m13
+. 386r16
+164f7 Right_Num{float} 217m13 218r43 228m13 229r43 239m13 240r43 250m13 251r16
+. 252r46 292m13 293r53 317m13 318r27 343m13 344r27 357m13 358r27 371m13 372r28
+. 385m13 386r28
+165f7 Result{float}
+166b7 Bool_Result{boolean} 435m13 439r16 449m13 453r16
+182a16 Var_Name{string} 188r25 188r54 190r28 190r43 193r28 197r19 197r48
+. 199r22 199r37 201r59
+186a22 Sub{string} 190r59 193r38
+479a16 Func_Name{string} 499r19 499r49 500r18 500r42 513r22 513r51 514r18
+. 514r42 525r22 525r50 526r18 526r42 533r22 533r50 534r18 534r42 539r22 539r49
+. 540r18 540r42 545r22 545r49 546r18 546r42 568r22 568r48 569r18 569r42
+480a16 Args(string) 492m22 504r28 505r43 506r43 509r28 510r43 518r28 519r28
+. 522r28 529r25 530r25 531r40 537r25 543r40 556r58 580r58 592r38
+481a16 Arg_Lens(natural) 493m22 504r43 505r58 506r58 509r43 510r58 518r43
+. 519r43 522r43 529r40 530r40 531r55 537r40 543r55 556r73 580r73 592r53
+482i16 Arg_Count{natural} 487r48 488m19 488r32 492r28 493r32 501r22 502r25
+. 515r22 516r25 527r22 535r22 541r22 547r22 570r22 591r31
+483p16 Arg_Node{29|68P9} 486m16 487r22 490r69 495m19 495r31
+490a22 Arg_Val{string} 492r45 492r64 493r46
+549p25 Arg_Node_Ref{29|68P9} 552r28 553r27 554r37
+550r25 Vname{17|105R9} 554m28 556m28 558r36 559r36 561r38 561r56 564r42
+572p25 Arg_Node_Ref{29|68P9} 576r28 577r27 578r37
+573r25 Vname{17|105R9} 578m28 580m28 582r36 583r36 585r38 585r56 587r68
+574r25 Val{17|105R9} 584m28 587m28 589r28 590r38 596r43
+609U14 Exec_Set 609b14 609=24 610>24 651l8 651t16 679s13
+609r24 State{31|14R9} 619m52 619r52 626m55 626r55
+610p24 Node{29|68P9} 615r10 615r37 616r22 617r13 619r59 624r16 626r62
+611r7 Var_Name{17|105R9} 616m10 628r33 629r32 631r36 631r63 635r36 639r30
+. 640r29 642r33 642r60 646r33
+612a7 Value{string} 621m16 632r30 635r52 643r22 646r44
+613i7 Val_Len{natural} 622m16 632r42 635r64 643r34 646r56
+619a16 Val{string} 621r28 621r43 622r27
+626a19 Sub{string} 632r25 635r47
+654U14 Exec_Write 654b14 654=26 655>26 668l8 668t18 681s13
+654r26 State{31|14R9} 661m49 661r49
+655p26 Node{29|68P9} 659r10 661r56
+656a7 Value{string} 663m13 666r20
+657i7 VLen{natural} 664m13 666r32
+661a13 Val{string} 663r25 663r40 664r21
+671U14 Execute_Command 671b14 671=31 672>31 751s28 759s28 842l8 842t23 856s13
+. 860s13
+671r31 State{31|14R9} 674r30 679m23 681m25 683m13 687m16 688m30 688r30 691m24
+. 692m13 696m56 696r56 698m19 703r16 725m53 725r53 728m55 728r55 734m54 734r54
+. 747r60 751m45 756r60 759m45 773r41 776m36 795m34 808r41 812m22
+672p31 Node{29|68P9} 674r10 677r12 679r30 681r32 686r16 688r37 694r16 696r63
+. 714r16 715r15 717r60 725r60 727r22 728r62 733r22 733r49 734r61 739r22 740r34
+. 768r16 770r57 782r16 784r60 803r16 805r57 820r16 820r43 822r57 832r16 832r43
+. 836r52
+696a19 Cond{string} 698r40 698r60
+717a19 Var_Name{string} 748r47 757r47
+718f19 Start_Val{float} 725m19 736r33 745r30
+719f19 Incr_Val{float} 728m22 730m22 746r22 753r46 755r25 761r46
+720f19 End_Val{float} 734m22 736m22 747r39 756r39
+721f19 Cur_Val{float} 745m19 747r28 748r69 753m25 753r36 756r28 757r69 761m25
+. 761r36
+722p19 Body_Cmd{29|68P9} 740m22 742m22 750r28 751r52 758r28 759r52
+770a19 Label{string} 773r48
+771p19 Target{29|68P9} 773m19 774r22 776r43
+784a19 Var_List{string} 791r33 792r24 795r41 796r36
+785i19 Start{natural} 790r27 795r51 797m22
+786i19 I{natural} 790m22 791r28 792r34 793m25 793r30 795r60 796r32 797r31
+805a19 Label{string} 808r48
+806p19 Target{29|68P9} 808m19 809r22
+822a19 Vname{string} 824r22 824r48 825r44 825r56 827r45
+834a19 Input{string} 836r70
+847p7 Cmd{29|68P9} 852m7 853r13 855r13 856r37 860r37 862m10 862r17
+869p7 Line{29|68P9} 877m7 878r13 879r31 880m10 880r18
 X 33 string_funcs.ads
 11K9*String_Funcs 32|17w6 17r33 33|65e17
-15V13*Dollar_ASCII{integer} 32|493s47 497s47
-18V13*Dollar_CHAR{string} 32|503s29
-21V13*Dollar_LENGTH{natural} 32|458s47
-24V13*Dollar_LENGTH{natural} 32|454s47
-28V13*Dollar_EXTRACT{string} 32|441s32 446s32
-34V13*Dollar_FIND{natural} 32|527s47 532s47
-39V13*Dollar_PIECE{string} 32|465s32 471s32
-45V13*Dollar_TRANSLATE{string} 32|480s32 485s32
-50V13*Dollar_REVERSE{string} 32|508s29
-53V13*Dollar_JUSTIFY{string} 32|519s32
-57V13*Dollar_JUSTIFY{string} 32|514s32
+15V13*Dollar_ASCII{integer} 32|536s44
+18V13*Dollar_CHAR{string} 32|542s29
+21V13*Dollar_LENGTH{natural} 32|521s47
+24V13*Dollar_LENGTH{natural} 32|517s47
+28V13*Dollar_EXTRACT{string} 32|503s32 508s32
+39V13*Dollar_PIECE{string} 32|528s29
 X 34 symbol_table.ads
-10K9*Symbol_Table 32|14w6 115r43 125r37 556r50 586r46 611r35 691r22 703r19
-. 763r22 772r19 34|68e17
-13U14*Set_Var 32|703s32 772s32
-16V13*Get_Var{17|105R9} 32|125s50 611s48
-22U14*Kill_Var 32|763s35
-26V13*Var_Data{natural} 32|556s63
-31V13*Var_Order{17|105R9} 32|586s59
-35U14*Set_Subscript 32|691s35
-40V13*Get_Subscript{17|105R9} 32|115s56
+10K9*Symbol_Table 32|14w6 112r12 114r10 129r13 192r43 201r37 563r50 587r35
+. 634r22 645r19 748r25 757r25 827r22 836r19 34|68e17
+13U14*Set_Var 32|114s23 129s26 645s32 748s38 757s38 836s32
+16V13*Get_Var{17|105R9} 32|112s25 201s50 587s48
+22U14*Kill_Var 32|827s35
+26V13*Var_Data{natural} 32|563s63
+35U14*Set_Subscript 32|634s35
+40V13*Get_Subscript{17|105R9} 32|192s56
 X 35 system.ads
 67M9*Address
 X 51 s-memory.ads

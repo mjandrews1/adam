@@ -125,6 +125,38 @@ package body Parser is
                end if;
             end if;
 
+         when Tok_BREAK .. Tok_XECUTE =>
+            -- Single-letter command tokens used as variable names (e.g., I, J, K, X)
+            if State.Current.Val_Len = 1 then
+               Node := Create_Node (N_Variable, "", State.Current.Line);
+               Node.Value := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
+               Advance (State);
+               -- Check for subscripts
+               if State.Current.Kind = Tok_LParen then
+                  Advance (State);
+                  while State.Current.Kind /= Tok_RParen and then
+                    State.Current.Kind /= Tok_EOF loop
+                     if State.Current.Kind = Tok_Comma then
+                        Advance (State);
+                     end if;
+                     Arg := Parse_Expression (State);
+                     if Node.Left = null then
+                        Node.Left := Arg;
+                     elsif Last /= null then
+                        Last.Next := Arg;
+                     end if;
+                     Last := Arg;
+                  end loop;
+                  if State.Current.Kind = Tok_RParen then
+                     Advance (State);
+                  end if;
+               end if;
+            else
+               Node := Create_Node (N_Null, "", State.Current.Line);
+               Advance (State);
+            end if;
+
          when Tok_LParen =>
             -- Parenthesized expression
             Advance (State);
@@ -348,7 +380,44 @@ package body Parser is
          when Tok_For =>
             Node := Create_Node (N_For, "", State.Current.Line);
             Advance (State);
-            -- Skip for now
+            -- Parse FOR var=start:increment:end
+            -- Accept identifier or single-letter command token as variable name
+            if State.Current.Kind = Tok_Identifier or else
+              (State.Current.Kind >= Tok_BREAK and then
+               State.Current.Kind <= Tok_XECUTE and then
+               State.Current.Val_Len = 1) then
+               -- Variable name
+               Node.Value := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
+               Advance (State);
+               -- Expect =
+               if State.Current.Kind = Tok_Equals then
+                  Advance (State);
+                  -- Parse start expression
+                  Node.left := Parse_Expression (State);
+                  -- Expect :
+                  if State.Current.Kind = Tok_Colon then
+                     Advance (State);
+                     -- Parse increment expression
+                     Node.right := Parse_Expression (State);
+                     -- Expect :
+                     if State.Current.Kind = Tok_Colon then
+                        Advance (State);
+                        -- Parse end expression (store in left of Next)
+                        Node.Next := Create_Node (N_Null, "", State.Current.Line);
+                        Node.Next.left := Parse_Expression (State);
+                     end if;
+                  end if;
+               end if;
+            end if;
+            -- Parse body command (rest of line)
+            if State.Current.Kind /= Tok_Newline and then
+              State.Current.Kind /= Tok_EOF then
+               if Node.Next = null then
+                  Node.Next := Create_Node (N_Null, "", State.Current.Line);
+               end if;
+               Node.Next.right := Parse_Command (State);
+            end if;
          when Tok_Merge =>
             Node := Create_Node (N_Merge, "", State.Current.Line);
             Advance (State);
@@ -356,7 +425,21 @@ package body Parser is
          when Tok_New =>
             Node := Create_Node (N_New, "", State.Current.Line);
             Advance (State);
-            -- Skip for now
+            -- Parse variable list: NEW var1,var2,...
+            if State.Current.Kind = Tok_Identifier then
+               Node.Value := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
+               Advance (State);
+               -- Parse additional variables
+               while State.Current.Kind = Tok_Comma loop
+                  Advance (State);
+                  if State.Current.Kind = Tok_Identifier then
+                     Node.Value := Node.Value & "," &
+                       To_Unbounded_String (State.Current.Value (1 .. State.Current.Val_Len));
+                     Advance (State);
+                  end if;
+               end loop;
+            end if;
          when Tok_Goto =>
             Node := Create_Node (N_Goto, "", State.Current.Line);
             Advance (State);
@@ -417,12 +500,18 @@ package body Parser is
       Cmd := Parse_Command (State);
       Line.left := Cmd;
       Last := Cmd;
-      -- Parse additional commands on same line (separated by space or semicolon)
-      while State.Current.Kind = Tok_Newline or else
-        State.Current.Kind = Tok_Semicolon loop
-         Advance (State);
-         exit when State.Current.Kind = Tok_EOF;
-         exit when State.Current.Kind = Tok_Newline;
+      -- Parse additional commands on same line
+      -- MUMPS allows multiple commands on same line separated by spaces
+      -- The lexer skips spaces, so we check if next token is a command
+      while State.Current.Kind /= Tok_Newline and then
+        State.Current.Kind /= Tok_EOF loop
+         -- Check if next token is a command keyword
+         exit when State.Current.Kind < Tok_BREAK;
+         exit when State.Current.Kind > Tok_XECUTE;
+         -- Skip if previous command was FOR (body already parsed)
+         if Last /= null and then Last.Kind = N_For then
+            exit;
+         end if;
          Cmd := Parse_Command (State);
          if Last /= null then
             Last.Next := Cmd;

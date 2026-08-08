@@ -36,13 +36,42 @@ package Runtime is
    -- Check if runtime is halted
    function Is_Halted (State : Runtime_State) return Boolean;
 
+   -- Get current quit value
+   function Get_Quit_Value (State : Runtime_State) return String;
+
 private
 
+   -- Label entry for DO/GOTO
+   type Label_Entry is record
+      Name    : Unbounded_String;
+      Line_Ptr : AST_Node_Ptr;  -- Pointer to the line with this label
+   end record;
+
+   -- Label table (fixed size for simplicity)
+   Max_Labels : constant Natural := 100;
+
+   type Label_Array is array (1 .. Max_Labels) of Label_Entry;
+
+   -- NEW scope entry
+   type Scope_Entry is record
+      Var_Name  : Unbounded_String;
+      Old_Value : Unbounded_String;
+   end record;
+
+   Max_Scope_Depth : constant Natural := 100;
+   type Scope_Array is array (1 .. Max_Scope_Depth) of Scope_Entry;
+
    type Runtime_State is record
-      Test_Result : Boolean;
-      Error_Code  : Integer;
-      Error_Msg   : Unbounded_String;
-      Halted      : Boolean;
+      Test_Result   : Boolean;
+      Error_Code    : Integer;
+      Error_Msg     : Unbounded_String;
+      Halted        : Boolean;
+      Quit_Value    : Unbounded_String;  -- QUIT return value
+      Skip_Remainder : Boolean;  -- Skip remaining commands on line (for ELSE)
+      Labels        : Label_Array;
+      Label_Count   : Natural;
+      Scope_Stack   : Scope_Array;
+      Scope_Top     : Natural;
    end record;
 
 end Runtime;

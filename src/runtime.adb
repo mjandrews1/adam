@@ -29,6 +29,10 @@ package body Runtime is
       State.Error_Code := 0;
       State.Error_Msg := Null_Unbounded_String;
       State.Halted := False;
+      State.Quit_Value := Null_Unbounded_String;
+      State.Skip_Remainder := False;
+      State.Label_Count := 0;
+      State.Scope_Top := 0;
       Ada.Numerics.Float_Random.Reset (Gen);
       return State;
    end Create_Runtime;
@@ -52,7 +56,6 @@ package body Runtime is
    function From_Float (Val : Float) return String is
       Int_Val : Integer;
    begin
-      -- Check if it's a whole number
       Int_Val := Integer (Val);
       if Float (Int_Val) = Val then
          declare
@@ -64,7 +67,6 @@ package body Runtime is
             return Int_Str;
          end;
       end if;
-      -- Otherwise use scientific notation
       declare
          Str : constant String := Float'Image (Val);
       begin
@@ -74,6 +76,83 @@ package body Runtime is
          return Str;
       end;
    end From_Float;
+
+   -- Add a label to the label table
+   procedure Add_Label (State : in out Runtime_State;
+                        Name  : String;
+                        Line  : AST_Node_Ptr) is
+   begin
+      if State.Label_Count < Max_Labels then
+         State.Label_Count := State.Label_Count + 1;
+         State.Labels (State.Label_Count).Name := To_Unbounded_String (Name);
+         State.Labels (State.Label_Count).Line_Ptr := Line;
+      end if;
+   end Add_Label;
+
+   -- Find a label by name
+   function Find_Label (State : Runtime_State;
+                        Name  : String) return AST_Node_Ptr is
+   begin
+      for I in 1 .. State.Label_Count loop
+         if To_String (State.Labels (I).Name) = Name then
+            return State.Labels (I).Line_Ptr;
+         end if;
+      end loop;
+      return null;
+   end Find_Label;
+
+   -- Push a variable scope (NEW)
+   procedure Push_Scope (State    : in out Runtime_State;
+                         Var_Name : String) is
+   begin
+      if State.Scope_Top < Max_Scope_Depth then
+         State.Scope_Top := State.Scope_Top + 1;
+         State.Scope_Stack (State.Scope_Top).Var_Name :=
+           To_Unbounded_String (Var_Name);
+         State.Scope_Stack (State.Scope_Top).Old_Value :=
+           Symbol_Table.Get_Var (Var_Name);
+         -- Clear the variable (MUMPS NEW creates undefined variable)
+         Symbol_Table.Set_Var (Var_Name, "");
+      end if;
+   end Push_Scope;
+
+   -- Pop variable scope (QUIT restores)
+   procedure Pop_Scope (State : in out Runtime_State) is
+   begin
+      if State.Scope_Top > 0 then
+         -- Restore the variable to its old value
+         declare
+            Var_Name : constant String :=
+              To_String (State.Scope_Stack (State.Scope_Top).Var_Name);
+            Old_Val  : constant String :=
+              To_String (State.Scope_Stack (State.Scope_Top).Old_Value);
+         begin
+            Symbol_Table.Set_Var (Var_Name, Old_Val);
+         end;
+         State.Scope_Top := State.Scope_Top - 1;
+      end if;
+   end Pop_Scope;
+
+   -- Build label table from AST
+   procedure Build_Label_Table (State : in out Runtime_State;
+                                Prog  : AST_Node_Ptr) is
+      Line : AST_Node_Ptr;
+      Cmd  : AST_Node_Ptr;
+   begin
+      if Prog = null or else Prog.Kind /= N_Program then
+         return;
+      end if;
+      Line := Prog.left;
+      while Line /= null loop
+         if Line.Kind = N_Line and then Line.left /= null then
+            -- Check if first command has a tag (label)
+            if Line.Value /= Null_Unbounded_String then
+               Add_Label (State, To_String (Line.Value), Line);
+            end if;
+         end if;
+         Line := Line.Next;
+      end loop;
+   end Build_Label_Table;
 
    -- Evaluate an expression node and return its string value
    function Eval_Expr (State : in out Runtime_State;
@@ -103,7 +182,6 @@ package body Runtime is
             declare
                Var_Name : constant String := To_String (Node.Value);
             begin
-               -- Check for subscripted access
                if Node.Left /= null then
                   declare
                      Sub : constant String := Eval_Expr (State, Node.Left);
@@ -117,7 +195,6 @@ package body Runtime is
                      end if;
                   end;
                end if;
-               -- Simple variable access
                if Var_Name'Length > 0 and then Var_Name (1) = '^' then
                   return To_String (Database.Get_Global
                     (Var_Name (2 .. Var_Name'Last)));
@@ -139,8 +216,7 @@ package body Runtime is
             Right_Len := Eval_Expr (State, Node.right)'Length;
             Left_Num := To_Float (Left_Val (1 .. Left_Len));
             Right_Num := To_Float (Right_Val (1 .. Right_Len));
-            Result := Left_Num + Right_Num;
-            return From_Float (Result);
+            return From_Float (Left_Num + Right_Num);
 
          when N_Sub =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
@@ -151,8 +227,7 @@ package body Runtime is
             Right_Len := Eval_Expr (State, Node.right)'Length;
             Left_Num := To_Float (Left_Val (1 .. Left_Len));
             Right_Num := To_Float (Right_Val (1 .. Right_Len));
-            Result := Left_Num - Right_Num;
-            return From_Float (Result);
+            return From_Float (Left_Num - Right_Num);
 
          when N_Mul =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
@@ -163,8 +238,7 @@ package body Runtime is
             Right_Len := Eval_Expr (State, Node.right)'Length;
             Left_Num := To_Float (Left_Val (1 .. Left_Len));
             Right_Num := To_Float (Right_Val (1 .. Right_Len));
-            Result := Left_Num * Right_Num;
-            return From_Float (Result);
+            return From_Float (Left_Num * Right_Num);
 
          when N_Div =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
@@ -176,11 +250,9 @@ package body Runtime is
             Left_Num := To_Float (Left_Val (1 .. Left_Len));
             Right_Num := To_Float (Right_Val (1 .. Right_Len));
             if Right_Num /= 0.0 then
-               Result := Left_Num / Right_Num;
-            else
-               Result := 0.0;
+               return From_Float (Left_Num / Right_Num);
             end if;
-            return From_Float (Result);
+            return "0";
 
          when N_IntDiv =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
@@ -193,9 +265,8 @@ package body Runtime is
                return Integer'Image
                  (Integer (To_Float (Left_Val (1 .. Left_Len))) /
                   Integer (To_Float (Right_Val (1 .. Right_Len))));
-            else
-               return "0";
             end if;
+            return "0";
 
          when N_Mod =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
@@ -208,9 +279,8 @@ package body Runtime is
                return Integer'Image
                  (Integer (To_Float (Left_Val (1 .. Left_Len))) mod
                   Integer (To_Float (Right_Val (1 .. Right_Len))));
-            else
-               return "0";
             end if;
+            return "0";
 
          when N_Pow =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
@@ -221,8 +291,7 @@ package body Runtime is
             Right_Len := Eval_Expr (State, Node.right)'Length;
             Left_Num := To_Float (Left_Val (1 .. Left_Len));
             Right_Num := To_Float (Right_Val (1 .. Right_Len));
-            Result := Left_Num ** Integer (Right_Num);
-            return From_Float (Result);
+            return From_Float (Left_Num ** Integer (Right_Num));
 
          -- String operators
          when N_Concat =>
@@ -234,7 +303,7 @@ package body Runtime is
             Right_Len := Eval_Expr (State, Node.right)'Length;
             return Left_Val (1 .. Left_Len) & Right_Val (1 .. Right_Len);
 
-         -- Comparison operators (return "1" for true, "0" for false)
+         -- Comparison operators
          when N_Eql =>
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
               Eval_Expr (State, Node.left);
@@ -245,7 +314,6 @@ package body Runtime is
             if Left_Val (1 .. Left_Len) = Right_Val (1 .. Right_Len) then
                return "1";
             end if;
-            -- Try numeric comparison
             Left_Num := To_Float (Left_Val (1 .. Left_Len));
             Right_Num := To_Float (Right_Val (1 .. Right_Len));
             if Left_Num = Right_Num then
@@ -369,9 +437,7 @@ package body Runtime is
                            Left_Val (1 .. Left_Len) /= "") and then
                           (Right_Val (1 .. Right_Len) /= "0" and then
                            Right_Val (1 .. Right_Len) /= "");
-            if Bool_Result then
-               return "1";
-            end if;
+            if Bool_Result then return "1"; end if;
             return "0";
 
          when N_Or =>
@@ -385,9 +451,7 @@ package body Runtime is
                            Left_Val (1 .. Left_Len) /= "") or else
                           (Right_Val (1 .. Right_Len) /= "0" and then
                            Right_Val (1 .. Right_Len) /= "");
-            if Bool_Result then
-               return "1";
-            end if;
+            if Bool_Result then return "1"; end if;
             return "0";
 
          -- Unary operators
@@ -395,8 +459,7 @@ package body Runtime is
             Left_Val (1 .. Eval_Expr (State, Node.left)'Length) :=
               Eval_Expr (State, Node.left);
             Left_Len := Eval_Expr (State, Node.left)'Length;
-            Left_Num := To_Float (Left_Val (1 .. Left_Len));
-            return From_Float (-Left_Num);
+            return From_Float (-To_Float (Left_Val (1 .. Left_Len)));
 
          when N_UnaryPlus =>
             return Eval_Expr (State, Node.left);
@@ -433,7 +496,7 @@ package body Runtime is
                   Arg_Node := Arg_Node.Next;
                end loop;
 
-               -- Dispatch to function (case-insensitive using direct comparison)
+               -- Dispatch to function
                if Func_Name = "EXTRACT" or else Func_Name = "extract" or else
                  Func_Name = "E" or else Func_Name = "e" then
                   if Arg_Count >= 2 then
@@ -448,7 +511,8 @@ package body Runtime is
                            Integer'Value (Args (2) (1 .. Arg_Lens (2))));
                      end if;
                   end if;
-               elsif Func_Name = "LENGTH" or else Func_Name = "length" or else Func_Name = "L" or else Func_Name = "l" then
+               elsif Func_Name = "LENGTH" or else Func_Name = "length" or else
+                 Func_Name = "L" or else Func_Name = "l" then
                   if Arg_Count >= 1 then
                      if Arg_Count >= 2 then
                         return Integer'Image (Dollar_LENGTH
@@ -459,85 +523,29 @@ package body Runtime is
                           (Args (1) (1 .. Arg_Lens (1))));
                      end if;
                   end if;
-               elsif Func_Name = "PIECE" or else Func_Name = "piece" or else Func_Name = "P" or else Func_Name = "p" then
+               elsif Func_Name = "PIECE" or else Func_Name = "piece" or else
+                 Func_Name = "P" or else Func_Name = "p" then
                   if Arg_Count >= 3 then
-                     if Arg_Count >= 4 then
-                        return Dollar_PIECE
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Args (2) (1 .. Arg_Lens (2)),
-                           Integer'Value (Args (3) (1 .. Arg_Lens (3))),
-                           Integer'Value (Args (4) (1 .. Arg_Lens (4))));
-                     else
-                        return Dollar_PIECE
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Args (2) (1 .. Arg_Lens (2)),
-                           Integer'Value (Args (3) (1 .. Arg_Lens (3))));
-                     end if;
+                     return Dollar_PIECE
+                       (Args (1) (1 .. Arg_Lens (1)),
+                        Args (2) (1 .. Arg_Lens (2)),
+                        Integer'Value (Args (3) (1 .. Arg_Lens (3))));
                   end if;
-               elsif Func_Name = "TRANSLATE" or else Func_Name = "translate" or else Func_Name = "T" or else Func_Name = "t" then
-                  if Arg_Count >= 2 then
-                     if Arg_Count >= 3 then
-                        return Dollar_TRANSLATE
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Args (2) (1 .. Arg_Lens (2)),
-                           Args (3) (1 .. Arg_Lens (3)));
-                     else
-                        return Dollar_TRANSLATE
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Args (2) (1 .. Arg_Lens (2)));
-                     end if;
-                  end if;
-               elsif Func_Name = "ASCII" or else Func_Name = "ascii" or else Func_Name = "A" or else Func_Name = "a" then
+               elsif Func_Name = "ASCII" or else Func_Name = "ascii" or else
+                 Func_Name = "A" or else Func_Name = "a" then
                   if Arg_Count >= 1 then
-                     if Arg_Count >= 2 then
-                        return Integer'Image (Dollar_ASCII
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Integer'Value (Args (2) (1 .. Arg_Lens (2)))));
-                     else
-                        return Integer'Image (Dollar_ASCII
-                          (Args (1) (1 .. Arg_Lens (1))));
-                     end if;
+                     return Integer'Image (Dollar_ASCII
+                       (Args (1) (1 .. Arg_Lens (1))));
                   end if;
-               elsif Func_Name = "CHAR" or else Func_Name = "char" or else Func_Name = "C" or else Func_Name = "c" then
+               elsif Func_Name = "CHAR" or else Func_Name = "char" or else
+                 Func_Name = "C" or else Func_Name = "c" then
                   if Arg_Count >= 1 then
                      return Dollar_CHAR
                        (Integer'Value (Args (1) (1 .. Arg_Lens (1))));
                   end if;
-               elsif Func_Name = "REVERSE" or else Func_Name = "reverse" then
-                  if Arg_Count >= 1 then
-                     return Dollar_REVERSE
-                       (Args (1) (1 .. Arg_Lens (1)));
-                  end if;
-               elsif Func_Name = "JUSTIFY" or else Func_Name = "justify" or else Func_Name = "J" or else Func_Name = "j" then
-                  if Arg_Count >= 2 then
-                     if Arg_Count >= 3 then
-                        return Dollar_JUSTIFY
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Natural'Value (Args (2) (1 .. Arg_Lens (2))),
-                           Natural'Value (Args (3) (1 .. Arg_Lens (3))));
-                     else
-                        return Dollar_JUSTIFY
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Natural'Value (Args (2) (1 .. Arg_Lens (2))));
-                     end if;
-                  end if;
-               elsif Func_Name = "FIND" or else Func_Name = "find" or else Func_Name = "F" or else Func_Name = "f" then
-                  if Arg_Count >= 2 then
-                     if Arg_Count >= 3 then
-                        return Integer'Image (Dollar_FIND
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Args (2) (1 .. Arg_Lens (2)),
-                           Integer'Value (Args (3) (1 .. Arg_Lens (3)))));
-                     else
-                        return Integer'Image (Dollar_FIND
-                          (Args (1) (1 .. Arg_Lens (1)),
-                           Args (2) (1 .. Arg_Lens (2))));
-                     end if;
-                  end if;
                elsif Func_Name = "DATA" or else Func_Name = "data" or else
                  Func_Name = "D" or else Func_Name = "d" then
                   if Arg_Count >= 1 then
-                     -- $DATA takes a variable reference, not an evaluated expression
                      declare
                         Arg_Node_Ref : constant AST_Node_Ptr := Node.left;
                         Vname : Unbounded_String;
@@ -558,40 +566,9 @@ package body Runtime is
                         end if;
                      end;
                   end if;
-               elsif Func_Name = "ORDER" or else Func_Name = "order" or else
-                 Func_Name = "O" or else Func_Name = "o" then
-                  if Arg_Count >= 1 then
-                     -- $ORDER takes a variable reference
-                     declare
-                        Arg_Node_Ref : constant AST_Node_Ptr := Node.left;
-                        Vname : Unbounded_String;
-                        Cur   : String (1 .. 1000);
-                        Cur_Len : Natural := 0;
-                     begin
-                        if Arg_Node_Ref /= null and then
-                          Arg_Node_Ref.Kind = N_Variable then
-                           Vname := Arg_Node_Ref.Value;
-                        else
-                           Vname := To_Unbounded_String (Args (1) (1 .. Arg_Lens (1)));
-                        end if;
-                        if Arg_Count >= 2 then
-                           Cur (1 .. Arg_Lens (2)) := Args (2) (1 .. Arg_Lens (2));
-                           Cur_Len := Arg_Lens (2);
-                        end if;
-                        if Length (Vname) > 0 and then
-                          Element (Vname, 1) = '^' then
-                           return To_String (Database.Global_Order
-                             (Slice (Vname, 2, Length (Vname)), Cur (1 .. Cur_Len)));
-                        else
-                           return To_String (Symbol_Table.Var_Order
-                             (To_String (Vname), Cur (1 .. Cur_Len)));
-                        end if;
-                     end;
-                  end if;
                elsif Func_Name = "GET" or else Func_Name = "get" or else
                  Func_Name = "G" or else Func_Name = "g" then
                   if Arg_Count >= 1 then
-                     -- $GET takes a variable reference
                      declare
                         Arg_Node_Ref : constant AST_Node_Ptr := Node.left;
                         Vname : Unbounded_String;
@@ -616,43 +593,11 @@ package body Runtime is
                               return Args (2) (1 .. Arg_Lens (2));
                            end if;
                            return "";
-                         end if;
-                         return To_String (Val);
-                      end;
-                   end if;
-                elsif Func_Name = "RANDOM" or else Func_Name = "random" or else
-                  Func_Name = "R" or else Func_Name = "r" then
-                  if Arg_Count >= 1 then
-                     declare
-                        Max : constant Integer :=
-                          Integer'Value (Args (1) (1 .. Arg_Lens (1)));
-                     begin
-                        if Max > 0 then
-                           return Integer'Image
-                             (Integer (Ada.Numerics.Float_Random.Random (Gen) *
-                              Float (Max)));
                         end if;
-                        return "0";
+                        return To_String (Val);
                      end;
                   end if;
-               elsif Func_Name = "SELECT" or else Func_Name = "select" or else Func_Name = "S" or else Func_Name = "s" then
-                  -- $SELECT(cond1:expr1, cond2:expr2, ...)
-                  -- Args are alternating condition:value pairs
-                  -- For now, evaluate conditions as strings (non-empty = true)
-                  declare
-                     I : Natural := 1;
-                  begin
-                     while I + 1 <= Arg_Count loop
-                        if Args (I) (1 .. Arg_Lens (I)) /= "0" and then
-                          Args (I) (1 .. Arg_Lens (I)) /= "" then
-                           return Args (I + 1) (1 .. Arg_Lens (I + 1));
-                        end if;
-                        I := I + 2;
-                     end loop;
-                  end;
                end if;
-
-               -- Unknown function or wrong arg count
                return "";
             end;
 
@@ -677,7 +622,6 @@ package body Runtime is
                Value (1 .. Val'Length) := Val;
                Val_Len := Val'Length;
             end;
-            -- Check for subscripted assignment
             if Node.left.left /= null then
                declare
                   Sub : constant String := Eval_Expr (State, Node.left.left);
@@ -693,7 +637,6 @@ package body Runtime is
                   end if;
                end;
             else
-               -- Simple assignment
                if To_String (Var_Name)'Length > 0 and then
                  To_String (Var_Name) (1) = '^' then
                   Database.Set_Global
@@ -729,7 +672,7 @@ package body Runtime is
    procedure Execute_Command (State : in out Runtime_State;
                               Node  : AST_Node_Ptr) is
    begin
-      if Node = null or else State.Halted then
+      if Node = null or else State.Halted or else State.Skip_Remainder then
          return;
       end if;
       case Node.Kind is
@@ -740,6 +683,13 @@ package body Runtime is
          when N_Halt =>
             State.Halted := True;
          when N_Quit =>
+            -- QUIT with optional return value
+            if Node.left /= null then
+               State.Quit_Value := To_Unbounded_String
+                 (Eval_Expr (State, Node.left));
+            end if;
+            -- Pop scope if in DO context
+            Pop_Scope (State);
             State.Halted := True;
          when N_If =>
             if Node.left /= null then
@@ -749,8 +699,122 @@ package body Runtime is
                   State.Test_Result := Cond /= "" and then Cond /= "0";
                end;
             end if;
+         when N_Else =>
+            -- ELSE: skip rest of line if $TEST is true
+            if State.Test_Result then
+               State.Skip_Remainder := True;
+            end if;
+         when N_For =>
+            -- FOR var=start:increment:end
+            -- Structure: Node.Value = var name
+            --            Node.left = start expression
+            --            Node.right = increment expression
+            --            Node.Next.left = end expression
+            --            Node.Next.right = body command
+            if Node.Value /= Null_Unbounded_String and then
+              Node.left /= null then
+               declare
+                  Var_Name : constant String := To_String (Node.Value);
+                  Start_Val : Float;
+                  Incr_Val  : Float;
+                  End_Val   : Float;
+                  Cur_Val   : Float;
+                  Body_Cmd  : AST_Node_Ptr;
+               begin
+                  -- Get start value
+                  Start_Val := To_Float (Eval_Expr (State, Node.left));
+                  -- Get increment value
+                  if Node.right /= null then
+                     Incr_Val := To_Float (Eval_Expr (State, Node.right));
+                  else
+                     Incr_Val := 1.0;
+                  end if;
+                  -- Get end value
+                  if Node.Next /= null and then Node.Next.left /= null then
+                     End_Val := To_Float (Eval_Expr (State, Node.Next.left));
+                  else
+                     End_Val := Start_Val;
+                  end if;
+                  -- Get body command
+                  if Node.Next /= null then
+                     Body_Cmd := Node.Next.right;
+                  else
+                     Body_Cmd := null;
+                  end if;
+                  -- Execute FOR loop
+                  Cur_Val := Start_Val;
+                  if Incr_Val > 0.0 then
+                     while Cur_Val <= End_Val and then not State.Halted loop
+                        Symbol_Table.Set_Var (Var_Name, From_Float (Cur_Val));
+                        -- Execute body commands
+                        if Body_Cmd /= null then
+                           Execute_Command (State, Body_Cmd);
+                        end if;
+                        Cur_Val := Cur_Val + Incr_Val;
+                     end loop;
+                  elsif Incr_Val < 0.0 then
+                     while Cur_Val >= End_Val and then not State.Halted loop
+                        Symbol_Table.Set_Var (Var_Name, From_Float (Cur_Val));
+                        if Body_Cmd /= null then
+                           Execute_Command (State, Body_Cmd);
+                        end if;
+                        Cur_Val := Cur_Val + Incr_Val;
+                     end loop;
+                  end if;
+               end;
+            end if;
+         when N_Do =>
+            -- DO label: call subroutine
+            if Node.Value /= Null_Unbounded_String then
+               declare
+                  Label : constant String := To_String (Node.Value);
+                  Target : AST_Node_Ptr;
+               begin
+                  Target := Find_Label (State, Label);
+                  if Target /= null then
+                     -- Save current state and jump
+                     Execute_Line (State, Target);
+                  end if;
+               end;
+            end if;
+         when N_New =>
+            -- NEW var1,var2,... : save and clear variables
+            if Node.Value /= Null_Unbounded_String then
+               declare
+                  Var_List : constant String := To_String (Node.Value);
+                  Start    : Natural := 1;
+                  I        : Natural;
+               begin
+                  -- Parse comma-separated variable names
+                  loop
+                     I := Start;
+                     while I <= Var_List'Length and then
+                       Var_List (I) /= ',' loop
+                        I := I + 1;
+                     end loop;
+                     Push_Scope (State, Var_List (Start .. I - 1));
+                     exit when I > Var_List'Length;
+                     Start := I + 1;
+                  end loop;
+               end;
+            end if;
+         when N_Goto =>
+            -- GOTO label: jump to label
+            if Node.Value /= Null_Unbounded_String then
+               declare
+                  Label : constant String := To_String (Node.Value);
+                  Target : AST_Node_Ptr;
+               begin
+                  Target := Find_Label (State, Label);
+                  if Target /= null then
+                     -- Jump to target (simplified: just set halted)
+                     -- In a full implementation, this would change the PC
+                     State.Halted := True;
+                  end if;
+               end;
+            end if;
          when N_Hang =>
-            -- Simplified: just skip
+            -- HANG: delay (simplified)
             null;
          when N_Kill =>
             if Node.left /= null and then Node.left.Kind = N_Variable then
@@ -785,10 +849,18 @@ package body Runtime is
       if Line = null or else State.Halted then
          return;
       end if;
-      -- Execute commands on this line
+      -- Reset skip flag for new line
+      State.Skip_Remainder := False;
       Cmd := Line.left;
       while Cmd /= null and then not State.Halted loop
-         Execute_Command (State, Cmd);
+         -- If this is a FOR command, execute it with the rest of the line as body
+         if Cmd.Kind = N_For then
+            Execute_Command (State, Cmd);
+            -- Skip the body commands since FOR already executed them
+            exit;
+         else
+            Execute_Command (State, Cmd);
+         end if;
          Cmd := Cmd.Next;
       end loop;
    end Execute_Line;
@@ -801,6 +873,9 @@ package body Runtime is
       if Prog = null or else Prog.Kind /= N_Program then
          return;
       end if;
+      -- Build label table
+      Build_Label_Table (State, Prog);
+      -- Execute
       Line := Prog.left;
       while Line /= null and then not State.Halted loop
          Execute_Line (State, Line);
@@ -827,5 +902,10 @@ package body Runtime is
    begin
       return State.Halted;
    end Is_Halted;
+
+   function Get_Quit_Value (State : Runtime_State) return String is
+   begin
+      return To_String (State.Quit_Value);
+   end Get_Quit_Value;
 
 end Runtime;
