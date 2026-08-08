@@ -814,26 +814,110 @@ package body Runtime is
                end;
             end if;
          when N_Hang =>
-            -- HANG: delay (simplified)
-            null;
+            -- HANG: delay for specified seconds
+            if Node.left /= null then
+               declare
+                  Delay_Sec : constant String := Eval_Expr (State, Node.left);
+                  Delay_Val : Float;
+               begin
+                  Delay_Val := To_Float (Delay_Sec);
+                  if Delay_Val > 0.0 then
+                     delay Duration (Long_Float (Delay_Val));
+                  end if;
+               end;
+            end if;
          when N_Kill =>
-            if Node.left /= null and then Node.left.Kind = N_Variable then
+            -- KILL variable (with optional subscripts)
+            if Node.left /= null then
                declare
                   Vname : constant String := To_String (Node.left.Value);
+                  Subs  : String (1 .. 1000);
+                  Sub_Len : Natural := 0;
                begin
-                  if Vname'Length > 0 and then Vname (1) = '^' then
-                     Database.Kill_Global (Vname (2 .. Vname'Last));
+                  -- Check for subscripted kill
+                  if Node.left.left /= null then
+                     -- KILL with subscript
+                     declare
+                        Sub_Val : constant String := Eval_Expr (State, Node.left.left);
+                     begin
+                        Subs (1 .. Sub_Val'Length) := Sub_Val;
+                        Sub_Len := Sub_Val'Length;
+                        if Vname'Length > 0 and then Vname (1) = '^' then
+                           Database.Kill_Global_Subscript
+                             (Vname (2 .. Vname'Last), Subs (1 .. Sub_Len));
+                        else
+                           Symbol_Table.Kill_Subscript
+                             (Vname, Subs (1 .. Sub_Len));
+                        end if;
+                     end;
                   else
-                     Symbol_Table.Kill_Var (Vname);
+                     -- KILL entire variable
+                     if Vname'Length > 0 and then Vname (1) = '^' then
+                        Database.Kill_Global (Vname (2 .. Vname'Last));
+                     else
+                        Symbol_Table.Kill_Var (Vname);
+                     end if;
                   end if;
                end;
             end if;
          when N_Read =>
+            -- READ variable
             if Node.left /= null and then Node.left.Kind = N_Variable then
                declare
                   Input : constant String := IO.Read;
                begin
                   Symbol_Table.Set_Var (To_String (Node.left.Value), Input);
+               end;
+            end if;
+         when N_Merge =>
+            -- MERGE dest=source (deep copy of subscript tree)
+            if Node.left /= null and then Node.right /= null then
+               declare
+                  Dest_Name : constant String := To_String (Node.left.Value);
+                  Src_Name  : constant String := To_String (Node.right.Value);
+               begin
+                  if Dest_Name'Length > 0 and then Dest_Name (1) = '^' then
+                     -- Global merge
+                     Database.Merge_Global
+                       (Dest_Name (2 .. Dest_Name'Last), Src_Name (2 .. Src_Name'Last));
+                  else
+                     -- Local merge
+                     Symbol_Table.Merge_Var (Dest_Name, Src_Name);
+                  end if;
+               end;
+            end if;
+         when N_Xecute =>
+            -- XECUTE: parse and execute string as MUMPS code
+            if Node.left /= null then
+               declare
+                  Code : constant String := Eval_Expr (State, Node.left);
+                  -- Unescape doubled quotes
+                  Unescaped : String (1 .. Code'Length);
+                  ULen : Natural := 0;
+                  I    : Natural := 1;
+                  P    : Parser_State;
+                  Prog : AST_Node_Ptr;
+               begin
+                  while I <= Code'Length loop
+                     if I < Code'Length and then Code (I) = '"' and then
+                       Code (I + 1) = '"' then
+                        ULen := ULen + 1;
+                        Unescaped (ULen) := '"';
+                        I := I + 2;
+                     else
+                        ULen := ULen + 1;
+                        Unescaped (ULen) := Code (I);
+                        I := I + 1;
+                     end if;
+                  end loop;
+                  if ULen > 0 then
+                     P := Create_Parser (Unescaped (1 .. ULen));
+                     Prog := Parse_Program (P);
+                     if Prog /= null then
+                        Execute (State, Prog);
+                        Destroy_AST (Prog);
+                     end if;
+                  end if;
                end;
             end if;
          when others =>

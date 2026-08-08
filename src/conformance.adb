@@ -741,6 +741,84 @@ begin
 
     New_Line;
 
+    -- Command Execution Tests
+    Put_Line ("Command Execution Tests:");
+    Put_Line ("=======================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test KILL
+        Symbol_Table.Set_Var ("KV", "value");
+        P := Create_Parser ("KILL KV");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (not Symbol_Table.Var_Exists ("KV"),
+                "KILL removes variable");
+        Destroy_AST (Prog);
+
+        -- Test KILL with subscript
+        Symbol_Table.Set_Subscript ("KS", "1", "first");
+        Symbol_Table.Set_Subscript ("KS", "2", "second");
+        P := Create_Parser ("KILL KS(1)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (not Symbol_Table.Subscript_Exists ("KS", "1"),
+                "KILL removes subscript");
+        Assert (Symbol_Table.Subscript_Exists ("KS", "2"),
+                "KILL preserves other subscripts");
+        Destroy_AST (Prog);
+
+        -- Test MERGE
+        Symbol_Table.Set_Var ("SRC", "source_value");
+        Symbol_Table.Set_Subscript ("SRC", "1", "sub1");
+        Symbol_Table.Set_Subscript ("SRC", "2", "sub2");
+        P := Create_Parser ("MERGE DST=SRC");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("DST")) = "source_value",
+                "MERGE copies root value");
+        Assert (To_String (Symbol_Table.Get_Subscript ("DST", "1")) = "sub1",
+                "MERGE copies subscript 1");
+        Assert (To_String (Symbol_Table.Get_Subscript ("DST", "2")) = "sub2",
+                "MERGE copies subscript 2");
+        Destroy_AST (Prog);
+
+        -- Test XECUTE
+        Symbol_Table.Set_Var ("XE", "before");
+        P := Create_Parser ("XECUTE ""SET XE = """"after""""""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("XE")) = "after",
+                "XECUTE executes string as code");
+        Destroy_AST (Prog);
+
+        -- Test FOR with body
+        P := Create_Parser ("FOR J=1:1:3 SET Y = J");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("J")) = "3",
+                "FOR loop variable set to last value");
+        Assert (To_String (Symbol_Table.Get_Var ("Y")) = "3",
+                "FOR loop body executes");
+        Destroy_AST (Prog);
+
+        -- Test FOR with step
+        P := Create_Parser ("FOR K=0:2:6 SET Z = K");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("K")) = "6",
+                "FOR loop with step 2");
+        Assert (To_String (Symbol_Table.Get_Var ("Z")) = "6",
+                "FOR loop body with step");
+        Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
     -- Summary
    Put_Line ("Test Results:");
    Put_Line ("=============");

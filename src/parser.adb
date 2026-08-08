@@ -421,7 +421,21 @@ package body Parser is
          when Tok_Merge =>
             Node := Create_Node (N_Merge, "", State.Current.Line);
             Advance (State);
-            -- Skip for now
+            -- Parse MERGE dest=source
+            -- dest and source can be variables with subscripts
+            if State.Current.Kind = Tok_Identifier or else
+              (State.Current.Kind >= Tok_BREAK and then
+               State.Current.Kind <= Tok_XECUTE and then
+               State.Current.Val_Len = 1) then
+               -- Destination variable
+               Node.left := Parse_Variable (State);
+               -- Expect =
+               if State.Current.Kind = Tok_Equals then
+                  Advance (State);
+                  -- Source variable
+                  Node.right := Parse_Variable (State);
+               end if;
+            end if;
          when Tok_New =>
             Node := Create_Node (N_New, "", State.Current.Line);
             Advance (State);
@@ -463,6 +477,13 @@ package body Parser is
          when Tok_Xecute =>
             Node := Create_Node (N_Xecute, "", State.Current.Line);
             Advance (State);
+            -- Parse string argument
+            if State.Current.Kind = Tok_String then
+               Node.left := Create_Node (N_String_Lit,
+                 State.Current.Value (1 .. State.Current.Val_Len),
+                 State.Current.Line);
+               Advance (State);
+            end if;
          when Tok_Use =>
             Node := Create_Node (N_Use, "", State.Current.Line);
             Advance (State);

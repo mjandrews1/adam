@@ -135,14 +135,15 @@ adam/
 
 ## Status
 
-**Version 0.3.0** - Control Flow
+**Version 0.4.0** - Command Execution
 
-- **141 conformance tests passing**
+- **152 conformance tests passing**
 - **100% test success rate**
-- **16 source modules, ~4,500 lines of Ada**
+- **16 source modules, ~5,000 lines of Ada**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
 - **Function dispatch for $DATA, $GET, $ORDER, string functions**
 - **Control flow: FOR loops, NEW scoping, ELSE, QUIT with return values**
+- **Command execution: KILL, READ, MERGE, XECUTE**
 
 ## Sprint History
 
@@ -158,6 +159,7 @@ adam/
 | S7: Integration & Conformance | ✅ Complete | 113 |
 | P2-S1: Expression Evaluator | ✅ Complete | 136 |
 | P2-S2: Control Flow | ✅ Complete | 141 |
+| P2-S3: Command Execution | ✅ Complete | 152 |
 
 ## References
 
