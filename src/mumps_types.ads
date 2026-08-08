@@ -29,4 +29,8 @@ package Mumps_Types is
       In_Use : Boolean := False;
    end record;
 
+   -- Array types for $SELECT and other functions
+   type Boolean_Array is array (Positive range <>) of Boolean;
+   type String_Array is array (Positive range <>) of Unbounded_String;
+
 end Mumps_Types;

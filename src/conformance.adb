@@ -11,6 +11,8 @@ with Symbol_Table;
 with Database;
 with Pattern;
 with IO;                    use IO;
+with String_Funcs;          use String_Funcs;
+with Mumps_Types;           use Mumps_Types;
 
 procedure Conformance is
    Total  : Natural := 0;
@@ -333,6 +335,76 @@ begin
     -- Switch back to terminal
     IO.Use_Device (0);
     Assert (IO.Current_Device = 0, "Switch back to terminal");
+
+    New_Line;
+
+    -- String Function Tests
+    Put_Line ("String Function Tests:");
+    Put_Line ("======================");
+
+    -- $ASCII
+    Assert (Dollar_ASCII ("A") = 65,
+            "$ASCII('A') = 65");
+    Assert (Dollar_ASCII ("ABC", 2) = 66,
+            "$ASCII('ABC', 2) = 66");
+    Assert (Dollar_ASCII ("", 1) = -1,
+            "$ASCII('', 1) = -1");
+
+    -- $CHAR
+    Assert (Dollar_CHAR (65) = "A",
+            "$CHAR(65) = 'A'");
+    Assert (Dollar_CHAR (90) = "Z",
+            "$CHAR(90) = 'Z'");
+
+    -- $LENGTH
+    Assert (Dollar_LENGTH ("Hello") = 5,
+            "$LENGTH('Hello') = 5");
+    Assert (Dollar_LENGTH ("") = 0,
+            "$LENGTH('') = 0");
+
+    -- $LENGTH with delimiter
+    Assert (Dollar_LENGTH ("A,B,C", ",") = 3,
+            "$LENGTH('A,B,C', ',') = 3");
+    Assert (Dollar_LENGTH ("ABC", ",") = 1,
+            "$LENGTH('ABC', ',') = 1");
+
+    -- $EXTRACT
+    Assert (Dollar_EXTRACT ("ABCDEF", 2) = "B",
+            "$EXTRACT('ABCDEF', 2) = 'B'");
+    Assert (Dollar_EXTRACT ("ABCDEF", 2, 4) = "BCD",
+            "$EXTRACT('ABCDEF', 2, 4) = 'BCD'");
+    Assert (Dollar_EXTRACT ("ABC", 5) = "",
+            "$EXTRACT('ABC', 5) = ''");
+
+    -- $FIND
+    Assert (Dollar_FIND ("ABCDEF", "CD") = 5,
+            "$FIND('ABCDEF', 'CD') = 5");
+    Assert (Dollar_FIND ("ABCDEF", "XY") = 0,
+            "$FIND('ABCDEF', 'XY') = 0");
+    Assert (Dollar_FIND ("ABCDEF", "CD", 3) = 5,
+            "$FIND('ABCDEF', 'CD', 3) = 5");
+
+    -- $PIECE
+    Assert (Dollar_PIECE ("A^B^C", "^", 2) = "B",
+            "$PIECE('A^B^C', '^', 2) = 'B'");
+    Assert (Dollar_PIECE ("A^B^C^D", "^", 2, 3) = "B^C",
+            "$PIECE('A^B^C^D', '^', 2, 3) = 'B^C'");
+
+    -- $TRANSLATE
+    Assert (Dollar_TRANSLATE ("ABC", "AC", "XY") = "XBY",
+            "$TRANSLATE('ABC', 'AC', 'XY') = 'XBY'");
+    Assert (Dollar_TRANSLATE ("ABC", "AC") = "B",
+            "$TRANSLATE('ABC', 'AC') = 'B' (delete)");
+
+    -- $REVERSE
+    Assert (Dollar_REVERSE ("ABC") = "CBA",
+            "$REVERSE('ABC') = 'CBA'");
+    Assert (Dollar_REVERSE ("") = "",
+            "$REVERSE('') = ''");
+
+    -- $JUSTIFY
+    Assert (Dollar_JUSTIFY ("ABC", 6) = "   ABC",
+            "$JUSTIFY('ABC', 6) = '   ABC'");
 
     New_Line;
 

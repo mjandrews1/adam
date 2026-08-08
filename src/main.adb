@@ -11,6 +11,8 @@ with Symbol_Table;
 with Database;
 with Pattern;
 with IO;
+with String_Funcs;          use String_Funcs;
+with Mumps_Types;           use Mumps_Types;
 with Conformance;
 
 procedure Main is
@@ -110,6 +112,20 @@ begin
    Put_Line ("  Cursor X after newline: " & Natural'Image (IO.Get_X (1)));
    IO.Close_Device (1);
    IO.Use_Device (0);
+   New_Line;
+
+   -- Test String Functions
+   Put_Line ("String Functions:");
+   Put_Line ("-----------------");
+   Put_Line ("  $ASCII('A') = " & Integer'Image (Dollar_ASCII ("A")));
+   Put_Line ("  $CHAR(65) = " & Dollar_CHAR (65));
+   Put_Line ("  $LENGTH('Hello') = " & Natural'Image (Dollar_LENGTH ("Hello")));
+   Put_Line ("  $EXTRACT('ABCDEF', 2, 4) = " & Dollar_EXTRACT ("ABCDEF", 2, 4));
+   Put_Line ("  $FIND('ABCDEF', 'CD') = " & Natural'Image (Dollar_FIND ("ABCDEF", "CD")));
+   Put_Line ("  $PIECE('A^B^C', '^', 2) = " & Dollar_PIECE ("A^B^C", "^", 2));
+   Put_Line ("  $TRANSLATE('ABC', 'AC', 'XY') = " & Dollar_TRANSLATE ("ABC", "AC", "XY"));
+   Put_Line ("  $REVERSE('ABC') = " & Dollar_REVERSE ("ABC"));
+   Put_Line ("  $JUSTIFY('ABC', 6) = " & Dollar_JUSTIFY ("ABC", 6));
    New_Line;
 
    Put_Line ("adam is ready for MUMPS development!");

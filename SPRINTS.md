@@ -20,7 +20,7 @@
 | S2 | Database Module | 2-3 days | ✅ COMPLETE |
 | S3 | Pattern Matching | 1 day | ✅ COMPLETE |
 | S4 | I/O Module | 1-2 days | ✅ COMPLETE |
-| S5 | String Functions | 2-3 days | NOT STARTED |
+| S5 | String Functions | 2-3 days | ✅ COMPLETE |
 | S6 | Runtime / Interpreter | 5-7 days | NOT STARTED |
 | S7 | Integration & Conformance | 2-3 days | NOT STARTED |
 
@@ -83,11 +83,11 @@ S0 (Environment) ─────────────────────
 
 ### S5: String Functions (2-3 days)
 
-- [ ] Create `string_funcs.ads/adb`
-- [ ] Implement: $EXTRACT, $LENGTH, $PIECE, $TRANSLATE
-- [ ] Implement: $ASCII, $CHAR, $REVERSE, $JUSTIFY
-- [ ] Implement: $FIND, $SELECT
-- [ ] Unit tests
+- [x] Create `string_funcs.ads/adb`
+- [x] Implement: $EXTRACT, $LENGTH, $PIECE, $TRANSLATE
+- [x] Implement: $ASCII, $CHAR, $REVERSE, $JUSTIFY
+- [x] Implement: $FIND, $SELECT
+- [x] Unit tests (22 passing)
 
 ### S6: Runtime / Interpreter (5-7 days)
 
@@ -125,7 +125,7 @@ S0 (Environment) ─────────────────────
 | File | Sprint | Status |
 |------|--------|--------|
 | `adam.gpr` | S0 | ✅ EXISTS |
-| `src/mumps_types.adb` | S1 | NOT NEEDED (spec only) |
+| `src/mumps_types.ads` | S1 | ✅ EXISTS |
 | `src/conformance.adb` | S1 | ✅ EXISTS |
 | `src/database.ads` | S2 | ✅ EXISTS |
 | `src/database.adb` | S2 | ✅ EXISTS |
@@ -133,8 +133,8 @@ S0 (Environment) ─────────────────────
 | `src/pattern.adb` | S3 | ✅ EXISTS |
 | `src/io.ads` | S4 | ✅ EXISTS |
 | `src/io.adb` | S4 | ✅ EXISTS |
-| `src/string_funcs.ads` | S5 | MISSING |
-| `src/string_funcs.adb` | S5 | MISSING |
+| `src/string_funcs.ads` | S5 | ✅ EXISTS |
+| `src/string_funcs.adb` | S5 | ✅ EXISTS |
 | `src/lexer.ads` | S6 | MISSING |
 | `src/lexer.adb` | S6 | MISSING |
 | `src/parser.ads` | S6 | MISSING |
