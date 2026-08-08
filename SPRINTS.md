@@ -15,7 +15,7 @@
 
 | Sprint | Name | Duration | Status |
 |--------|------|----------|--------|
-| S0 | Environment Setup | 0.5 day | NOT STARTED |
+| S0 | Environment Setup | 0.5 day | ✅ COMPLETE |
 | S1 | Core Types & Symbol Table | 1-2 days | NOT STARTED |
 | S2 | Database Module | 2-3 days | NOT STARTED |
 | S3 | Pattern Matching | 1 day | NOT STARTED |
@@ -41,11 +41,11 @@ S0 (Environment) ─────────────────────
 
 ### S0: Environment Setup (0.5 day)
 
-- [ ] Install GNAT: `brew install gcc`
-- [ ] Verify: `gnatmake --version`
-- [ ] Create `adam.gpr` (GNAT project file)
-- [ ] Fix `main.adb` (remove imports of missing packages)
-- [ ] Verify compilation: `gnatmake -P adam.gpr`
+- [x] Install GNAT: `brew install gcc`
+- [x] Verify: `gnatmake --version`
+- [x] Create `adam.gpr` (GNAT project file)
+- [x] Fix `main.adb` (remove imports of missing packages)
+- [x] Verify compilation: `gnatmake -P adam.gpr`
 
 ### S1: Core Types & Symbol Table (1-2 days)
 

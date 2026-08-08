@@ -8,8 +8,6 @@
 with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
-with Database;
-with Pattern;
 
 procedure Main is
 begin
@@ -28,20 +26,10 @@ begin
    Put_Line ("Y exists: " & Boolean'Image (Symbol_Table.Var_Exists ("Y")));
    New_Line;
 
-   -- Test Database
-   Put_Line ("Database Operations:");
-   Put_Line ("--------------------");
-   Database.Set_Global ("TEST", "value1");
-   Put_Line ("TEST = " & To_String (Database.Get_Global ("TEST")));
-   New_Line;
-
-   -- Test Pattern Matching
-   Put_Line ("Pattern Matching:");
-   Put_Line ("-----------------");
-   Put_Line ("Match 'ABC' against '3A': " &
-     Boolean'Image (Pattern.Match ("ABC", "3A")));
-   Put_Line ("Match '123' against '3N': " &
-     Boolean'Image (Pattern.Match ("123", "3N")));
+   -- List all variables
+   Put_Line ("All Variables:");
+   Put_Line ("--------------");
+   Symbol_Table.List_All;
    New_Line;
 
    Put_Line ("adam is ready for MUMPS development!");
