@@ -183,9 +183,13 @@ package body Parser is
             Node.left := Parse_Primary (State);
 
          when Tok_Dollar =>
-            -- $ function call
+            -- $ function call or special variable
             Advance (State);
-            if State.Current.Kind = Tok_Identifier then
+            -- Accept identifier or single-letter command token
+            if State.Current.Kind = Tok_Identifier or else
+              (State.Current.Kind >= Tok_BREAK and then
+               State.Current.Kind <= Tok_XECUTE and then
+               State.Current.Val_Len = 1) then
                Func_Name := To_Unbounded_String
                  (State.Current.Value (1 .. State.Current.Val_Len));
                Advance (State);

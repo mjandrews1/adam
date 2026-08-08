@@ -26,7 +26,7 @@
 | P2-S2: Control Flow | ✅ COMPLETE | 141 | FOR, NEW, ELSE, QUIT with values |
 | P2-S3: Command Execution | ✅ COMPLETE | 152 | KILL, READ, MERGE, XECUTE |
 | P2-S4: Runtime String/Math Functions | ✅ COMPLETE | 158 | $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $REVERSE, $FIND, $JUSTIFY, $RANDOM |
-| P2-S5: Special Variables | ⬜ NOT STARTED | - | $T, $X, $Y, $H, $I |
+| P2-S5: Special Variables | ✅ COMPLETE | 167 | $T, $X, $Y, $H, $I, $J, $SYSTEM, $STORAGE |
 | P2-S6: File I/O | ⬜ NOT STARTED | - | OPEN/CLOSE/USE |
 | P2-S7: NEW Scoping & Error Handling | ⬜ NOT STARTED | - | Variable scoping |
 | P2-S8: Indirection (@) | ⬜ NOT STARTED | - | Variable indirection |

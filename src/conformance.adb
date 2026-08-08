@@ -873,6 +873,93 @@ begin
                 "FOR loop with step 2");
         Assert (To_String (Symbol_Table.Get_Var ("Z")) = "6",
                 "FOR loop body with step");
+         Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
+    -- Special Variable Tests
+    Put_Line ("Special Variable Tests:");
+    Put_Line ("=======================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test $TEST
+        P := Create_Parser ("IF 1 SET X = $T");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Special: $T = 1 after IF 1");
+        Destroy_AST (Prog);
+
+        R := Create_Runtime;
+        P := Create_Parser ("IF 0 SET X = $T");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "0",
+                "Special: $T = 0 after IF 0");
+        Destroy_AST (Prog);
+
+        -- Test $X
+        P := Create_Parser ("SET X = $X");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        -- $X should be a number (cursor position)
+        Assert (To_String (Symbol_Table.Get_Var ("X")) /= "",
+                "Special: $X returns value");
+        Destroy_AST (Prog);
+
+        -- Test $Y
+        P := Create_Parser ("SET X = $Y");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) /= "",
+                "Special: $Y returns value");
+        Destroy_AST (Prog);
+
+        -- Test $H (HOROLOG)
+        P := Create_Parser ("SET X = $H");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) /= "",
+                "Special: $H returns value");
+        Destroy_AST (Prog);
+
+        -- Test $I (IO device)
+        P := Create_Parser ("SET X = $I");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) /= "",
+                "Special: $I returns value");
+        Destroy_AST (Prog);
+
+        -- Test $J (Job number)
+        P := Create_Parser ("SET X = $J");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1" or else
+                To_String (Symbol_Table.Get_Var ("X")) = " 1",
+                "Special: $J = 1");
+        Destroy_AST (Prog);
+
+        -- Test $SYSTEM
+        P := Create_Parser ("SET X = $SYSTEM");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "adam",
+                "Special: $SYSTEM = adam");
+        Destroy_AST (Prog);
+
+        -- Test $STORAGE
+        P := Create_Parser ("SET X = $STORAGE");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) /= "",
+                "Special: $STORAGE returns value");
         Destroy_AST (Prog);
     end;
 

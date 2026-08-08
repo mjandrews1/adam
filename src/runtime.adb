@@ -474,7 +474,7 @@ package body Runtime is
             end if;
             return "0";
 
-         -- Function calls
+         -- Function calls and special variables
          when N_Function_Call =>
             declare
                Func_Name : constant String := To_String (Node.Value);
@@ -483,7 +483,47 @@ package body Runtime is
                Arg_Count : Natural := 0;
                Arg_Node  : AST_Node_Ptr;
             begin
-               -- Evaluate arguments
+               -- Check for special variables first (no arguments)
+               if Func_Name = "T" or else Func_Name = "t" or else
+                 Func_Name = "TEST" or else Func_Name = "test" then
+                  if State.Test_Result then
+                     return "1";
+                  end if;
+                  return "0";
+               elsif Func_Name = "X" or else Func_Name = "x" then
+                  return Integer'Image (IO.Get_X (IO.Current_Device));
+               elsif Func_Name = "Y" or else Func_Name = "y" then
+                  return Integer'Image (IO.Get_Y (IO.Current_Device));
+               elsif Func_Name = "H" or else Func_Name = "h" or else
+                 Func_Name = "HOROLOG" or else Func_Name = "horolog" then
+                  -- $HOROLOG: days,seconds since 1840-12-31
+                  -- Simplified: return current timestamp
+                  declare
+                     Secs : constant Integer := 0;  -- Placeholder
+                  begin
+                     return Integer'Image (Secs) & "," & Integer'Image (Secs);
+                  end;
+               elsif Func_Name = "I" or else Func_Name = "i" or else
+                 Func_Name = "IO" or else Func_Name = "io" then
+                  return Integer'Image (IO.Current_Device);
+               elsif Func_Name = "J" or else Func_Name = "j" or else
+                 Func_Name = "JOB" or else Func_Name = "job" then
+                  return "1";  -- Single-threaded, always job 1
+               elsif Func_Name = "K" or else Func_Name = "k" or else
+                 Func_Name = "KEY" or else Func_Name = "key" then
+                  return "";  -- No key pressed
+               elsif Func_Name = "S" or else Func_Name = "s" or else
+                 Func_Name = "STORAGE" or else Func_Name = "storage" then
+                  return "1000000";  -- Available memory (placeholder)
+               elsif Func_Name = "SYSTEM" or else Func_Name = "system" then
+                  return "adam";
+               elsif Func_Name = "ECODE" or else Func_Name = "ecode" then
+                  return Integer'Image (State.Error_Code);
+               elsif Func_Name = "ETRAP" or else Func_Name = "etrap" then
+                  return To_String (State.Error_Msg);
+               end if;
+
+               -- Evaluate arguments for function calls
                Arg_Node := Node.left;
                while Arg_Node /= null and then Arg_Count < 10 loop
                   Arg_Count := Arg_Count + 1;

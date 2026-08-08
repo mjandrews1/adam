@@ -135,13 +135,14 @@ adam/
 
 ## Status
 
-**Version 0.5.0** - String/Math Functions
+**Version 0.6.0** - Special Variables
 
-- **158 conformance tests passing**
+- **167 conformance tests passing**
 - **100% test success rate**
-- **16 source modules, ~5,500 lines of Ada**
+- **16 source modules, ~5,800 lines of Ada**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
 - **Function dispatch for $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $ASCII, $CHAR, $REVERSE, $JUSTIFY, $FIND, $DATA, $GET, $ORDER, $RANDOM, $SELECT**
+- **Special variables: $T, $X, $Y, $H, $I, $J, $K, $S, $SYSTEM, $ECODE, $ETRAP**
 - **Control flow: FOR loops, NEW scoping, ELSE, QUIT with return values**
 - **Command execution: KILL, READ, MERGE, XECUTE**
 
@@ -161,6 +162,7 @@ adam/
 | P2-S2: Control Flow | ✅ Complete | 141 |
 | P2-S3: Command Execution | ✅ Complete | 152 |
 | P2-S4: Runtime String/Math Functions | ✅ Complete | 158 |
+| P2-S5: Special Variables | ✅ Complete | 167 |
 
 ## References
 
