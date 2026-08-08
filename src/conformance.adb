@@ -10,6 +10,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
 with Database;
 with Pattern;
+with IO;                    use IO;
 
 procedure Conformance is
    Total  : Natural := 0;
@@ -282,6 +283,56 @@ begin
             "Pattern 5A3N matches Hello123");
     Assert (Pattern.Match ("A1B2C3", "1A1N1A1N1A1N"),
             "Pattern 1A1N1A1N1A1N matches A1B2C3");
+
+    New_Line;
+
+    -- I/O Tests
+    Put_Line ("I/O Tests:");
+    Put_Line ("==========");
+
+    -- Device management
+    IO.Open_Device (1, "test_device", IO.File);
+    Assert (IO.Is_Open (1), "Open device");
+    Assert (IO.Get_Mode (1) = IO.File, "Device mode");
+    Assert (IO.Current_Device = 0, "Default device is terminal");
+
+    -- Use device
+    IO.Use_Device (1);
+    Assert (IO.Current_Device = 1, "Use device");
+
+    -- Write to device
+    IO.Write ("Hello");
+    IO.Write (" ");
+    IO.Write ("World");
+    Assert (IO.Get_X (1) = 11, "Cursor X after write");
+    Assert (IO.Get_Y (1) = 0, "Cursor Y after write");
+
+    -- Write newline
+    IO.Write_Newline;
+    Assert (IO.Get_X (1) = 0, "Cursor X after newline");
+    Assert (IO.Get_Y (1) = 1, "Cursor Y after newline");
+
+    -- Write tab
+    IO.Write_Tab (10);
+    Assert (IO.Get_X (1) = 10, "Cursor X after tab");
+
+    -- Write star
+    IO.Write_Star ('X');
+    Assert (IO.Get_X (1) = 11, "Cursor X after write star");
+
+    -- Set position
+    IO.Set_Position (1, 5, 3);
+    Assert (IO.Get_X (1) = 5, "Set position X");
+    Assert (IO.Get_Y (1) = 3, "Set position Y");
+
+    -- Close device
+    IO.Close_Device (1);
+    Assert (not IO.Is_Open (1), "Close device");
+    Assert (IO.Current_Device = 1, "Current device unchanged after close");
+
+    -- Switch back to terminal
+    IO.Use_Device (0);
+    Assert (IO.Current_Device = 0, "Switch back to terminal");
 
     New_Line;
 

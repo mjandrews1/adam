@@ -19,7 +19,7 @@
 | S1 | Core Types & Symbol Table | 1-2 days | ✅ COMPLETE |
 | S2 | Database Module | 2-3 days | ✅ COMPLETE |
 | S3 | Pattern Matching | 1 day | ✅ COMPLETE |
-| S4 | I/O Module | 1-2 days | NOT STARTED |
+| S4 | I/O Module | 1-2 days | ✅ COMPLETE |
 | S5 | String Functions | 2-3 days | NOT STARTED |
 | S6 | Runtime / Interpreter | 5-7 days | NOT STARTED |
 | S7 | Integration & Conformance | 2-3 days | NOT STARTED |
@@ -75,11 +75,11 @@ S0 (Environment) ─────────────────────
 
 ### S4: I/O Module (1-2 days)
 
-- [ ] Create `io.ads` (specification)
-- [ ] Create `io.adb` (implementation)
-- [ ] Terminal I/O with cursor tracking
-- [ ] File I/O (open/close/read/write)
-- [ ] Unit tests
+- [x] Create `io.ads` (specification)
+- [x] Create `io.adb` (implementation)
+- [x] Terminal I/O with cursor tracking
+- [x] File I/O (open/close/read/write)
+- [x] Unit tests (15 passing)
 
 ### S5: String Functions (2-3 days)
 
@@ -131,8 +131,8 @@ S0 (Environment) ─────────────────────
 | `src/database.adb` | S2 | ✅ EXISTS |
 | `src/pattern.ads` | S3 | ✅ EXISTS |
 | `src/pattern.adb` | S3 | ✅ EXISTS |
-| `src/io.ads` | S4 | MISSING |
-| `src/io.adb` | S4 | MISSING |
+| `src/io.ads` | S4 | ✅ EXISTS |
+| `src/io.adb` | S4 | ✅ EXISTS |
 | `src/string_funcs.ads` | S5 | MISSING |
 | `src/string_funcs.adb` | S5 | MISSING |
 | `src/lexer.ads` | S6 | MISSING |

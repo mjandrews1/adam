@@ -10,6 +10,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
 with Database;
 with Pattern;
+with IO;
 with Conformance;
 
 procedure Main is
@@ -94,6 +95,21 @@ begin
      Boolean'Image (Pattern.Match ("A1B", "1A1N1A")));
    Put_Line ("  Match 'AB' against '3A': " &
      Boolean'Image (Pattern.Match ("AB", "3A")));
+   New_Line;
+
+   -- Test I/O
+   Put_Line ("I/O Operations:");
+   Put_Line ("---------------");
+   Put_Line ("  Current device: " & Natural'Image (IO.Current_Device));
+   IO.Open_Device (1, "test_device", IO.File);
+   Put_Line ("  Opened device 1: " & Boolean'Image (IO.Is_Open (1)));
+   IO.Use_Device (1);
+   IO.Write ("Test output");
+   Put_Line ("  Cursor X after write: " & Natural'Image (IO.Get_X (1)));
+   IO.Write_Newline;
+   Put_Line ("  Cursor X after newline: " & Natural'Image (IO.Get_X (1)));
+   IO.Close_Device (1);
+   IO.Use_Device (0);
    New_Line;
 
    Put_Line ("adam is ready for MUMPS development!");
