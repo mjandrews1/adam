@@ -9,6 +9,7 @@ with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
 with Database;
+with Pattern;
 with Conformance;
 
 procedure Main is
@@ -80,6 +81,19 @@ begin
    -- List all globals
    Put_Line ("All Globals:");
    Database.List_All_Globals;
+   New_Line;
+
+   -- Test Pattern Matching
+   Put_Line ("Pattern Matching:");
+   Put_Line ("-----------------");
+   Put_Line ("  Match 'ABC' against '3A': " &
+     Boolean'Image (Pattern.Match ("ABC", "3A")));
+   Put_Line ("  Match '123' against '3N': " &
+     Boolean'Image (Pattern.Match ("123", "3N")));
+   Put_Line ("  Match 'A1B' against '1A1N1A': " &
+     Boolean'Image (Pattern.Match ("A1B", "1A1N1A")));
+   Put_Line ("  Match 'AB' against '3A': " &
+     Boolean'Image (Pattern.Match ("AB", "3A")));
    New_Line;
 
    Put_Line ("adam is ready for MUMPS development!");

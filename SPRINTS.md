@@ -18,7 +18,7 @@
 | S0 | Environment Setup | 0.5 day | ✅ COMPLETE |
 | S1 | Core Types & Symbol Table | 1-2 days | ✅ COMPLETE |
 | S2 | Database Module | 2-3 days | ✅ COMPLETE |
-| S3 | Pattern Matching | 1 day | NOT STARTED |
+| S3 | Pattern Matching | 1 day | ✅ COMPLETE |
 | S4 | I/O Module | 1-2 days | NOT STARTED |
 | S5 | String Functions | 2-3 days | NOT STARTED |
 | S6 | Runtime / Interpreter | 5-7 days | NOT STARTED |
@@ -67,11 +67,11 @@ S0 (Environment) ─────────────────────
 
 ### S3: Pattern Matching (1 day)
 
-- [ ] Create `pattern.ads` (specification)
-- [ ] Create `pattern.adb` (implementation)
-- [ ] Pattern codes: A, N, E, U, L, P, C
-- [ ] Count specifications (3A, 1.5N, .3A)
-- [ ] Unit tests
+- [x] Create `pattern.ads` (specification)
+- [x] Create `pattern.adb` (implementation)
+- [x] Pattern codes: A, N, E, U, L, P, C
+- [x] Count specifications (3A, 1.5N, .3A)
+- [x] Unit tests (21 passing)
 
 ### S4: I/O Module (1-2 days)
 
@@ -129,8 +129,8 @@ S0 (Environment) ─────────────────────
 | `src/conformance.adb` | S1 | ✅ EXISTS |
 | `src/database.ads` | S2 | ✅ EXISTS |
 | `src/database.adb` | S2 | ✅ EXISTS |
-| `src/pattern.ads` | S3 | MISSING |
-| `src/pattern.adb` | S3 | MISSING |
+| `src/pattern.ads` | S3 | ✅ EXISTS |
+| `src/pattern.adb` | S3 | ✅ EXISTS |
 | `src/io.ads` | S4 | MISSING |
 | `src/io.adb` | S4 | MISSING |
 | `src/string_funcs.ads` | S5 | MISSING |

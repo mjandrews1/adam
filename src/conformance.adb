@@ -9,6 +9,7 @@ with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
 with Database;
+with Pattern;
 
 procedure Conformance is
    Total  : Natural := 0;
@@ -219,6 +220,68 @@ begin
             "MERGE copies global subscript 1");
     Assert (To_String (Database.Get_Global_Subscript ("GDST", "2")) = "gsrc_sub2",
             "MERGE copies global subscript 2");
+
+    New_Line;
+
+    -- Pattern Matching Tests
+    Put_Line ("Pattern Matching Tests:");
+    Put_Line ("======================");
+
+    -- Basic pattern codes
+    Assert (Pattern.Match ("ABC", "3A"),
+            "Pattern 3A matches ABC");
+    Assert (Pattern.Match ("123", "3N"),
+            "Pattern 3N matches 123");
+    Assert (Pattern.Match ("ABC123", "3A3N"),
+            "Pattern 3A3N matches ABC123");
+    Assert (Pattern.Match ("A1B", "1A1N1A"),
+            "Pattern 1A1N1A matches A1B");
+
+    -- Pattern failures
+    Assert (not Pattern.Match ("AB", "3A"),
+            "Pattern 3A does not match AB");
+    Assert (not Pattern.Match ("12", "3N"),
+            "Pattern 3N does not match 12");
+
+    -- Uppercase and lowercase codes
+    Assert (Pattern.Match ("ABC", "3U"),
+            "Pattern 3U matches ABC");
+    Assert (not Pattern.Match ("abc", "3U"),
+            "Pattern 3U does not match abc");
+    Assert (Pattern.Match ("abc", "3L"),
+            "Pattern 3L matches abc");
+    Assert (not Pattern.Match ("ABC", "3L"),
+            "Pattern 3L does not match ABC");
+
+    -- Everything code
+    Assert (Pattern.Match ("!@#", "3E"),
+            "Pattern 3E matches !@#");
+    Assert (Pattern.Match ("ABC", "3E"),
+            "Pattern 3E matches ABC");
+
+    -- Range counts
+    Assert (Pattern.Match ("AB", "2.5A"),
+            "Pattern 2.5A matches AB (2 letters)");
+    Assert (Pattern.Match ("ABCDE", "2.5A"),
+            "Pattern 2.5A matches ABCDE (5 letters)");
+    Assert (not Pattern.Match ("A", "2.5A"),
+            "Pattern 2.5A does not match A (1 letter)");
+    Assert (not Pattern.Match ("ABCDEF", "2.5A"),
+            "Pattern 2.5A does not match ABCDEF (6 letters)");
+
+    -- Dot counts (.N means 0 to N)
+    Assert (Pattern.Match ("", ".3A"),
+            "Pattern .3A matches empty string");
+    Assert (Pattern.Match ("ABC", ".3A"),
+            "Pattern .3A matches ABC");
+    Assert (not Pattern.Match ("ABCD", ".3A"),
+            "Pattern .3A does not match ABCD");
+
+    -- Mixed patterns
+    Assert (Pattern.Match ("Hello123", "5A3N"),
+            "Pattern 5A3N matches Hello123");
+    Assert (Pattern.Match ("A1B2C3", "1A1N1A1N1A1N"),
+            "Pattern 1A1N1A1N1A1N matches A1B2C3");
 
     New_Line;
 
