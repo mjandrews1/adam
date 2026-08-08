@@ -7,11 +7,11 @@
 
 with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Directories;
 
 package body IO is
 
    Max_Devices : constant Natural := 64;
-   Buffer_Size : constant Natural := 4096;
 
    type Device_Buffer is record
       Input  : Unbounded_String;
@@ -21,6 +21,14 @@ package body IO is
    Devices : array (0 .. Max_Devices - 1) of Device_State;
    Buffers : array (0 .. Max_Devices - 1) of Device_Buffer;
    Current : Natural := 0;  -- Default to terminal (device 0)
+
+   -- File handles for file devices
+   type File_Handle is record
+      Is_Open : Boolean;
+      File    : File_Type;
+   end record;
+
+   File_Handles : array (1 .. Max_Devices - 1) of File_Handle;
 
    -- Initialize device array
    procedure Init_Devices is
@@ -32,43 +40,62 @@ package body IO is
          Devices (I).Is_Open := False;
          Devices (I).X := 0;
          Devices (I).Y := 0;
+         Devices (I).Eof := False;
          Buffers (I).Input := Null_Unbounded_String;
          Buffers (I).Output := Null_Unbounded_String;
+      end loop;
+      for I in File_Handles'Range loop
+         File_Handles (I).Is_Open := False;
       end loop;
       -- Terminal (device 0) is always open
       Devices (0).Is_Open := True;
       Devices (0).Kind := Terminal;
    end Init_Devices;
 
-   -- Initialize on package elaboration
-   procedure Initialize is
-   begin
-      Init_Devices;
-   end Initialize;
-
-   -- Call initialize at elaboration time
-   pragma Unreferenced (Initialize);
-
    procedure Open_Device (Id   : Natural;
                           Name : String;
                           Kind : Device_Type) is
    begin
-      if Id < Max_Devices then
+      if Id < Max_Devices and then Id /= 0 then
          Devices (Id).Id := Id;
          Devices (Id).Name (1 .. Name'Length) := Name;
          Devices (Id).Name_Len := Name'Length;
          Devices (Id).Kind := Kind;
-         Devices (Id).Is_Open := True;
          Devices (Id).X := 0;
          Devices (Id).Y := 0;
+         Devices (Id).Eof := False;
          Buffers (Id).Input := Null_Unbounded_String;
          Buffers (Id).Output := Null_Unbounded_String;
+
+         -- Open actual file
+         if Kind = File_Read then
+            if Ada.Directories.Exists (Name) then
+               Open (File_Handles (Id).File, In_File, Name);
+               File_Handles (Id).Is_Open := True;
+               Devices (Id).Is_Open := True;
+            else
+               Devices (Id).Is_Open := False;
+            end if;
+         elsif Kind = File_Write then
+            Create (File_Handles (Id).File, Out_File, Name);
+            File_Handles (Id).Is_Open := True;
+            Devices (Id).Is_Open := True;
+         else
+            Devices (Id).Is_Open := True;
+         end if;
       end if;
    end Open_Device;
 
    procedure Close_Device (Id : Natural) is
    begin
-      if Id < Max_Devices and then Id /= 0 then
+      if Id < Max_Devices and then Id /= 0 and then Devices (Id).Is_Open then
+         -- Close file if open
+         if Id < File_Handles'Last and then File_Handles (Id).Is_Open then
+            if Is_Open (File_Handles (Id).File) then
+               Close (File_Handles (Id).File);
+            end if;
+            File_Handles (Id).Is_Open := False;
+         end if;
          Devices (Id).Is_Open := False;
       end if;
    end Close_Device;
@@ -91,6 +118,11 @@ package body IO is
          if Current = 0 then
             -- Terminal output
             Put (Data);
+         elsif Current < File_Handles'Last and then
+           File_Handles (Current).Is_Open and then
+           Is_Open (File_Handles (Current).File) then
+            -- File output
+            Put (File_Handles (Current).File, Data);
          else
             -- Buffer output
             Append (Buffers (Current).Output, Data);
@@ -145,6 +177,22 @@ package body IO is
                Get_Line (Line, Last);
                return Line (1 .. Last);
             end;
+         elsif Current < File_Handles'Last and then
+           File_Handles (Current).Is_Open and then
+           Is_Open (File_Handles (Current).File) then
+            -- File input
+            if not End_Of_File (File_Handles (Current).File) then
+               declare
+                  Line : String (1 .. 1024);
+                  Last : Natural;
+               begin
+                  Get_Line (File_Handles (Current).File, Line, Last);
+                  return Line (1 .. Last);
+               end;
+            else
+               Devices (Current).Eof := True;
+               return "";
+            end if;
          else
             -- Buffer input
             declare
@@ -170,6 +218,21 @@ package body IO is
                Get_Immediate (C);
                return C;
             end;
+         elsif Current < File_Handles'Last and then
+           File_Handles (Current).Is_Open and then
+           Is_Open (File_Handles (Current).File) then
+            -- File input
+            if not End_Of_File (File_Handles (Current).File) then
+               declare
+                  C : Character;
+               begin
+                  Get_Immediate (File_Handles (Current).File, C);
+                  return C;
+               end;
+            else
+               Devices (Current).Eof := True;
+               return ASCII.NUL;
+            end if;
          else
             -- Buffer input
             declare
@@ -226,6 +289,28 @@ package body IO is
       end if;
       return Terminal;
    end Get_Mode;
+
+   function At_Eof (Id : Natural) return Boolean is
+   begin
+      if Id < Max_Devices then
+         return Devices (Id).Eof;
+      end if;
+      return True;
+   end At_Eof;
+
+   function Available_Bytes (Id : Natural) return Natural is
+   begin
+      if Id < Max_Devices and then Devices (Id).Is_Open then
+         if Id < File_Handles'Last and then
+           File_Handles (Id).Is_Open and then
+           Is_Open (File_Handles (Id).File) then
+            if not End_Of_File (File_Handles (Id).File) then
+               return 1;
+            end if;
+         end if;
+      end if;
+      return 0;
+   end Available_Bytes;
 
 begin
    -- Initialize devices at package elaboration

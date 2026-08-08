@@ -296,9 +296,9 @@ begin
     Put_Line ("==========");
 
     -- Device management
-    IO.Open_Device (1, "test_device", IO.File);
+    IO.Open_Device (1, "test_device", IO.File_Write);
     Assert (IO.Is_Open (1), "Open device");
-    Assert (IO.Get_Mode (1) = IO.File, "Device mode");
+    Assert (IO.Get_Mode (1) = IO.File_Write, "Device mode");
     Assert (IO.Current_Device = 0, "Default device is terminal");
 
     -- Use device
@@ -960,8 +960,67 @@ begin
         Execute (R, Prog);
         Assert (To_String (Symbol_Table.Get_Var ("X")) /= "",
                 "Special: $STORAGE returns value");
-        Destroy_AST (Prog);
+         Destroy_AST (Prog);
     end;
+
+    New_Line;
+
+    -- File I/O Tests
+    Put_Line ("File I/O Tests:");
+    Put_Line ("===============");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+        Test_File : constant String := "/tmp/adam_test_io.txt";
+    begin
+        R := Create_Runtime;
+
+        -- Test file write
+        IO.Open_Device (1, Test_File, IO.File_Write);
+        Assert (IO.Is_Open (1), "File: Open for writing");
+        IO.Use_Device (1);
+        IO.Write ("Hello, File!");
+        IO.Write_Newline;
+        IO.Write ("Second line");
+        IO.Close_Device (1);
+        IO.Use_Device (0);
+        Assert (not IO.Is_Open (1), "File: Close after write");
+
+        -- Test file read
+        IO.Open_Device (2, Test_File, IO.File_Read);
+        Assert (IO.Is_Open (2), "File: Open for reading");
+        IO.Use_Device (2);
+        declare
+            Line1 : constant String := IO.Read;
+        begin
+            Assert (Line1 = "Hello, File!", "File: Read first line");
+        end;
+        declare
+            Line2 : constant String := IO.Read;
+        begin
+            Assert (Line2 = "Second line", "File: Read second line");
+        end;
+        IO.Close_Device (2);
+        IO.Use_Device (0);
+
+        -- Test file exists check
+         Assert (IO.Is_Open (2) = False, "File: Device closed after read");
+
+         -- Test EOF
+         IO.Open_Device (3, Test_File, IO.File_Read);
+         IO.Use_Device (3);
+         declare
+            Dummy : Unbounded_String;
+         begin
+            Dummy := To_Unbounded_String (IO.Read);  -- Read first line
+            Dummy := To_Unbounded_String (IO.Read);  -- Read second line
+            Dummy := To_Unbounded_String (IO.Read);  -- Should hit EOF
+         end;
+         Assert (IO.At_Eof (3), "File: EOF detected");
+         IO.Close_Device (3);
+         IO.Use_Device (0);
+     end;
 
     New_Line;
 

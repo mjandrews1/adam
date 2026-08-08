@@ -8,7 +8,7 @@
 package IO is
 
    -- Device types
-   type Device_Type is (Terminal, File, Socket, Pipe);
+   type Device_Type is (Terminal, File_Read, File_Write, Socket, Pipe);
 
    -- Device state
    type Device_State is record
@@ -19,6 +19,7 @@ package IO is
       Is_Open  : Boolean;
       X        : Natural;  -- Cursor column
       Y        : Natural;  -- Cursor row
+      Eof      : Boolean;  -- End of file flag
    end record;
 
    -- Open a device
@@ -70,5 +71,11 @@ package IO is
 
    -- Get device mode
    function Get_Mode (Id : Natural) return Device_Type;
+
+   -- Check if at end of file
+   function At_Eof (Id : Natural) return Boolean;
+
+   -- Get number of available bytes (simplified: 0 or 1)
+   function Available_Bytes (Id : Natural) return Natural;
 
 end IO;

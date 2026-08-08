@@ -135,16 +135,17 @@ adam/
 
 ## Status
 
-**Version 0.6.0** - Special Variables
+**Version 0.7.0** - File I/O
 
-- **167 conformance tests passing**
+- **174 conformance tests passing**
 - **100% test success rate**
-- **16 source modules, ~5,800 lines of Ada**
+- **16 source modules, ~6,000 lines of Ada**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
 - **Function dispatch for $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $ASCII, $CHAR, $REVERSE, $JUSTIFY, $FIND, $DATA, $GET, $ORDER, $RANDOM, $SELECT**
 - **Special variables: $T, $X, $Y, $H, $I, $J, $K, $S, $SYSTEM, $ECODE, $ETRAP**
 - **Control flow: FOR loops, NEW scoping, ELSE, QUIT with return values**
 - **Command execution: KILL, READ, MERGE, XECUTE**
+- **File I/O: OPEN/CLOSE/USE with real file operations, EOF detection**
 
 ## Sprint History
 
@@ -163,6 +164,7 @@ adam/
 | P2-S3: Command Execution | ✅ Complete | 152 |
 | P2-S4: Runtime String/Math Functions | ✅ Complete | 158 |
 | P2-S5: Special Variables | ✅ Complete | 167 |
+| P2-S6: File I/O | ✅ Complete | 174 |
 
 ## References
 
