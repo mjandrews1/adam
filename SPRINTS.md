@@ -16,7 +16,7 @@
 | Sprint | Name | Duration | Status |
 |--------|------|----------|--------|
 | S0 | Environment Setup | 0.5 day | ✅ COMPLETE |
-| S1 | Core Types & Symbol Table | 1-2 days | NOT STARTED |
+| S1 | Core Types & Symbol Table | 1-2 days | ✅ COMPLETE |
 | S2 | Database Module | 2-3 days | NOT STARTED |
 | S3 | Pattern Matching | 1 day | NOT STARTED |
 | S4 | I/O Module | 1-2 days | NOT STARTED |
@@ -49,13 +49,13 @@ S0 (Environment) ─────────────────────
 
 ### S1: Core Types & Symbol Table (1-2 days)
 
-- [ ] Complete `mumps_types.ads/adb` (add body file)
-- [ ] Fix `symbol_table.adb`:
-  - [ ] `Var_Data` — return codes 10/11 (subscripts only, both)
-  - [ ] `Var_Order` — forward/reverse subscript traversal
-  - [ ] `Merge_Var` — deep copy of subscript trees
-- [ ] Full subscript support
-- [ ] Unit tests
+- [x] Complete `mumps_types.ads/adb` (add body file)
+- [x] Fix `symbol_table.adb`:
+  - [x] `Var_Data` — return codes 10/11 (subscripts only, both)
+  - [x] `Var_Order` — forward/reverse subscript traversal
+  - [x] `Merge_Var` — deep copy of subscript trees
+- [x] Full subscript support
+- [x] Unit tests (23 passing)
 
 ### S2: Database Module (2-3 days)
 
@@ -124,8 +124,9 @@ S0 (Environment) ─────────────────────
 
 | File | Sprint | Status |
 |------|--------|--------|
-| `adam.gpr` | S0 | MISSING |
-| `src/mumps_types.adb` | S1 | MISSING |
+| `adam.gpr` | S0 | ✅ EXISTS |
+| `src/mumps_types.adb` | S1 | NOT NEEDED (spec only) |
+| `src/conformance.adb` | S1 | ✅ EXISTS |
 | `src/database.ads` | S2 | MISSING |
 | `src/database.adb` | S2 | MISSING |
 | `src/pattern.ads` | S3 | MISSING |
@@ -140,7 +141,6 @@ S0 (Environment) ─────────────────────
 | `src/parser.adb` | S6 | MISSING |
 | `src/runtime.ads` | S6 | MISSING |
 | `src/runtime.adb` | S6 | MISSING |
-| `src/conformance.adb` | S7 | MISSING |
 | `examples/hello.mumps` | S7 | MISSING |
 | `examples/factorial.mumps` | S7 | MISSING |
 | `examples/fibonacci.mumps` | S7 | MISSING |

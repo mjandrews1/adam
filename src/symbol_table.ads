@@ -25,7 +25,7 @@ package Symbol_Table is
    -- Returns: 0=undefined, 1=data only, 10=subscripts only, 11=both
    function Var_Data (Name : String) return Natural;
 
-   -- $ORDER function - get next subscript
+   -- $ORDER function - get next subscript at depth 1
    -- If Current is empty, returns first subscript
    -- If Current is non-empty, returns next subscript after Current
    function Var_Order (Name : String; Current : String := "")
@@ -38,6 +38,21 @@ package Symbol_Table is
 
    -- Get a subscripted variable
    function Get_Subscript (Name : String; Subs : String)
+     return Unbounded_String;
+
+   -- Check if subscripted variable exists
+   function Subscript_Exists (Name : String; Subs : String)
+     return Boolean;
+
+   -- Kill a subscripted variable
+   procedure Kill_Subscript (Name : String; Subs : String);
+
+   -- $DATA for subscripted variables
+   function Subscript_Data (Name : String; Subs : String) return Natural;
+
+   -- $ORDER for subscripted variables (deeper levels)
+   function Subscript_Order (Name : String; Subs : String;
+                             Current : String := "")
      return Unbounded_String;
 
    -- MERGE - deep copy source subtree to destination
