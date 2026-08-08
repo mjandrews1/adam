@@ -52,6 +52,7 @@ package Lexer is
       Tok_Comma,        -- ,
       Tok_Colon,        -- :
       Tok_Semicolon,    -- ;
+      Tok_Dollar,       -- $
 
       -- Special
       Tok_Newline,

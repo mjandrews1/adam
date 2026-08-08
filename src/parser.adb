@@ -6,6 +6,7 @@
 -- SPDX-License-Identifier: AGPL-3.0-or-later
 
 with Ada.Unchecked_Deallocation;
+with Ada.Characters.Handling; use Ada.Characters.Handling;
 
 package body Parser is
 
@@ -39,13 +40,187 @@ package body Parser is
       State.Current := Next_Token (State.Lex);
    end Advance;
 
-   procedure Expect (State : in out Parser_State;
-                     Kind  : Token_Type) is
+   -- Check if token is a comparison operator
+   function Is_Comparison (Kind : Token_Type) return Boolean is
    begin
-      if State.Current.Kind = Kind then
+      return Kind = Tok_Equals or else Kind = Tok_NotEquals or else
+             Kind = Tok_Less or else Kind = Tok_Greater or else
+             Kind = Tok_LessEquals or else Kind = Tok_GreaterEquals or else
+             Kind = Tok_Follows or else Kind = Tok_SortAfter or else
+             Kind = Tok_Contains;
+   end Is_Comparison;
+
+   -- Map token type to AST node kind for binary operators
+   function Token_To_Binary (Kind : Token_Type) return Node_Kind is
+   begin
+      case Kind is
+         when Tok_Plus => return N_Add;
+         when Tok_Minus => return N_Sub;
+         when Tok_Star => return N_Mul;
+         when Tok_Slash => return N_Div;
+         when Tok_Backslash => return N_IntDiv;
+         when Tok_Hash => return N_Mod;
+         when Tok_StarStar => return N_Pow;
+         when Tok_Concat => return N_Concat;
+         when Tok_Equals => return N_Eql;
+         when Tok_NotEquals => return N_Neql;
+         when Tok_Less => return N_Lt;
+         when Tok_Greater => return N_Gt;
+         when Tok_LessEquals => return N_Lte;
+         when Tok_GreaterEquals => return N_Gte;
+         when Tok_Follows => return N_Follows;
+         when Tok_SortAfter => return N_SortsAfter;
+         when Tok_Contains => return N_Contains;
+         when Tok_And => return N_And;
+         when Tok_Or => return N_Or;
+         when others => return N_Null;
+      end case;
+   end Token_To_Binary;
+
+   -- Parse a primary expression (literal, variable, function, parenthesized)
+   function Parse_Primary (State : in out Parser_State) return AST_Node_Ptr is
+      Node : AST_Node_Ptr;
+      Func_Name : Unbounded_String;
+      Args : AST_Node_Ptr;
+      Last : AST_Node_Ptr;
+      Arg : AST_Node_Ptr;
+   begin
+      case State.Current.Kind is
+         when Tok_String =>
+            Node := Create_Node (N_String_Lit,
+                                State.Current.Value (1 .. State.Current.Val_Len),
+                                State.Current.Line);
+            Advance (State);
+
+         when Tok_Number =>
+            Node := Create_Node (N_Number_Lit,
+                                State.Current.Value (1 .. State.Current.Val_Len),
+                                State.Current.Line);
+            Advance (State);
+
+         when Tok_Identifier =>
+            -- Variable (possibly with subscripts)
+            Node := Create_Node (N_Variable, "", State.Current.Line);
+            Node.Value := To_Unbounded_String
+              (State.Current.Value (1 .. State.Current.Val_Len));
+            Advance (State);
+            -- Check for subscripts
+            if State.Current.Kind = Tok_LParen then
+               Advance (State);
+               while State.Current.Kind /= Tok_RParen and then
+                 State.Current.Kind /= Tok_EOF loop
+                  if State.Current.Kind = Tok_Comma then
+                     Advance (State);
+                  end if;
+                  Arg := Parse_Expression (State);
+                  if Node.Left = null then
+                     Node.Left := Arg;
+                  elsif Last /= null then
+                     Last.Next := Arg;
+                  end if;
+                  Last := Arg;
+               end loop;
+               if State.Current.Kind = Tok_RParen then
+                  Advance (State);
+               end if;
+            end if;
+
+         when Tok_LParen =>
+            -- Parenthesized expression
+            Advance (State);
+            Node := Parse_Expression (State);
+            if State.Current.Kind = Tok_RParen then
+               Advance (State);
+            end if;
+
+         when Tok_Minus =>
+            -- Unary minus
+            Advance (State);
+            Node := Create_Node (N_UnaryMinus, "", State.Current.Line);
+            Node.Left := Parse_Primary (State);
+
+         when Tok_Plus =>
+            -- Unary plus
+            Advance (State);
+            Node := Parse_Primary (State);
+
+         when Tok_Not =>
+            -- Logical NOT
+            Advance (State);
+            Node := Create_Node (N_Not, "", State.Current.Line);
+            Node.left := Parse_Primary (State);
+
+         when Tok_Dollar =>
+            -- $ function call
+            Advance (State);
+            if State.Current.Kind = Tok_Identifier then
+               Func_Name := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
+               Advance (State);
+               Node := Create_Node (N_Function_Call, "", State.Current.Line);
+               Node.Value := Func_Name;
+               -- Parse arguments
+               if State.Current.Kind = Tok_LParen then
+                  Advance (State);
+                  Args := null;
+                  Last := null;
+                  while State.Current.Kind /= Tok_RParen and then
+                    State.Current.Kind /= Tok_EOF loop
+                     if State.Current.Kind = Tok_Comma then
+                        Advance (State);
+                     end if;
+                     Arg := Parse_Expression (State);
+                     if Args = null then
+                        Args := Arg;
+                        Last := Arg;
+                     elsif Last /= null then
+                        Last.Next := Arg;
+                        Last := Arg;
+                     end if;
+                  end loop;
+                  Node.Left := Args;
+                  if State.Current.Kind = Tok_RParen then
+                     Advance (State);
+                  end if;
+               end if;
+            else
+               Node := Create_Node (N_Null, "", State.Current.Line);
+            end if;
+
+         when others =>
+            Node := Create_Node (N_Null, "", State.Current.Line);
+            Advance (State);
+      end case;
+      return Node;
+   end Parse_Primary;
+
+   -- Parse expression (MUMPS evaluates left-to-right, no precedence)
+   function Parse_Expression (State : in out Parser_State) return AST_Node_Ptr is
+      Left : AST_Node_Ptr;
+      Node : AST_Node_Ptr;
+      Op   : Node_Kind;
+   begin
+      Left := Parse_Primary (State);
+      -- Parse binary operators left-to-right (no precedence)
+      while Is_Comparison (State.Current.Kind) or else
+        State.Current.Kind = Tok_Plus or else
+        State.Current.Kind = Tok_Minus or else
+        State.Current.Kind = Tok_Star or else
+        State.Current.Kind = Tok_Slash or else
+        State.Current.Kind = Tok_Backslash or else
+        State.Current.Kind = Tok_Hash or else
+        State.Current.Kind = Tok_Concat or else
+        State.Current.Kind = Tok_And or else
+        State.Current.Kind = Tok_Or loop
+         Op := Token_To_Binary (State.Current.Kind);
          Advance (State);
-      end if;
-   end Expect;
+         Node := Create_Node (Op, "", State.Current.Line);
+         Node.left := Left;
+         Node.right := Parse_Primary (State);
+         Left := Node;
+      end loop;
+      return Left;
+   end Parse_Expression;
 
    -- Parse a variable (with optional subscripts)
    function Parse_Variable (State : in out Parser_State) return AST_Node_Ptr is
@@ -64,14 +239,20 @@ package body Parser is
       -- Check for subscripts
       if State.Current.Kind = Tok_LParen then
          Advance (State);
-         -- Parse subscript expressions
          while State.Current.Kind /= Tok_RParen and then
            State.Current.Kind /= Tok_EOF loop
             if State.Current.Kind = Tok_Comma then
                Advance (State);
             end if;
-            -- Skip expression for now
-            Advance (State);
+            -- Parse subscript expression
+            declare
+               Arg : AST_Node_Ptr;
+            begin
+               Arg := Parse_Expression (State);
+               if Node.Left = null then
+                  Node.Left := Arg;
+               end if;
+            end;
          end loop;
          if State.Current.Kind = Tok_RParen then
             Advance (State);
@@ -80,43 +261,7 @@ package body Parser is
       return Node;
    end Parse_Variable;
 
-   -- Parse a primary expression (literal, variable, function)
-   function Parse_Primary (State : in out Parser_State) return AST_Node_Ptr is
-      Node : AST_Node_Ptr;
-   begin
-      case State.Current.Kind is
-         when Tok_String =>
-            Node := Create_Node (N_String_Lit,
-                                State.Current.Value (1 .. State.Current.Val_Len),
-                                State.Current.Line);
-            Advance (State);
-         when Tok_Number =>
-            Node := Create_Node (N_Number_Lit,
-                                State.Current.Value (1 .. State.Current.Val_Len),
-                                State.Current.Line);
-            Advance (State);
-         when Tok_Identifier =>
-            Node := Parse_Variable (State);
-         when Tok_LParen =>
-            Advance (State);
-            Node := Parse_Expression (State);
-            if State.Current.Kind = Tok_RParen then
-               Advance (State);
-            end if;
-         when others =>
-            Node := Create_Node (N_Null, "", State.Current.Line);
-            Advance (State);
-      end case;
-      return Node;
-   end Parse_Primary;
-
-   -- Parse expression (simplified - just primary for now)
-   function Parse_Expression (State : in out Parser_State) return AST_Node_Ptr is
-   begin
-      return Parse_Primary (State);
-   end Parse_Expression;
-
-   -- Parse SET command: S var=value
+   -- Parse SET command: S var=expr
    function Parse_Set (State : in out Parser_State) return AST_Node_Ptr is
       Node : AST_Node_Ptr;
       Var  : AST_Node_Ptr;
@@ -130,7 +275,7 @@ package body Parser is
       if State.Current.Kind = Tok_Equals then
          Advance (State);
          -- Parse value expression
-         Node.Right := Parse_Expression (State);
+         Node.right := Parse_Expression (State);
       end if;
       return Node;
    end Parse_Set;
@@ -142,9 +287,20 @@ package body Parser is
       Node := Create_Node (N_Write, "", State.Current.Line);
       Advance (State); -- Skip W/WRITE
       -- Parse expression to write
-      Node.Left := Parse_Expression (State);
+      Node.left := Parse_Expression (State);
       return Node;
    end Parse_Write;
+
+   -- Parse READ command
+   function Parse_Read (State : in out Parser_State) return AST_Node_Ptr is
+      Node : AST_Node_Ptr;
+   begin
+      Node := Create_Node (N_Read, "", State.Current.Line);
+      Advance (State); -- Skip R/READ
+      -- Parse variable to read into
+      Node.left := Parse_Variable (State);
+      return Node;
+   end Parse_Read;
 
    -- Parse a single command
    function Parse_Command (State : in out Parser_State) return AST_Node_Ptr is
@@ -155,6 +311,8 @@ package body Parser is
             Node := Parse_Set (State);
          when Tok_Write =>
             Node := Parse_Write (State);
+         when Tok_Read =>
+            Node := Parse_Read (State);
          when Tok_Kill =>
             Node := Create_Node (N_Kill, "", State.Current.Line);
             Advance (State);
@@ -165,6 +323,12 @@ package body Parser is
          when Tok_Quit =>
             Node := Create_Node (N_Quit, "", State.Current.Line);
             Advance (State);
+            -- Optional quit value
+            if State.Current.Kind /= Tok_Newline and then
+              State.Current.Kind /= Tok_EOF and then
+              State.Current.Kind /= Tok_Semicolon then
+               Node.left := Parse_Expression (State);
+            end if;
          when Tok_Hang =>
             Node := Create_Node (N_Hang, "", State.Current.Line);
             Advance (State);
@@ -172,8 +336,9 @@ package body Parser is
          when Tok_Do =>
             Node := Create_Node (N_Do, "", State.Current.Line);
             Advance (State);
-            -- Skip label reference for now
             if State.Current.Kind = Tok_Identifier then
+               Node.Value := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
                Advance (State);
             end if;
          when Tok_If =>
@@ -184,6 +349,49 @@ package body Parser is
             Node := Create_Node (N_For, "", State.Current.Line);
             Advance (State);
             -- Skip for now
+         when Tok_Merge =>
+            Node := Create_Node (N_Merge, "", State.Current.Line);
+            Advance (State);
+            -- Skip for now
+         when Tok_New =>
+            Node := Create_Node (N_New, "", State.Current.Line);
+            Advance (State);
+            -- Skip for now
+         when Tok_Goto =>
+            Node := Create_Node (N_Goto, "", State.Current.Line);
+            Advance (State);
+            if State.Current.Kind = Tok_Identifier then
+               Node.Value := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
+               Advance (State);
+            end if;
+         when Tok_Else =>
+            Node := Create_Node (N_Else, "", State.Current.Line);
+            Advance (State);
+         when Tok_Break =>
+            Node := Create_Node (N_Break, "", State.Current.Line);
+            Advance (State);
+         when Tok_Job =>
+            Node := Create_Node (N_Job, "", State.Current.Line);
+            Advance (State);
+         when Tok_Lock =>
+            Node := Create_Node (N_Lock, "", State.Current.Line);
+            Advance (State);
+         when Tok_Xecute =>
+            Node := Create_Node (N_Xecute, "", State.Current.Line);
+            Advance (State);
+         when Tok_Use =>
+            Node := Create_Node (N_Use, "", State.Current.Line);
+            Advance (State);
+         when Tok_Open =>
+            Node := Create_Node (N_Open, "", State.Current.Line);
+            Advance (State);
+         when Tok_Close =>
+            Node := Create_Node (N_Close, "", State.Current.Line);
+            Advance (State);
+         when Tok_View =>
+            Node := Create_Node (N_View, "", State.Current.Line);
+            Advance (State);
          when others =>
             Node := Create_Node (N_Null, "", State.Current.Line);
             Advance (State);
@@ -205,25 +413,16 @@ package body Parser is
          return null;
       end if;
       Line := Create_Node (N_Line, "", State.Current.Line);
-      -- Check for tag
-      if State.Current.Kind = Tok_Identifier then
-         -- Could be a tag or command
-         if State.Current.Val_Len > 0 and then
-           State.Current.Value (1) >= 'A' and then
-           State.Current.Value (1) <= 'Z' then
-            -- Might be a command
-            null;
-         end if;
-      end if;
       -- Parse commands on this line
       Cmd := Parse_Command (State);
-      Line.Left := Cmd;
+      Line.left := Cmd;
       Last := Cmd;
-      -- Parse additional commands on same line (separated by space)
+      -- Parse additional commands on same line (separated by space or semicolon)
       while State.Current.Kind = Tok_Newline or else
         State.Current.Kind = Tok_Semicolon loop
          Advance (State);
          exit when State.Current.Kind = Tok_EOF;
+         exit when State.Current.Kind = Tok_Newline;
          Cmd := Parse_Command (State);
          if Last /= null then
             Last.Next := Cmd;
@@ -241,7 +440,7 @@ package body Parser is
    begin
       Prog := Create_Node (N_Program, "", 0);
       Line := Parse_Line (State);
-      Prog.Left := Line;
+      Prog.left := Line;
       Last := Line;
       while Line /= null loop
          Line := Parse_Line (State);
@@ -256,8 +455,8 @@ package body Parser is
    procedure Destroy_AST (Node : in out AST_Node_Ptr) is
    begin
       if Node /= null then
-         Destroy_AST (Node.Left);
-         Destroy_AST (Node.Right);
+         Destroy_AST (Node.left);
+         Destroy_AST (Node.right);
          Destroy_AST (Node.Next);
          Free (Node);
       end if;

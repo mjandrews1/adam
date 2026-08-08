@@ -23,16 +23,41 @@ package Parser is
       N_Merge, N_New, N_Lock, N_Xecute, N_Use,
       N_Open, N_Close, N_View, N_Break, N_Job,
 
-      -- Expressions
+      -- Literals and variables
       N_String_Lit,
       N_Number_Lit,
       N_Variable,
       N_Global,
       N_Subscript,
-      N_Binary_Op,
-      N_Unary_Op,
-      N_Function_Call,
-      N_Postcondition,
+
+      -- Binary operators (left op right)
+      N_Add,            -- +
+      N_Sub,            -- -
+      N_Mul,            -- *
+      N_Div,            -- /
+      N_IntDiv,         -- \  (integer divide)
+      N_Mod,            -- #
+      N_Pow,            -- **
+      N_Concat,         -- _
+      N_Eql,            -- =
+      N_Neql,           -- '=
+      N_Lt,             -- <
+      N_Gt,             -- >
+      N_Lte,            -- <=
+      N_Gte,            -- >=
+      N_Follows,        -- ]
+      N_SortsAfter,     -- ]]
+      N_Contains,       -- [
+      N_And,            -- &
+      N_Or,             -- !
+
+      -- Unary operators (op operand)
+      N_UnaryMinus,     -- - (unary)
+      N_UnaryPlus,      -- + (unary)
+      N_Not,            -- '
+
+      -- Function call
+      N_Function_Call,  -- $FUNC(args)
 
       -- Special
       N_Null
@@ -47,7 +72,7 @@ package Parser is
       Value    : Unbounded_String;
       Left     : AST_Node_Ptr;
       Right    : AST_Node_Ptr;
-      Next     : AST_Node_Ptr;
+      Next     : AST_Node_Ptr;  -- For argument lists
       Line_Num : Natural;
    end record;
 
@@ -63,7 +88,7 @@ package Parser is
    -- Parse a single line
    function Parse_Line (State : in out Parser_State) return AST_Node_Ptr;
 
-   -- Parse expression
+   -- Parse expression (entry point for expression parsing)
    function Parse_Expression (State : in out Parser_State) return AST_Node_Ptr;
 
    -- Destroy AST

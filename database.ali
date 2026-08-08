@@ -1,0 +1,519 @@
+V "GNAT Lib v16"
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_STREAMS
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_ALIASING
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV NO_OBSOLESCENT_FEATURES
+
+U database%b		database.adb		7b87d2e1 OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.containers%s	a-contai.ads		a-contai.ali
+Z ada.containers.hash_tables%s  a-cohata.ads	a-cohata.ali
+Z ada.containers.hash_tables.generic_keys%s
+Z ada.containers.hash_tables.generic_operations%s
+W ada.containers.hashed_maps%s
+W ada.containers.helpers%s  a-conhel.adb	a-conhel.ali
+Z ada.containers.prime_numbers%s  a-coprnu.adb	a-coprnu.ali
+W ada.directories%s	a-direct.adb		a-direct.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.ads		a-finali.ali
+Z ada.iterator_interfaces%s
+W ada.sequential_io%s
+Z ada.streams%s		a-stream.adb		a-stream.ali
+W ada.strings%s		a-string.ads		a-string.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+W ada.strings.unbounded.hash%s  a-stunha.adb	a-stunha.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.unchecked_deallocation%s
+Z system%s		system.ads		system.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.finalization_primitives%s  s-finpri.adb  s-finpri.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.put_images%s	s-putima.adb		s-putima.ali
+Z system.return_stack%s	s-retsta.ads		s-retsta.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.ads	s-stoele.ali
+Z system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+Z system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+Z system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+Z system.strings.stream_ops%s  s-ststop.adb	s-ststop.ali
+
+U database%s		database.ads		b1313e7d EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+
+D ada.ads		20260610194523 76789da1 ada%s
+D a-calend.ads		20260610194523 bf7f3cc9 ada.calendar%s
+D a-charac.ads		20260610194523 2d3ec45b ada.characters%s
+D a-chlat1.ads		20260610194523 e0d72e76 ada.characters.latin_1%s
+D a-contai.ads		20260610194523 61e5e089 ada.containers%s
+D a-cohata.ads		20260610194523 bea783e3 ada.containers.hash_tables%s
+D a-chtgke.ads		20260610194523 20177f7b ada.containers.hash_tables.generic_keys%s
+D a-chtgke.adb		20260610194523 fdf2dddc ada.containers.hash_tables.generic_keys%b
+D a-chtgop.ads		20260610194523 11c5978a ada.containers.hash_tables.generic_operations%s
+D a-chtgop.adb		20260610194523 c3ccdc4f ada.containers.hash_tables.generic_operations%b
+D a-cohama.ads		20260610194523 477ea40a ada.containers.hashed_maps%s
+D a-cohama.adb		20260610194523 768389f7 ada.containers.hashed_maps%b
+D a-conhel.ads		20260610194523 46fe1ce3 ada.containers.helpers%s
+D a-conhel.adb		20260610194523 854d323e ada.containers.helpers%b
+D a-coprnu.ads		20260610194523 24215258 ada.containers.prime_numbers%s
+D a-direct.ads		20260610194523 467e87a1 ada.directories%s
+D a-except.ads		20260610194523 8699d7ff ada.exceptions%s
+D a-finali.ads		20260610194523 099c16e4 ada.finalization%s
+D a-ioexce.ads		20260610194523 40018c65 ada.io_exceptions%s
+D a-iteint.ads		20260610194523 49a8bee2 ada.iterator_interfaces%s
+D a-sequio.ads		20260610194523 3573d8ce ada.sequential_io%s
+D a-sequio.adb		20260610194523 3a82bda9 ada.sequential_io%b
+D a-stream.ads		20260610194523 cb01a8f8 ada.streams%s
+D a-string.ads		20260610194523 90ac6797 ada.strings%s
+D a-strmap.ads		20260610194523 f7e6ca10 ada.strings.maps%s
+D a-strsea.ads		20260610194523 18c3c634 ada.strings.search%s
+D a-sttebu.ads		20260610194523 f1ad67a2 ada.strings.text_buffers%s
+D a-strunb.ads		20260610194523 8d6ccba7 ada.strings.unbounded%s
+D a-stunha.ads		20260610194523 115e053b ada.strings.unbounded.hash%s
+D a-stuten.ads		20260610194523 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260610194523 2dbf449c ada.tags%s
+D a-textio.ads		20260610194523 34ef47de ada.text_io%s
+D a-unccon.ads		20260610194523 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20260610194523 c3a8ac65 ada.unchecked_deallocation%s
+D database.ads		20260808201917 3c5df5da database%s
+D database.adb		20260808201951 db74551c database%b
+D interfac.ads		20260610194523 9111f9c1 interfaces%s
+D i-c.ads		20260610194523 dbdd3be7 interfaces.c%s
+D i-cstrea.ads		20260610194523 ffd01b9d interfaces.c_streams%s
+D system.ads		20260610194523 8a611ac3 system%s
+D s-atocou.ads		20260610194523 dc18efc3 system.atomic_counters%s
+D s-atocou.adb		20260610194523 6fe685de system.atomic_counters%b
+D s-atopri.ads		20260610194523 e19c1d89 system.atomic_primitives%s
+D s-bytswa.ads		20260610194523 1d5476e8 system.byte_swapping%s
+D s-conca2.ads		20260610194523 b5fb73f7 system.concat_2%s
+D s-conca3.ads		20260610194523 8a7a19a2 system.concat_3%s
+D s-conca4.ads		20260610194523 33f85f3e system.concat_4%s
+D s-crtl.ads		20260610194523 823b6536 system.crtl%s
+D s-exctab.ads		20260610194523 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260610194523 dc5161d4 system.file_control_block%s
+D s-fileio.ads		20260610194523 45ce2f0f system.file_io%s
+D s-finpri.ads		20260610194523 5970d55a system.finalization_primitives%s
+D s-finroo.ads		20260610194523 0a7c3ed4 system.finalization_root%s
+D s-memory.ads		20260610194523 18949c1a system.memory%s
+D s-oscons.ads		20260629131825 a97567d0 system.os_constants%s
+D s-oslock.ads		20260610194523 bcc789d2 system.os_locks%s
+D s-parame.ads		20260610194523 a1aeab5c system.parameters%s
+D s-pooglo.ads		20260610194523 91708d21 system.pool_global%s
+D s-putima.ads		20260610194523 1b989439 system.put_images%s
+D s-retsta.ads		20260610194523 0f6b06cb system.return_stack%s
+D s-secsta.ads		20260610194523 578279f5 system.secondary_stack%s
+D s-sequio.ads		20260610194523 fc7560a7 system.sequential_io%s
+D s-soflin.ads		20260610194523 5d88fdea system.soft_links%s
+D s-stache.ads		20260610194523 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260610194523 1c9580f6 system.standard_library%s
+D s-stalib.adb		20260610194523 eb464a47 system.standard_library%b
+D s-stoele.ads		20260610194523 ccded4e8 system.storage_elements%s
+D s-stopoo.ads		20260610194523 45459446 system.storage_pools%s
+D s-stposu.ads		20260610194523 f8e797ef system.storage_pools.subpools%s
+D s-stratt.ads		20260610194523 80b8dafb system.stream_attributes%s
+D s-string.ads		20260610194523 582aac7d system.strings%s
+D s-ststop.ads		20260610194523 c569db7c system.strings.stream_ops%s
+D s-traent.ads		20260610194523 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260610194523 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260610194523 d9032363 system.wch_con%s
+G a e
+G c Z s b [set_global database 13 14 none]
+G c Z s b [get_global database 16 13 none]
+G c Z s b [global_exists database 19 13 none]
+G c Z s b [kill_global database 22 14 none]
+G c Z s b [global_data database 26 13 none]
+G c Z s b [global_order database 29 13 none]
+G c Z s b [set_global_subscript database 33 14 none]
+G c Z s b [get_global_subscript database 38 13 none]
+G c Z s b [global_subscript_exists database 42 13 none]
+G c Z s b [kill_global_subscript database 46 14 none]
+G c Z s b [global_subscript_data database 49 13 none]
+G c Z s b [global_subscript_order database 53 13 none]
+G c Z s b [merge_global database 58 14 none]
+G c Z s b [kill_all_globals database 62 14 none]
+G c Z s b [save database 65 13 none]
+G c Z s b [load database 68 13 none]
+G c Z s b [list_all_globals database 71 14 none]
+G c Z b b [Oeq database__global_maps 113 13 18_4]
+G c Z b b [empty database__global_maps 129 13 18_4]
+G c Z b b [has_element database__global_maps 131 13 18_4]
+G c Z b b [Oeq database__global_maps 138 13 18_4]
+G c Z b b [capacity database__global_maps 154 13 18_4]
+G c Z b b [reserve_capacity database__global_maps 158 14 18_4]
+G c Z b b [length database__global_maps 168 13 18_4]
+G c Z b b [is_empty database__global_maps 171 13 18_4]
+G c Z b b [clear database__global_maps 174 14 18_4]
+G c Z b b [key database__global_maps 177 13 18_4]
+G c Z b b [element database__global_maps 182 13 18_4]
+G c Z b b [replace_element database__global_maps 188 14 18_4]
+G c Z b b [query_element database__global_maps 199 14 18_4]
+G c Z b b [update_element database__global_maps 212 14 18_4]
+G c Z b b [constant_reference database__global_maps 238 13 18_4]
+G c Z b b [reference database__global_maps 256 13 18_4]
+G c Z b b [constant_reference database__global_maps 273 13 18_4]
+G c Z b b [reference database__global_maps 279 13 18_4]
+G c Z b b [assign database__global_maps 285 14 18_4]
+G c Z b b [copy database__global_maps 290 13 18_4]
+G c Z b b [move database__global_maps 292 14 18_4]
+G c Z b b [insert database__global_maps 297 14 18_4]
+G c Z b b [insert database__global_maps 311 14 18_4]
+G c Z b b [insert database__global_maps 320 14 18_4]
+G c Z b b [include database__global_maps 328 14 18_4]
+G c Z b b [replace database__global_maps 338 14 18_4]
+G c Z b b [exclude database__global_maps 346 14 18_4]
+G c Z b b [delete database__global_maps 350 14 18_4]
+G c Z b b [delete database__global_maps 355 14 18_4]
+G c Z b b [first database__global_maps 363 13 18_4]
+G c Z b b [next database__global_maps 367 13 18_4]
+G c Z b b [next database__global_maps 372 14 18_4]
+G c Z b b [find database__global_maps 375 13 18_4]
+G c Z b b [contains database__global_maps 381 13 18_4]
+G c Z b b [element database__global_maps 384 13 18_4]
+G c Z b b [equivalent_keys database__global_maps 387 13 18_4]
+G c Z b b [equivalent_keys database__global_maps 391 13 18_4]
+G c Z b b [equivalent_keys database__global_maps 395 13 18_4]
+G c Z b b [iterate database__global_maps 399 14 18_4]
+G c Z b b [iterate database__global_maps 408 13 18_4]
+G c Z b b [node_typeDI database__global_maps 429 9 18_4]
+G c Z b b [node_typeDF database__global_maps 429 9 18_4]
+G c Z b b [node_typeIP database__global_maps 429 9 18_4]
+G c Z b b [adjust database__global_maps__ht_types__implementation 90 28 58_7_435_4_18_4]
+G c Z b b [finalize database__global_maps__ht_types__implementation 93 28 58_7_435_4_18_4]
+G c Z b b [zero_counts database__global_maps__ht_types__implementation 96 17 58_7_435_4_18_4]
+G c Z b b [busy database__global_maps__ht_types__implementation 100 17 58_7_435_4_18_4]
+G c Z b b [unbusy database__global_maps__ht_types__implementation 104 17 58_7_435_4_18_4]
+G c Z b b [lock database__global_maps__ht_types__implementation 108 17 58_7_435_4_18_4]
+G c Z b b [unlock database__global_maps__ht_types__implementation 112 17 58_7_435_4_18_4]
+G c Z b b [tc_check database__global_maps__ht_types__implementation 116 17 58_7_435_4_18_4]
+G c Z b b [te_check database__global_maps__ht_types__implementation 120 17 58_7_435_4_18_4]
+G c Z b b [is_busy database__global_maps__ht_types__implementation 136 16 58_7_435_4_18_4]
+G c Z b b [is_locked database__global_maps__ht_types__implementation 140 16 58_7_435_4_18_4]
+G c Z b b [initialize database__global_maps__ht_types__implementation 161 28 58_7_435_4_18_4]
+G c Z b b [finalize database__global_maps__ht_types__implementation 162 28 58_7_435_4_18_4]
+G c Z b b [initialize database__global_maps__ht_types__implementation 167 28 58_7_435_4_18_4]
+G c Z b b [finalize database__global_maps__ht_types__implementation 168 28 58_7_435_4_18_4]
+G c Z b b [reference_control_typeDA database__global_maps__ht_types__implementation 84 12 58_7_435_4_18_4]
+G c Z b b [reference_control_typeDF database__global_maps__ht_types__implementation 84 12 58_7_435_4_18_4]
+G c Z b b [reference_control_typeIP database__global_maps__ht_types__implementation 84 12 58_7_435_4_18_4]
+G c Z b b [with_busyDF database__global_maps__ht_types__implementation 158 12 58_7_435_4_18_4]
+G c Z b b [with_busyIP database__global_maps__ht_types__implementation 158 12 58_7_435_4_18_4]
+G c Z b b [with_lockDF database__global_maps__ht_types__implementation 164 12 58_7_435_4_18_4]
+G c Z b b [with_lockIP database__global_maps__ht_types__implementation 164 12 58_7_435_4_18_4]
+G c Z b b [buckets_typeIP database__global_maps__ht_types 46 12 435_4_18_4]
+G c Z b b [hash_table_typeDA database__global_maps__ht_types 52 12 435_4_18_4]
+G c Z b b [hash_table_typeDF database__global_maps__ht_types 52 12 435_4_18_4]
+G c Z b b [hash_table_typeIP database__global_maps__ht_types 52 12 435_4_18_4]
+G c Z b b [put_image database__global_maps 442 14 18_4]
+G c Z b b [adjust database__global_maps 445 25 18_4]
+G c Z b b [finalize database__global_maps 447 25 18_4]
+G c Z b b [write database__global_maps 453 14 18_4]
+G c Z b b [read database__global_maps 459 14 18_4]
+G c Z b b [read database__global_maps 488 14 18_4]
+G c Z b b [write database__global_maps 494 14 18_4]
+G c Z b b [write database__global_maps 513 14 18_4]
+G c Z b b [read database__global_maps 519 14 18_4]
+G c Z b b [write database__global_maps 535 14 18_4]
+G c Z b b [read database__global_maps 541 14 18_4]
+G c Z b b [pseudo_reference database__global_maps 551 13 18_4]
+G c Z b b [get_element_access database__global_maps 561 13 18_4]
+G c Z b b [mapDA database__global_maps 438 9 18_4]
+G c Z b b [mapDF database__global_maps 438 9 18_4]
+G c Z b b [mapIP database__global_maps 438 9 18_4]
+G c Z b b [cursorIP database__global_maps 468 9 18_4]
+G c Z b b [finalize database__global_maps 577 25 18_4]
+G c Z b b [first database__global_maps 579 24 18_4]
+G c Z b b [next database__global_maps 581 24 18_4]
+G c Z b b [constant_reference_typeDI database__global_maps 503 9 18_4]
+G c Z b b [constant_reference_typeDA database__global_maps 503 9 18_4]
+G c Z b b [constant_reference_typeDF database__global_maps 503 9 18_4]
+G c Z b b [constant_reference_typeIP database__global_maps 503 9 18_4]
+G c Z b b [reference_typeDI database__global_maps 525 9 18_4]
+G c Z b b [reference_typeDA database__global_maps 525 9 18_4]
+G c Z b b [reference_typeDF database__global_maps 525 9 18_4]
+G c Z b b [reference_typeIP database__global_maps 525 9 18_4]
+G c Z b b [iteratorDF database__global_maps 570 9 18_4]
+G c Z b b [iteratorIP database__global_maps 570 9 18_4]
+G c Z b b [copy_node database__global_maps 55 13 18_4]
+G c Z b b [equivalent_key_node database__global_maps 59 13 18_4]
+G c Z b b [free database__global_maps 64 14 18_4]
+G c Z b b [find_equal_key database__global_maps 66 13 18_4]
+G c Z b b [hash_node database__global_maps 70 13 18_4]
+G c Z b b [next database__global_maps 73 13 18_4]
+G c Z b b [read_node database__global_maps 76 13 18_4]
+G c Z b b [set_next database__global_maps 80 14 18_4]
+G c Z b b [vet database__global_maps 83 13 18_4]
+G c Z b b [write_node database__global_maps 85 14 18_4]
+G c Z b b [free_hash_table database__global_maps__ht_ops 57 14 94_4_18_4]
+G c Z b b [index database__global_maps__ht_ops 61 13 94_4_18_4]
+G c Z b b [index database__global_maps__ht_ops 67 13 94_4_18_4]
+G c Z b b [checked_index database__global_maps__ht_ops 74 13 94_4_18_4]
+G c Z b b [checked_index database__global_maps__ht_ops 81 13 94_4_18_4]
+G c Z b b [adjust database__global_maps__ht_ops 86 14 94_4_18_4]
+G c Z b b [finalize database__global_maps__ht_ops 92 14 94_4_18_4]
+G c Z b b [clear database__global_maps__ht_ops 108 14 94_4_18_4]
+G c Z b b [move database__global_maps__ht_ops 114 14 94_4_18_4]
+G c Z b b [capacity database__global_maps__ht_ops 120 13 94_4_18_4]
+G c Z b b [reserve_capacity database__global_maps__ht_ops 123 14 94_4_18_4]
+G c Z b b [delete_node_at_index database__global_maps__ht_ops 132 14 94_4_18_4]
+G c Z b b [delete_node_sans_free database__global_maps__ht_ops 141 14 94_4_18_4]
+G c Z b b [first database__global_maps__ht_ops 146 13 94_4_18_4]
+G c Z b b [first database__global_maps__ht_ops 148 13 94_4_18_4]
+G c Z b b [next database__global_maps__ht_ops 155 13 94_4_18_4]
+G c Z b b [next database__global_maps__ht_ops 158 13 94_4_18_4]
+G c Z b b [new_buckets database__global_maps__ht_ops 205 13 94_4_18_4]
+G c Z b b [free_buckets database__global_maps__ht_ops 209 14 94_4_18_4]
+G c Z b b [index database__global_maps__key_ops 56 13 102_4_18_4]
+G c Z b b [checked_index database__global_maps__key_ops 62 13 102_4_18_4]
+G c Z b b [checked_equivalent_keys database__global_maps__key_ops 69 13 102_4_18_4]
+G c Z b b [delete_key_sans_free database__global_maps__key_ops 76 14 102_4_18_4]
+G c Z b b [find database__global_maps__key_ops 84 13 102_4_18_4]
+G c Z b b [is_equalR database__global_maps__is_equalGP4517 110 13 18_4]
+G c Z b b [is_equal database__global_maps 110 13 18_4]
+G c Z b b [read_nodesR database__global_maps__read_nodesGP4586 112 14 18_4]
+G c Z b b [read_nodes database__global_maps 112 14 18_4]
+G c Z b b [write_nodesR database__global_maps__write_nodesGP4651 113 14 18_4]
+G c Z b b [write_nodes database__global_maps 113 14 18_4]
+G c Z b b [encode_key database 27 13 none]
+G c Z b b [starts_with database 38 13 none]
+X 1 ada.ads
+18K9*Ada 22e8 35|8r6 8r33 36|8r6 8r33 9r6 9r33 10r6 11r6 12r6 13r6 18r31
+. 21r26 383r14
+X 5 a-contai.ads
+16K13*Containers 28e19 36|10r10 18r35
+19M9*Hash_Type
+22I9*Count_Type<integer>
+X 11 a-cohama.ads
+62+9 Key_Type 36|19r7
+63+9 Element_Type 36|20r7
+65V18 Hash{5|19M9} 36|21r7
+74V18 Equivalent_Keys{boolean} 36|22r7
+92k24*Hashed_Maps 585e31 36|10w21 18r46
+99R9*Map<18|43R9> 36|24r29[18]
+109R9*Cursor
+168V13*Length{5|22I9} 36|81s59[18] 212s59[18] 324s57[18]
+174U14*Clear 36|351s18[18]
+177V13*Key{28|105R9} 36|86s41[18] 88s54[18] 106s38[18] 129s61[18] 131s41[18]
+. 217s41[18] 219s54[18] 238s38[18] 262s61[18] 264s41[18] 329s41[18] 331s52[18]
+. 362s49[18] 418s49[18]
+182V13*Element{28|105R9} 36|363s43[18] 419s43[18]
+328U14*Include 36|52s18[18] 182s18[18] 319s24[18] 342s27[18] 400s24[18]
+350U14*Delete 36|77s21[18] 92s24[18] 209s21[18] 223s24[18]
+381V13*Contains{boolean} 36|58s21[18] 68s25[18] 76s21[18] 103s30[18] 189s21[18]
+. 200s25[18] 208s21[18] 235s30[18] 318s24[18]
+384V13*Element{28|105R9} 36|59s28[18] 69s25[18] 104s30[18] 190s28[18] 201s25[18]
+. 236s30[18] 320s43[18] 343s46[18]
+408V13*Iterate{20|24C9[135[36|18]]} 36|85s30[18] 105s27[18] 127s27[18] 216s30[18]
+. 237s27[18] 260s27[18] 328s30[18] 361s27[18] 417s27[18]
+X 16 a-direct.ads
+76K13*Directories 524e20 36|13w10 383r18
+310V13*Exists{boolean} 36|383s30
+X 20 a-iteint.ads
+24C9*Forward_Iterator<24R9[11|135[36|18]]>
+24h9*Forward_Iterator
+X 21 a-sequio.ads
+43k13*Sequential_IO 160e22 36|12w10
+X 24 a-string.ads
+16K13*Strings 35e16 35|8r10 8r37 36|9r10 9r37 11r10 21r30
+X 28 a-strunb.ads
+91K21*Unbounded 1641e26 35|8w18 8r45 36|9w18 9r45 11r18 21r38
+105R9*Unbounded_String<18|43R9> 1620e15 35|16r47 30r13 39r13 55r13 36|19r26
+. 20r26 28r13 38r32 50r22 55r47 56r22 66r22 73r25 82r15 98r27 123r13 125r16
+. 180r22 186r13 187r22 198r22 205r25 213r15 230r27 256r13 258r16 316r29 325r15
+. 339r35 378r14 380r17 381r17
+109r4*Null_Unbounded_String{105R9} 36|61r17 69r42 104r47 125r36 156r38 162r41
+. 192r17 201r42 236r47 258r36 289r38 295r41
+111V13*Length{natural} 36|391s24 397s44 399s60
+122V13*To_Unbounded_String{105R9} 36|31s17 33s17 52s32 158s39 164s42 182s32
+. 291s39 297s42 340s18 388s18
+135V13*To_String{string} 36|40s36 129s38 157s36 163s39 262s38 290s36 296s39
+. 336s41 362s26 363s20 418s26 419s20
+217V13*Element{character} 36|392s16
+247V13*Unbounded_Slice{105R9} 36|398s24 399s24
+269V14*"="{boolean} 11|84i19 36|22r27 69s39 104s44 156s36 162s39 201s39 236s44
+. 289s36 295s39
+X 29 a-stunha.ads
+18V32*Hash{5|19M9} 36|11w28 21r48
+X 32 a-textio.ads
+58K13*Text_IO 785e16 36|8w10 8r37
+67P9*File_Type 36|358r14 377r14
+69n23*In_File{69E9} 36|386r19
+69n32*Out_File{69E9} 36|360r21
+99U14*Create 36|360s7
+115U14*Open 36|386s7
+131U14*Close 36|365s7 370s13 403s7 408s13
+176V13*Is_Open{boolean} 36|369s13 407s13
+341V13*End_Of_File{boolean} 36|387s17
+549V13*Get_Line{string} 36|388s39
+555U14*Put_Line 36|362s10
+565U14*Put_Line 36|415s7 416s7 418s10
+X 35 database.ads
+10K9*Database 73l5 73e13 36|15b14 423l5 423t13
+13U14*Set_Global 13>26 13>41 36|49b14 53l8 53t18
+13a26 Name{string} 36|49b26 50r54
+13a41 Value{string} 36|49b41 52r53
+16V13*Get_Global{28|105R9} 16>25 36|55b13 63l8 63t18
+16a25 Name{string} 36|55b25 56r54
+19V13*Global_Exists{boolean} 19>28 36|65b13 70l8 70t21
+19a28 Name{string} 36|65b28 66r54
+22U14*Kill_Global 22>27 36|72b14 95l8 95t19
+22a27 Name{string} 36|72b27 73r57 74r35
+26V13*Global_Data{natural} 26>26 36|97b13 120l8 120t19
+26a26 Name{string} 36|97b26 98r59 101r37
+29V13*Global_Order{28|105R9} 29>27 29>42 36|122b13 175l8 175t20
+29a27 Name{string} 36|122b27 124r35
+29a42 Current{string} 36|122b42 155r28 161r37
+33U14*Set_Global_Subscript 33>36 34>36 35>36 36|177b14 183l8 183t28
+33a36 Name{string} 36|177b36 180r54
+34a36 Subs{string} 36|178b36 180r60
+35a36 Value{string} 36|179b36 182r53
+38V13*Get_Global_Subscript{28|105R9} 38>35 38>50 36|185b13 194l8 194t28
+38a35 Name{string} 36|185b35 187r54
+38a50 Subs{string} 36|185b50 187r60
+42V13*Global_Subscript_Exists{boolean} 42>38 42>53 36|196b13 202l8 202t31
+42a38 Name{string} 36|196b38 198r54
+42a53 Subs{string} 36|196b53 198r60
+46U14*Kill_Global_Subscript 46>37 46>52 36|204b14 226l8 226t29
+46a37 Name{string} 36|204b37 205r57 206r35
+46a52 Subs{string} 36|204b52 205r63 206r48
+49V13*Global_Subscript_Data{natural} 49>36 49>51 36|228b13 252l8 252t29
+49a36 Name{string} 36|228b36 230r59 233r37
+49a51 Subs{string} 36|228b51 230r65 233r50
+53V13*Global_Subscript_Order{28|105R9} 53>37 53>52 54>37 36|254b13 308l8
+. 308t30
+53a37 Name{string} 36|254b37 257r35
+53a52 Subs{string} 36|254b52 257r48
+54a37 Current{string} 36|255b37 288r28 294r37
+58U14*Merge_Global 58>28 59>28 36|310b14 347l8 347t20
+58a28 Dest_Name{string} 36|310b28 313r40 319r45
+59a28 Src_Name{string} 36|311b28 312r40 316r61
+62U14*Kill_All_Globals 36|349b14 352l8 352t24
+65V13*Save{boolean} 65>19 36|357b13 373l8 373t12
+65a19 Filename{string} 36|357b19 360r31
+68V13*Load{boolean} 68>19 36|376b13 411l8 411t12
+68a19 Filename{string} 36|376b19 383r38 386r28
+71U14*List_All_Globals 36|413b14 421l8 421t24
+X 36 database.adb
+18K12 Global_Maps[11|92] 24r17 86r29 88r42 106r26 129r49 131r29 217r29 219r42
+. 238r26 262r49 264r29 329r29 331r40 362r37 363r31 418r37 419r31
+24r4 Global_Map{11|99R9[18]} 52m7 52r7 58r10 59r17 68r14 69r14 76r10 77m10
+. 77r10 81r48 85r19 92m13 92r13 103r19 104r19 105r16 127r16 182m7 182r7 189r10
+. 190r17 200r14 201r14 208r10 209m10 209r10 212r48 216r19 223m13 223r13 235r19
+. 236r19 237r16 260r16 318r13 319m13 319r13 320r32 324r46 328r19 342m16 342r16
+. 343r35 351m7 351r7 361r16 400m13 400r13 417r16
+27V13 Encode_Key{28|105R9} 27b13 27>25 27>40 35l8 35t18 50s42 56s42 66s42
+. 73s45 98s47 180s42 187s42 198s42 205s45 230s47 316s49 319s33
+27a25 Name{string} 31r38 33r38
+27a40 Subs{string} 30r10 33r51
+38V13 Starts_With{boolean} 38b13 38>26 39>26 47l8 47t19 86s16 106s13 131s16
+. 217s16 238s13 264s16 329s16
+38r26 Key{28|105R9} 40r47
+39a26 Prefix{string} 42r27 45r56 46r11
+40a7 Key_Str{string} 42r10 45r14 45r23 45r40
+50r7 Key{28|105R9} 52r27
+56r7 Key{28|105R9} 58r31 59r37
+66r7 Key{28|105R9} 68r35 69r34
+73r7 Key{28|105R9} 76r31 77r29
+74a7 Prefix=74:40{string} 86r50
+81a10 Keys_To_Delete(28|105R9) 88m16 92r32
+83i10 Count{natural} 87m16 87r25 88r32 91r24
+85i14 C{any type} 86r46 88r59
+91i14 I{integer} 92r48
+98r7 Key{28|105R9} 103r40 104r39
+99b7 Has_Data{boolean} 103m7 111r10 113r13
+100b7 Has_Subs{boolean} 107m13 111r28 115r13
+101a7 Prefix=101:42{string} 106r47
+105i11 C{any type} 106r43
+124a7 Prefix=124:40{string} 131r50 133r63
+125r7 Best{28|105R9} 156r31 157r47 158m31 162r34 163r50 164m34 174r14
+127i11 C{any type} 129r66 131r46
+129a13 Key{string} 133r51 134r42 138r41 139r25 141r28 153r27
+133i19 Sub_Start{natural} 138r28 150r33 153r32
+134i19 Sub_End{natural} 146m22 148m22 150r22 153r45
+135i19 Comma_Pos{natural} 139r48 140m25 145r22 146r33
+136i19 Close_Pos{natural} 141r51 142m25 147r25 148r33
+138i23 I{integer} 139r30 140r38 141r33 142r38
+152a25 Sub{string} 157r30 158r60 161r31 163r33 164r63
+180r7 Key{28|105R9} 182r27
+187r7 Key{28|105R9} 189r31 190r37
+198r7 Key{28|105R9} 200r35 201r34
+205r7 Key{28|105R9} 208r31 209r29
+206a7 Prefix=206:53{string} 217r50
+212a10 Keys_To_Delete(28|105R9) 219m16 223r32
+214i10 Count{natural} 218m16 218r25 219r32 222r24
+216i14 C{any type} 217r46 219r59
+222i14 I{integer} 223r48
+230r7 Key{28|105R9} 235r40 236r39
+231b7 Has_Data{boolean} 235m7 243r10 245r13
+232b7 Has_Subs{boolean} 239m13 243r28 247r13
+233a7 Prefix=233:55{string} 238r47
+237i11 C{any type} 238r43
+257a7 Prefix=257:53{string} 264r50 266r63
+258r7 Best{28|105R9} 289r31 290r47 291m31 295r34 296r50 297m34 307r14
+260i11 C{any type} 262r66 264r46
+262a13 Key{string} 266r51 267r42 271r41 272r25 274r28 286r27
+266i19 Sub_Start{natural} 271r28 283r33 286r32
+267i19 Sub_End{natural} 279m22 281m22 283r22 286r45
+268i19 Comma_Pos{natural} 272r48 273m25 278r22 279r33
+269i19 Close_Pos{natural} 274r51 275m25 280r25 281r33
+271i23 I{integer} 272r30 273r38 274r33 275r38
+285a25 Sub{string} 290r30 291r60 294r31 296r33 297r63
+312a7 Src_Prefix=312:49{string} 329r50 338r35
+313a7 Dest_Prefix=313:50{string} 340r39
+316r10 Src_Key{28|105R9} 318r34 320r52
+324a10 Keys_To_Copy(28|105R9) 331m16 336r52 343r55
+326i10 Count{natural} 330m16 330r25 331r30 334r24
+328i14 C{any type} 329r46 331r57
+334i14 I{integer} 336r66 343r69
+336a16 Key{string} 338r18 338r23 338r56
+337a16 Suffix{string} 340r53
+339r16 New_Key{28|105R9} 342r36
+358p7 File{32|67P9} 360m15 360r15 362r20 365m14 365r14 369r22 370m20 370r20
+361i11 C{any type} 362r54 363r52
+377p7 File{32|67P9} 386m13 386r13 387r30 388r49 403m14 403r14 407r22 408m20
+. 408r20
+378r7 Line{28|105R9} 388m10 391r32 392r25 397r52 398r41 399r41 399r68
+379i7 Tab_Pos{natural} 389m10 393m16 397r13 397r34 398r50 399r47
+380r7 Key_Str{28|105R9} 398m13 400r33
+381r7 Val_Str{28|105R9} 399m13 400r42
+391i14 I{integer} 392r31 393r27
+417r11 C{11|109R9[18]} 418r54 419r52
+X 40 system.ads
+67M9*Address
+X 54 s-memory.ads
+51V13*Alloc{40|67M9} 101i<c,__gnat_malloc>22
+66U14*Free 102i<c,__gnat_free>22
+74V13*Realloc{40|67M9} 103i<c,__gnat_realloc>22
+X 66 s-stalib.adb
+87U14 Break_Start 88i<c,__gnat_break_start>22
+

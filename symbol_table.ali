@@ -1,0 +1,478 @@
+V "GNAT Lib v16"
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_STREAMS
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_ALIASING
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+
+U symbol_table%b	symbol_table.adb	d494d3a9 OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.containers%s	a-contai.ads		a-contai.ali
+Z ada.containers.hash_tables%s  a-cohata.ads	a-cohata.ali
+Z ada.containers.hash_tables.generic_keys%s
+Z ada.containers.hash_tables.generic_operations%s
+W ada.containers.hashed_maps%s
+W ada.containers.helpers%s  a-conhel.adb	a-conhel.ali
+Z ada.containers.prime_numbers%s  a-coprnu.adb	a-coprnu.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.ads		a-finali.ali
+Z ada.iterator_interfaces%s
+Z ada.streams%s		a-stream.adb		a-stream.ali
+W ada.strings%s		a-string.ads		a-string.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+W ada.strings.unbounded.hash%s  a-stunha.adb	a-stunha.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.unchecked_deallocation%s
+Z system%s		system.ads		system.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.finalization_primitives%s  s-finpri.adb  s-finpri.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.put_images%s	s-putima.adb		s-putima.ali
+Z system.return_stack%s	s-retsta.ads		s-retsta.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.ads	s-stoele.ali
+Z system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+Z system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+Z system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+Z system.strings.stream_ops%s  s-ststop.adb	s-ststop.ali
+
+U symbol_table%s	symbol_table.ads	d19ea3b4 EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+
+D ada.ads		20260610194523 76789da1 ada%s
+D a-charac.ads		20260610194523 2d3ec45b ada.characters%s
+D a-chlat1.ads		20260610194523 e0d72e76 ada.characters.latin_1%s
+D a-contai.ads		20260610194523 61e5e089 ada.containers%s
+D a-cohata.ads		20260610194523 bea783e3 ada.containers.hash_tables%s
+D a-chtgke.ads		20260610194523 20177f7b ada.containers.hash_tables.generic_keys%s
+D a-chtgke.adb		20260610194523 fdf2dddc ada.containers.hash_tables.generic_keys%b
+D a-chtgop.ads		20260610194523 11c5978a ada.containers.hash_tables.generic_operations%s
+D a-chtgop.adb		20260610194523 c3ccdc4f ada.containers.hash_tables.generic_operations%b
+D a-cohama.ads		20260610194523 477ea40a ada.containers.hashed_maps%s
+D a-cohama.adb		20260610194523 768389f7 ada.containers.hashed_maps%b
+D a-conhel.ads		20260610194523 46fe1ce3 ada.containers.helpers%s
+D a-conhel.adb		20260610194523 854d323e ada.containers.helpers%b
+D a-coprnu.ads		20260610194523 24215258 ada.containers.prime_numbers%s
+D a-except.ads		20260610194523 8699d7ff ada.exceptions%s
+D a-finali.ads		20260610194523 099c16e4 ada.finalization%s
+D a-ioexce.ads		20260610194523 40018c65 ada.io_exceptions%s
+D a-iteint.ads		20260610194523 49a8bee2 ada.iterator_interfaces%s
+D a-stream.ads		20260610194523 cb01a8f8 ada.streams%s
+D a-string.ads		20260610194523 90ac6797 ada.strings%s
+D a-strmap.ads		20260610194523 f7e6ca10 ada.strings.maps%s
+D a-strsea.ads		20260610194523 18c3c634 ada.strings.search%s
+D a-sttebu.ads		20260610194523 f1ad67a2 ada.strings.text_buffers%s
+D a-strunb.ads		20260610194523 8d6ccba7 ada.strings.unbounded%s
+D a-stunha.ads		20260610194523 115e053b ada.strings.unbounded.hash%s
+D a-stuten.ads		20260610194523 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260610194523 2dbf449c ada.tags%s
+D a-textio.ads		20260610194523 34ef47de ada.text_io%s
+D a-unccon.ads		20260610194523 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20260610194523 c3a8ac65 ada.unchecked_deallocation%s
+D interfac.ads		20260610194523 9111f9c1 interfaces%s
+D i-c.ads		20260610194523 dbdd3be7 interfaces.c%s
+D i-cstrea.ads		20260610194523 ffd01b9d interfaces.c_streams%s
+D symbol_table.ads	20260808201336 5cf26813 symbol_table%s
+D symbol_table.adb	20260808201510 67c596f2 symbol_table%b
+D system.ads		20260610194523 8a611ac3 system%s
+D s-atocou.ads		20260610194523 dc18efc3 system.atomic_counters%s
+D s-atocou.adb		20260610194523 6fe685de system.atomic_counters%b
+D s-atopri.ads		20260610194523 e19c1d89 system.atomic_primitives%s
+D s-conca2.ads		20260610194523 b5fb73f7 system.concat_2%s
+D s-conca3.ads		20260610194523 8a7a19a2 system.concat_3%s
+D s-conca4.ads		20260610194523 33f85f3e system.concat_4%s
+D s-crtl.ads		20260610194523 823b6536 system.crtl%s
+D s-exctab.ads		20260610194523 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260610194523 dc5161d4 system.file_control_block%s
+D s-finpri.ads		20260610194523 5970d55a system.finalization_primitives%s
+D s-finroo.ads		20260610194523 0a7c3ed4 system.finalization_root%s
+D s-memory.ads		20260610194523 18949c1a system.memory%s
+D s-oscons.ads		20260629131825 a97567d0 system.os_constants%s
+D s-oslock.ads		20260610194523 bcc789d2 system.os_locks%s
+D s-parame.ads		20260610194523 a1aeab5c system.parameters%s
+D s-pooglo.ads		20260610194523 91708d21 system.pool_global%s
+D s-putima.ads		20260610194523 1b989439 system.put_images%s
+D s-retsta.ads		20260610194523 0f6b06cb system.return_stack%s
+D s-secsta.ads		20260610194523 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260610194523 5d88fdea system.soft_links%s
+D s-stache.ads		20260610194523 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260610194523 1c9580f6 system.standard_library%s
+D s-stalib.adb		20260610194523 eb464a47 system.standard_library%b
+D s-stoele.ads		20260610194523 ccded4e8 system.storage_elements%s
+D s-stopoo.ads		20260610194523 45459446 system.storage_pools%s
+D s-stposu.ads		20260610194523 f8e797ef system.storage_pools.subpools%s
+D s-stratt.ads		20260610194523 80b8dafb system.stream_attributes%s
+D s-string.ads		20260610194523 582aac7d system.strings%s
+D s-ststop.ads		20260610194523 c569db7c system.strings.stream_ops%s
+D s-traent.ads		20260610194523 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260610194523 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260610194523 d9032363 system.wch_con%s
+G a e
+G c Z s b [set_var symbol_table 13 14 none]
+G c Z s b [get_var symbol_table 16 13 none]
+G c Z s b [var_exists symbol_table 19 13 none]
+G c Z s b [kill_var symbol_table 22 14 none]
+G c Z s b [var_data symbol_table 26 13 none]
+G c Z s b [var_order symbol_table 31 13 none]
+G c Z s b [set_subscript symbol_table 35 14 none]
+G c Z s b [get_subscript symbol_table 40 13 none]
+G c Z s b [subscript_exists symbol_table 44 13 none]
+G c Z s b [kill_subscript symbol_table 48 14 none]
+G c Z s b [subscript_data symbol_table 51 13 none]
+G c Z s b [subscript_order symbol_table 54 13 none]
+G c Z s b [merge_var symbol_table 59 14 none]
+G c Z s b [kill_all symbol_table 63 14 none]
+G c Z s b [list_all symbol_table 66 14 none]
+G c Z b b [Oeq symbol_table__var_maps 113 13 17_4]
+G c Z b b [empty symbol_table__var_maps 129 13 17_4]
+G c Z b b [has_element symbol_table__var_maps 131 13 17_4]
+G c Z b b [Oeq symbol_table__var_maps 138 13 17_4]
+G c Z b b [capacity symbol_table__var_maps 154 13 17_4]
+G c Z b b [reserve_capacity symbol_table__var_maps 158 14 17_4]
+G c Z b b [length symbol_table__var_maps 168 13 17_4]
+G c Z b b [is_empty symbol_table__var_maps 171 13 17_4]
+G c Z b b [clear symbol_table__var_maps 174 14 17_4]
+G c Z b b [key symbol_table__var_maps 177 13 17_4]
+G c Z b b [element symbol_table__var_maps 182 13 17_4]
+G c Z b b [replace_element symbol_table__var_maps 188 14 17_4]
+G c Z b b [query_element symbol_table__var_maps 199 14 17_4]
+G c Z b b [update_element symbol_table__var_maps 212 14 17_4]
+G c Z b b [constant_reference symbol_table__var_maps 238 13 17_4]
+G c Z b b [reference symbol_table__var_maps 256 13 17_4]
+G c Z b b [constant_reference symbol_table__var_maps 273 13 17_4]
+G c Z b b [reference symbol_table__var_maps 279 13 17_4]
+G c Z b b [assign symbol_table__var_maps 285 14 17_4]
+G c Z b b [copy symbol_table__var_maps 290 13 17_4]
+G c Z b b [move symbol_table__var_maps 292 14 17_4]
+G c Z b b [insert symbol_table__var_maps 297 14 17_4]
+G c Z b b [insert symbol_table__var_maps 311 14 17_4]
+G c Z b b [insert symbol_table__var_maps 320 14 17_4]
+G c Z b b [include symbol_table__var_maps 328 14 17_4]
+G c Z b b [replace symbol_table__var_maps 338 14 17_4]
+G c Z b b [exclude symbol_table__var_maps 346 14 17_4]
+G c Z b b [delete symbol_table__var_maps 350 14 17_4]
+G c Z b b [delete symbol_table__var_maps 355 14 17_4]
+G c Z b b [first symbol_table__var_maps 363 13 17_4]
+G c Z b b [next symbol_table__var_maps 367 13 17_4]
+G c Z b b [next symbol_table__var_maps 372 14 17_4]
+G c Z b b [find symbol_table__var_maps 375 13 17_4]
+G c Z b b [contains symbol_table__var_maps 381 13 17_4]
+G c Z b b [element symbol_table__var_maps 384 13 17_4]
+G c Z b b [equivalent_keys symbol_table__var_maps 387 13 17_4]
+G c Z b b [equivalent_keys symbol_table__var_maps 391 13 17_4]
+G c Z b b [equivalent_keys symbol_table__var_maps 395 13 17_4]
+G c Z b b [iterate symbol_table__var_maps 399 14 17_4]
+G c Z b b [iterate symbol_table__var_maps 408 13 17_4]
+G c Z b b [node_typeDI symbol_table__var_maps 429 9 17_4]
+G c Z b b [node_typeDF symbol_table__var_maps 429 9 17_4]
+G c Z b b [node_typeIP symbol_table__var_maps 429 9 17_4]
+G c Z b b [adjust symbol_table__var_maps__ht_types__implementation 90 28 58_7_435_4_17_4]
+G c Z b b [finalize symbol_table__var_maps__ht_types__implementation 93 28 58_7_435_4_17_4]
+G c Z b b [zero_counts symbol_table__var_maps__ht_types__implementation 96 17 58_7_435_4_17_4]
+G c Z b b [busy symbol_table__var_maps__ht_types__implementation 100 17 58_7_435_4_17_4]
+G c Z b b [unbusy symbol_table__var_maps__ht_types__implementation 104 17 58_7_435_4_17_4]
+G c Z b b [lock symbol_table__var_maps__ht_types__implementation 108 17 58_7_435_4_17_4]
+G c Z b b [unlock symbol_table__var_maps__ht_types__implementation 112 17 58_7_435_4_17_4]
+G c Z b b [tc_check symbol_table__var_maps__ht_types__implementation 116 17 58_7_435_4_17_4]
+G c Z b b [te_check symbol_table__var_maps__ht_types__implementation 120 17 58_7_435_4_17_4]
+G c Z b b [is_busy symbol_table__var_maps__ht_types__implementation 136 16 58_7_435_4_17_4]
+G c Z b b [is_locked symbol_table__var_maps__ht_types__implementation 140 16 58_7_435_4_17_4]
+G c Z b b [initialize symbol_table__var_maps__ht_types__implementation 161 28 58_7_435_4_17_4]
+G c Z b b [finalize symbol_table__var_maps__ht_types__implementation 162 28 58_7_435_4_17_4]
+G c Z b b [initialize symbol_table__var_maps__ht_types__implementation 167 28 58_7_435_4_17_4]
+G c Z b b [finalize symbol_table__var_maps__ht_types__implementation 168 28 58_7_435_4_17_4]
+G c Z b b [reference_control_typeDA symbol_table__var_maps__ht_types__implementation 84 12 58_7_435_4_17_4]
+G c Z b b [reference_control_typeDF symbol_table__var_maps__ht_types__implementation 84 12 58_7_435_4_17_4]
+G c Z b b [reference_control_typeIP symbol_table__var_maps__ht_types__implementation 84 12 58_7_435_4_17_4]
+G c Z b b [with_busyDF symbol_table__var_maps__ht_types__implementation 158 12 58_7_435_4_17_4]
+G c Z b b [with_busyIP symbol_table__var_maps__ht_types__implementation 158 12 58_7_435_4_17_4]
+G c Z b b [with_lockDF symbol_table__var_maps__ht_types__implementation 164 12 58_7_435_4_17_4]
+G c Z b b [with_lockIP symbol_table__var_maps__ht_types__implementation 164 12 58_7_435_4_17_4]
+G c Z b b [buckets_typeIP symbol_table__var_maps__ht_types 46 12 435_4_17_4]
+G c Z b b [hash_table_typeDA symbol_table__var_maps__ht_types 52 12 435_4_17_4]
+G c Z b b [hash_table_typeDF symbol_table__var_maps__ht_types 52 12 435_4_17_4]
+G c Z b b [hash_table_typeIP symbol_table__var_maps__ht_types 52 12 435_4_17_4]
+G c Z b b [put_image symbol_table__var_maps 442 14 17_4]
+G c Z b b [adjust symbol_table__var_maps 445 25 17_4]
+G c Z b b [finalize symbol_table__var_maps 447 25 17_4]
+G c Z b b [write symbol_table__var_maps 453 14 17_4]
+G c Z b b [read symbol_table__var_maps 459 14 17_4]
+G c Z b b [read symbol_table__var_maps 488 14 17_4]
+G c Z b b [write symbol_table__var_maps 494 14 17_4]
+G c Z b b [write symbol_table__var_maps 513 14 17_4]
+G c Z b b [read symbol_table__var_maps 519 14 17_4]
+G c Z b b [write symbol_table__var_maps 535 14 17_4]
+G c Z b b [read symbol_table__var_maps 541 14 17_4]
+G c Z b b [pseudo_reference symbol_table__var_maps 551 13 17_4]
+G c Z b b [get_element_access symbol_table__var_maps 561 13 17_4]
+G c Z b b [mapDA symbol_table__var_maps 438 9 17_4]
+G c Z b b [mapDF symbol_table__var_maps 438 9 17_4]
+G c Z b b [mapIP symbol_table__var_maps 438 9 17_4]
+G c Z b b [cursorIP symbol_table__var_maps 468 9 17_4]
+G c Z b b [finalize symbol_table__var_maps 577 25 17_4]
+G c Z b b [first symbol_table__var_maps 579 24 17_4]
+G c Z b b [next symbol_table__var_maps 581 24 17_4]
+G c Z b b [constant_reference_typeDI symbol_table__var_maps 503 9 17_4]
+G c Z b b [constant_reference_typeDA symbol_table__var_maps 503 9 17_4]
+G c Z b b [constant_reference_typeDF symbol_table__var_maps 503 9 17_4]
+G c Z b b [constant_reference_typeIP symbol_table__var_maps 503 9 17_4]
+G c Z b b [reference_typeDI symbol_table__var_maps 525 9 17_4]
+G c Z b b [reference_typeDA symbol_table__var_maps 525 9 17_4]
+G c Z b b [reference_typeDF symbol_table__var_maps 525 9 17_4]
+G c Z b b [reference_typeIP symbol_table__var_maps 525 9 17_4]
+G c Z b b [iteratorDF symbol_table__var_maps 570 9 17_4]
+G c Z b b [iteratorIP symbol_table__var_maps 570 9 17_4]
+G c Z b b [copy_node symbol_table__var_maps 55 13 17_4]
+G c Z b b [equivalent_key_node symbol_table__var_maps 59 13 17_4]
+G c Z b b [free symbol_table__var_maps 64 14 17_4]
+G c Z b b [find_equal_key symbol_table__var_maps 66 13 17_4]
+G c Z b b [hash_node symbol_table__var_maps 70 13 17_4]
+G c Z b b [next symbol_table__var_maps 73 13 17_4]
+G c Z b b [read_node symbol_table__var_maps 76 13 17_4]
+G c Z b b [set_next symbol_table__var_maps 80 14 17_4]
+G c Z b b [vet symbol_table__var_maps 83 13 17_4]
+G c Z b b [write_node symbol_table__var_maps 85 14 17_4]
+G c Z b b [free_hash_table symbol_table__var_maps__ht_ops 57 14 94_4_17_4]
+G c Z b b [index symbol_table__var_maps__ht_ops 61 13 94_4_17_4]
+G c Z b b [index symbol_table__var_maps__ht_ops 67 13 94_4_17_4]
+G c Z b b [checked_index symbol_table__var_maps__ht_ops 74 13 94_4_17_4]
+G c Z b b [checked_index symbol_table__var_maps__ht_ops 81 13 94_4_17_4]
+G c Z b b [adjust symbol_table__var_maps__ht_ops 86 14 94_4_17_4]
+G c Z b b [finalize symbol_table__var_maps__ht_ops 92 14 94_4_17_4]
+G c Z b b [clear symbol_table__var_maps__ht_ops 108 14 94_4_17_4]
+G c Z b b [move symbol_table__var_maps__ht_ops 114 14 94_4_17_4]
+G c Z b b [capacity symbol_table__var_maps__ht_ops 120 13 94_4_17_4]
+G c Z b b [reserve_capacity symbol_table__var_maps__ht_ops 123 14 94_4_17_4]
+G c Z b b [delete_node_at_index symbol_table__var_maps__ht_ops 132 14 94_4_17_4]
+G c Z b b [delete_node_sans_free symbol_table__var_maps__ht_ops 141 14 94_4_17_4]
+G c Z b b [first symbol_table__var_maps__ht_ops 146 13 94_4_17_4]
+G c Z b b [first symbol_table__var_maps__ht_ops 148 13 94_4_17_4]
+G c Z b b [next symbol_table__var_maps__ht_ops 155 13 94_4_17_4]
+G c Z b b [next symbol_table__var_maps__ht_ops 158 13 94_4_17_4]
+G c Z b b [new_buckets symbol_table__var_maps__ht_ops 205 13 94_4_17_4]
+G c Z b b [free_buckets symbol_table__var_maps__ht_ops 209 14 94_4_17_4]
+G c Z b b [index symbol_table__var_maps__key_ops 56 13 102_4_17_4]
+G c Z b b [checked_index symbol_table__var_maps__key_ops 62 13 102_4_17_4]
+G c Z b b [checked_equivalent_keys symbol_table__var_maps__key_ops 69 13 102_4_17_4]
+G c Z b b [delete_key_sans_free symbol_table__var_maps__key_ops 76 14 102_4_17_4]
+G c Z b b [find symbol_table__var_maps__key_ops 84 13 102_4_17_4]
+G c Z b b [is_equalR symbol_table__var_maps__is_equalGP4517 110 13 17_4]
+G c Z b b [is_equal symbol_table__var_maps 110 13 17_4]
+G c Z b b [read_nodesR symbol_table__var_maps__read_nodesGP4586 112 14 17_4]
+G c Z b b [read_nodes symbol_table__var_maps 112 14 17_4]
+G c Z b b [write_nodesR symbol_table__var_maps__write_nodesGP4651 113 14 17_4]
+G c Z b b [write_nodes symbol_table__var_maps 113 14 17_4]
+G c Z b b [encode_key symbol_table 26 13 none]
+G c Z b b [starts_with symbol_table 37 13 none]
+X 1 ada.ads
+18K9*Ada 22e8 34|8r6 8r33 35|8r6 8r33 9r6 9r33 10r6 11r6 17r28 20r26
+X 4 a-contai.ads
+16K13*Containers 28e19 35|10r10 17r32
+19M9*Hash_Type
+22I9*Count_Type<integer>
+X 10 a-cohama.ads
+62+9 Key_Type 35|18r7
+63+9 Element_Type 35|19r7
+65V18 Hash{4|19M9} 35|20r7
+74V18 Equivalent_Keys{boolean} 35|21r7
+92k24*Hashed_Maps 585e31 35|10w21 17r43
+99R9*Map<16|43R9> 35|23r23[17]
+109R9*Cursor 35|74r25[17]
+168V13*Length{4|22I9} 35|85s56[17] 227s56[17] 341s54[17]
+174U14*Clear 35|367s15[17]
+177V13*Key{24|105R9} 35|90s38[17] 92s51[17] 112s35[17] 138s58[17] 140s38[17]
+. 232s38[17] 234s51[17] 252s35[17] 276s58[17] 278s38[17] 346s38[17] 348s49[17]
+. 375s40[17]
+182V13*Element{24|105R9} 35|376s40[17]
+328U14*Include 35|51s15[17] 195s15[17] 335s21[17] 359s24[17]
+350U14*Delete 35|79s18[17] 96s21[17] 223s18[17] 238s21[17]
+381V13*Contains{boolean} 35|57s18[17] 67s22[17] 78s18[17] 108s27[17] 202s18[17]
+. 213s22[17] 222s18[17] 249s27[17] 334s21[17]
+384V13*Element{24|105R9} 35|58s25[17] 68s22[17] 109s27[17] 203s25[17] 214s22[17]
+. 250s27[17] 336s37[17] 359s50[17]
+408V13*Iterate{18|24C9[135[35|17]]} 35|89s27[17] 111s24[17] 136s24[17] 231s27[17]
+. 251s24[17] 274s24[17] 345s27[17] 374s24[17]
+X 18 a-iteint.ads
+24h9 Forward_Iterator
+24C9*Forward_Iterator<24R9[10|135[35|17]]>
+X 20 a-string.ads
+16K13*Strings 35e16 34|8r10 8r37 35|9r10 9r37 11r10 20r30
+X 24 a-strunb.ads
+91K21*Unbounded 1641e26 34|8w18 8r45 35|9w18 9r45 11r18 20r38
+105R9*Unbounded_String<16|43R9> 1620e15 34|16r44 32r13 41r13 56r13 35|18r26
+. 19r26 27r13 37r32 49r22 54r44 55r22 65r22 72r25 75r19 84r57 86r15 102r27
+. 130r13 132r16 133r18 193r22 199r13 200r22 211r22 218r25 228r15 244r27 270r13
+. 272r16 332r29 342r15 356r35
+109r4*Null_Unbounded_String{105R9} 35|60r17 68r39 109r44 132r36 133r38 168r38
+. 175r41 205r17 214r39 250r44 272r36 304r38 310r41
+122V13*To_Unbounded_String{105R9} 35|30s17 32s17 51s29 170s39 177s42 195s29
+. 306s39 312s42 357s18
+135V13*To_String{string} 35|39s36 138s38 169s36 176s39 276s38 305s36 311s39
+. 353s41 375s20 376s20
+269V14*"="{boolean} 10|84i19 35|21r27 68s36 109s41 168s36 175s39 214s36 250s41
+. 304s36 310s39
+X 25 a-stunha.ads
+18V32*Hash{4|19M9} 35|11w28 20r48
+X 28 a-textio.ads
+58K13*Text_IO 785e16 35|8w10 8r37
+565U14*Put_Line 35|372s7 373s7 375s10
+X 34 symbol_table.ads
+10K9*Symbol_Table 68l5 68e17 35|13b14 380l5 380t17
+13U14*Set_Var 13>23 13>38 35|48b14 52l8 52t15
+13a23 Name{string} 35|48b23 49r54
+13a38 Value{string} 35|48b38 51r50
+16V13*Get_Var{24|105R9} 16>22 35|54b13 62l8 62t15
+16a22 Name{string} 35|54b22 55r54
+19V13*Var_Exists{boolean} 19>25 35|64b13 69l8 69t18
+19a25 Name{string} 35|64b25 65r54
+22U14*Kill_Var 22>24 35|71b14 99l8 99t16
+22a24 Name{string} 35|71b24 72r57 73r35
+26V13*Var_Data{natural} 26>23 35|101b13 127l8 127t16
+26a23 Name{string} 35|101b23 102r59 105r37
+31V13*Var_Order{24|105R9} 31>24 31>39 35|129b13 188l8 188t17
+31a24 Name{string} 35|129b24 131r35
+31a39 Current{string} 35|129b39 166r28 174r37
+35U14*Set_Subscript 35>29 36>29 37>29 35|190b14 196l8 196t21
+35a29 Name{string} 35|190b29 193r54
+36a29 Subs{string} 35|191b29 193r60
+37a29 Value{string} 35|192b29 195r50
+40V13*Get_Subscript{24|105R9} 40>28 40>43 35|198b13 207l8 207t21
+40a28 Name{string} 35|198b28 200r54
+40a43 Subs{string} 35|198b43 200r60
+44V13*Subscript_Exists{boolean} 44>31 44>46 35|209b13 215l8 215t24
+44a31 Name{string} 35|209b31 211r54
+44a46 Subs{string} 35|209b46 211r60
+48U14*Kill_Subscript 48>30 48>45 35|217b14 241l8 241t22
+48a30 Name{string} 35|217b30 218r57 219r35
+48a45 Subs{string} 35|217b45 218r63 219r48
+51V13*Subscript_Data{natural} 51>29 51>44 35|243b13 266l8 266t22
+51a29 Name{string} 35|243b29 244r59 247r37
+51a44 Subs{string} 35|243b44 244r65 247r50
+54V13*Subscript_Order{24|105R9} 54>30 54>45 55>30 35|268b13 323l8 323t23
+54a30 Name{string} 35|268b30 271r35
+54a45 Subs{string} 35|268b45 271r48
+55a30 Current{string} 35|269b30 303r28 309r37
+59U14*Merge_Var 59>25 60>25 35|325b14 363l8 363t17
+59a25 Dest_Name{string} 35|325b25 328r40 335r42
+60a25 Src_Name{string} 35|326b25 327r40 332r61
+63U14*Kill_All 35|365b14 368l8 368t16
+66U14*List_All 35|370b14 378l8 378t16
+X 35 symbol_table.adb
+17K12 Var_Maps[10|92] 23r14 74r16 90r29 92r42 112r26 138r49 140r29 232r29
+. 234r42 252r26 276r49 278r29 346r29 348r40 375r31 376r31
+23r4 Var_Map{10|99R9[17]} 51m7 51r7 57r10 58r17 67r14 68r14 78r10 79m10 79r10
+. 85r48 89r19 96m13 96r13 108r19 109r19 111r16 136r16 195m7 195r7 202r10
+. 203r17 213r14 214r14 222r10 223m10 223r10 227r48 231r19 238m13 238r13 249r19
+. 250r19 251r16 274r16 334r13 335m13 335r13 336r29 341r46 345r19 359m16 359r16
+. 359r42 367m7 367r7 374r16
+26V13 Encode_Key{24|105R9} 26b13 26>25 26>40 34l8 34t18 49s42 55s42 65s42
+. 72s45 102s47 193s42 200s42 211s42 218s45 244s47 332s49 335s30
+26a25 Name{string} 30r38 32r38
+26a40 Subs{string} 29r10 32r51
+37V13 Starts_With{boolean} 37b13 37>26 38>26 46l8 46t19 90s16 112s13 140s16
+. 232s16 252s13 278s16 346s16
+37r26 Key{24|105R9} 39r47
+38a26 Prefix{string} 41r27 44r56 45r11
+39a7 Key_Str{string} 41r10 44r14 44r23 44r40
+49r7 Key{24|105R9} 51r24
+55r7 Key{24|105R9} 57r28 58r34
+65r7 Key{24|105R9} 67r32 68r31
+72r7 Key{24|105R9} 78r28 79r26
+73a7 Prefix=73:40{string} 90r47
+74r7 Cursor{10|109R9[17]}
+75r7 To_Delete{24|105R9}
+84A15 Key_Array(24|105R9)<integer>
+85a10 Keys_To_Delete(24|105R9) 92m16 96r29
+87i10 Count{natural} 91m16 91r25 92r32 95r24
+89i14 C{any type} 90r43 92r56
+95i14 I{integer} 96r45
+102r7 Key{24|105R9} 108r37 109r36
+103b7 Has_Data{boolean} 108m7 118r10 120r13
+104b7 Has_Subs{boolean} 113m13 118r28 122r13
+105a7 Prefix=105:42{string} 112r44
+111i11 C{any type} 112r40
+131a7 Prefix=131:40{string} 140r47 143r63
+132r7 Best{24|105R9} 168r31 169r47 170m31 175r34 176r50 177m34 187r14
+133r7 Best_Str{24|105R9}
+136i11 C{any type} 138r63 140r43
+138a13 Key{string} 143r51 144r42 149r41 150r25 152r28 164r27
+143i19 Sub_Start{natural} 149r28 161r33 164r32
+144i19 Sub_End{natural} 157m22 159m22 161r22 164r45
+145i19 Comma_Pos{natural} 150r48 151m25 156r22 157r33
+146i19 Close_Pos{natural} 152r51 153m25 158r25 159r33
+149i23 I{integer} 150r30 151r38 152r33 153r38
+163a25 Sub{string} 169r30 170r60 174r31 176r33 177r63
+193r7 Key{24|105R9} 195r24
+200r7 Key{24|105R9} 202r28 203r34
+211r7 Key{24|105R9} 213r32 214r31
+218r7 Key{24|105R9} 222r28 223r26
+219a7 Prefix=219:53{string} 232r47
+227a10 Keys_To_Delete(24|105R9) 234m16 238r29
+229i10 Count{natural} 233m16 233r25 234r32 237r24
+231i14 C{any type} 232r43 234r56
+237i14 I{integer} 238r45
+244r7 Key{24|105R9} 249r37 250r36
+245b7 Has_Data{boolean} 249m7 257r10 259r13
+246b7 Has_Subs{boolean} 253m13 257r28 261r13
+247a7 Prefix=247:55{string} 252r44
+251i11 C{any type} 252r40
+271a7 Prefix=271:53{string} 278r47 281r63
+272r7 Best{24|105R9} 304r31 305r47 306m31 310r34 311r50 312m34 322r14
+274i11 C{any type} 276r63 278r43
+276a13 Key{string} 281r51 282r42 286r41 287r25 289r28 301r27
+281i19 Sub_Start{natural} 286r28 298r33 301r32
+282i19 Sub_End{natural} 294m22 296m22 298r22 301r45
+283i19 Comma_Pos{natural} 287r48 288m25 293r22 294r33
+284i19 Close_Pos{natural} 289r51 290m25 295r25 296r33
+286i23 I{integer} 287r30 288r38 289r33 290r38
+300a25 Sub{string} 305r30 306r60 309r31 311r33 312r63
+327a7 Src_Prefix=327:49{string} 346r47 355r35
+328a7 Dest_Prefix=328:50{string} 357r39
+332r10 Src_Key{24|105R9} 334r31 336r46
+341a10 Keys_To_Copy(24|105R9) 348m16 353r52 359r59
+343i10 Count{natural} 347m16 347r25 348r30 351r24
+345i14 C{any type} 346r43 348r54
+351i14 I{integer} 353r66 359r73
+353a16 Key{string} 355r18 355r23 355r56
+354a16 Suffix{string} 357r53
+356r16 New_Key{24|105R9} 359r33
+374i11 C{any type} 375r45 376r49
+X 36 system.ads
+67M9*Address
+X 48 s-memory.ads
+51V13*Alloc{36|67M9} 101i<c,__gnat_malloc>22
+66U14*Free 102i<c,__gnat_free>22
+74V13*Realloc{36|67M9} 103i<c,__gnat_realloc>22
+X 59 s-stalib.adb
+87U14 Break_Start 88i<c,__gnat_break_start>22
+

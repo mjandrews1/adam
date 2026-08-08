@@ -1,0 +1,207 @@
+V "GNAT Lib v16"
+P SS ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV NO_OBSOLESCENT_FEATURES
+
+U io%b			io.adb			6c8896c2 OO PK IU
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.strings%s		a-string.ads		a-string.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z system%s		system.ads		system.ali
+Z system.finalization_primitives%s  s-finpri.adb  s-finpri.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.ads	s-stoele.ali
+
+U io%s			io.ads			ea909782 EE NE OO PK IU
+
+D ada.ads		20260610194523 76789da1 ada%s
+D a-charac.ads		20260610194523 2d3ec45b ada.characters%s
+D a-chlat1.ads		20260610194523 e0d72e76 ada.characters.latin_1%s
+D a-except.ads		20260610194523 8699d7ff ada.exceptions%s
+D a-finali.ads		20260610194523 099c16e4 ada.finalization%s
+D a-ioexce.ads		20260610194523 40018c65 ada.io_exceptions%s
+D a-stream.ads		20260610194523 cb01a8f8 ada.streams%s
+D a-string.ads		20260610194523 90ac6797 ada.strings%s
+D a-strmap.ads		20260610194523 f7e6ca10 ada.strings.maps%s
+D a-strsea.ads		20260610194523 18c3c634 ada.strings.search%s
+D a-sttebu.ads		20260610194523 f1ad67a2 ada.strings.text_buffers%s
+D a-strunb.ads		20260610194523 8d6ccba7 ada.strings.unbounded%s
+D a-stuten.ads		20260610194523 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260610194523 2dbf449c ada.tags%s
+D a-textio.ads		20260610194523 34ef47de ada.text_io%s
+D a-unccon.ads		20260610194523 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20260610194523 9111f9c1 interfaces%s
+D i-c.ads		20260610194523 dbdd3be7 interfaces.c%s
+D i-cstrea.ads		20260610194523 ffd01b9d interfaces.c_streams%s
+D io.ads		20260808203929 ea909782 io%s
+D io.adb		20260808203947 3f9b8d39 io%b
+D system.ads		20260610194523 8a611ac3 system%s
+D s-atocou.ads		20260610194523 dc18efc3 system.atomic_counters%s
+D s-crtl.ads		20260610194523 823b6536 system.crtl%s
+D s-exctab.ads		20260610194523 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260610194523 dc5161d4 system.file_control_block%s
+D s-finpri.ads		20260610194523 5970d55a system.finalization_primitives%s
+D s-finroo.ads		20260610194523 0a7c3ed4 system.finalization_root%s
+D s-memory.ads		20260610194523 18949c1a system.memory%s
+D s-oscons.ads		20260629131825 a97567d0 system.os_constants%s
+D s-oslock.ads		20260610194523 bcc789d2 system.os_locks%s
+D s-parame.ads		20260610194523 a1aeab5c system.parameters%s
+D s-putima.ads		20260610194523 1b989439 system.put_images%s
+D s-retsta.ads		20260610194523 0f6b06cb system.return_stack%s
+D s-secsta.ads		20260610194523 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260610194523 5d88fdea system.soft_links%s
+D s-stache.ads		20260610194523 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260610194523 1c9580f6 system.standard_library%s
+D s-stalib.adb		20260610194523 eb464a47 system.standard_library%b
+D s-stoele.ads		20260610194523 ccded4e8 system.storage_elements%s
+D s-stratt.ads		20260610194523 80b8dafb system.stream_attributes%s
+D s-traent.ads		20260610194523 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260610194523 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260610194523 d9032363 system.wch_con%s
+G a e
+G c Z s b [open_device io 25 14 none]
+G c Z s b [close_device io 30 14 none]
+G c Z s b [use_device io 33 14 none]
+G c Z s b [current_device io 36 13 none]
+G c Z s b [write io 39 14 none]
+G c Z s b [write_newline io 42 14 none]
+G c Z s b [write_form_feed io 45 14 none]
+G c Z s b [write_tab io 48 14 none]
+G c Z s b [write_star io 51 14 none]
+G c Z s b [read io 54 13 none]
+G c Z s b [read_star io 57 13 none]
+G c Z s b [get_x io 60 13 none]
+G c Z s b [get_y io 63 13 none]
+G c Z s b [set_position io 66 14 none]
+G c Z s b [is_open io 69 13 none]
+G c Z s b [get_mode io 72 13 none]
+G c Z s s [device_stateIP io 14 9 none]
+G c Z b b [TdevicesBIP io 21 4 none]
+G c Z b b [device_bufferDI io 16 9 none]
+G c Z b b [device_bufferDA io 16 9 none]
+G c Z b b [device_bufferDF io 16 9 none]
+G c Z b b [device_bufferIP io 16 9 none]
+G c Z b b [TbuffersBIP io 22 4 none]
+G c Z b b [TbuffersBDI io 22 4 none]
+G c Z b b [TbuffersBDA io 22 4 none]
+G c Z b b [TbuffersBDF io 22 4 none]
+G c Z b b [init_devices io 26 14 none]
+G c Z b b [initialize io 44 14 none]
+X 1 ada.ads
+18K9*Ada 22e8 21|8r6 8r33 9r6 9r33
+X 8 a-string.ads
+16K13*Strings 35e16 21|9r10 9r37
+X 12 a-strunb.ads
+91K21*Unbounded 1641e26 21|9w18 9r45
+105R9*Unbounded_String<5|43R9> 1620e15 21|17r16 18r16
+109r4*Null_Unbounded_String{105R9} 21|35r31 36r32 64r32 65r33 154r43
+122V13*To_Unbounded_String{105R9} 21|181s21
+135V13*To_String{string} 21|152s18 177s18
+159U14*Append 21|96s13
+X 15 a-textio.ads
+58K13*Text_IO 785e16 21|8w10 8r37
+464U14*Get_Immediate 21|170s16
+515U14*Put 21|93s13
+535U14*Get_Line 21|145s16
+X 20 io.ads
+8K9*IO 74l5 74e7 21|11b14 233l5 233t7
+11E9*Device_Type 11e54 18r18 27r34 72r44 21|54r34 222r44
+11n25*Terminal{11E9} 21|31r30 40r27 227r14
+11n35*File{11E9}
+11n41*Socket{11E9}
+11n49*Pipe{11E9}
+14R9*Device_State 22e14 21|21r46
+15i7*Id{natural} 21|29m22 57m23
+16a7*Name{string} 21|58m23
+17i7*Name_Len{natural} 21|30m22 59m23
+18e7*Kind{11E9} 21|31m22 40m19 60m23 225r30
+19b7*Is_Open{boolean} 21|32m22 39m19 61m23 72m23 78r49 90r59 124r59 138r59
+. 164r59 217r30
+20i7*X{natural} 21|33m22 62m23 101m34 104m34 106m34 106r57 125r34 193r30
+. 209m23
+21i7*Y{natural} 21|34m22 63m23 102m34 102r57 201r30 210m23
+25U14*Open_Device 25>27 26>27 27>27 21|52b14 67l8 67t19
+25i27 Id{natural} 21|52b27 56r10 57r19 57r29 58r19 59r19 60r19 61r19 62r19
+. 63r19 64r19 65r19
+26a27 Name{string} 21|53b27 58r34 58r50 59r35
+27e27 Kind{11E9} 21|54b27 60r31
+30U14*Close_Device 30>28 21|69b14 74l8 74t20
+30i28 Id{natural} 21|69b28 71r10 71r36 72r19
+33U14*Use_Device 33>26 21|76b14 81l8 81t18
+33i26 Id{natural} 21|76b26 78r10 78r45 79r21
+36V13*Current_Device{natural} 21|83b13 86l8 86t22
+39U14*Write 39>21 21|88b14 110l8 110t13 114s7 119s7 126s13 133s7
+39a21 Data{string} 21|88b21 93r18 96r47 99r19 100r16 103r19
+42U14*Write_Newline 21|112b14 115l8 115t21
+45U14*Write_Form_Feed 21|117b14 120l8 120t23
+48U14*Write_Tab 48>25 21|122b14 129l8 129t17
+48i25 Col{natural} 21|122b25 125r38
+51U14*Write_Star 51>26 21|131b14 134l8 134t18
+51e26 C{character} 21|131b26 133r20
+54V13*Read{string} 21|136b13 160l8 160t12
+57V13*Read_Star{character} 21|162b13 188l8 188t17
+60V13*Get_X{natural} 60>20 21|190b13 196l8 196t13
+60i20 Id{natural} 21|190b20 192r10 193r26
+63V13*Get_Y{natural} 63>20 21|198b13 204l8 204t13
+63i20 Id{natural} 21|198b20 200r10 201r26
+66U14*Set_Position 66>28 66>42 66>55 21|206b14 212l8 212t20
+66i28 Id{natural} 21|206b28 208r10 209r19 210r19
+66i42 X{natural} 21|206b42 209r28
+66i55 Y{natural} 21|206b55 210r28
+69V13*Is_Open{boolean} 69>22 21|214b13 220l8 220t15
+69i22 Id{natural} 21|214b22 216r10 217r26
+72V13*Get_Mode{11E9} 72>23 21|222b13 228l8 228t16
+72i23 Id{natural} 21|222b23 224r10 225r26
+X 21 io.adb
+13i4 Max_Devices{natural} 21r26 22r26 56r15 71r15 78r15 90r20 124r20 138r20
+. 164r20 192r15 200r15 208r15 216r15 224r15
+14i4 Buffer_Size{natural}
+16R9 Device_Buffer 19e14 22r46
+17r7*Input{12|105R9} 35m22 64m23 152r47 154m34 177r47 180m37
+18r7*Output{12|105R9} 36m22 65m23 96m39
+21a4 Devices(20|14R9) 28r16 29m10 30m10 31m10 32m10 33m10 34m10 39m7 40m7
+. 57m10 58m10 59m10 60m10 61m10 62m10 63m10 72m10 78r36 90r41 101m16 102m16
+. 102r39 104m16 106m16 106r39 124r41 125r16 138r41 164r41 193r17 201r17 209m10
+. 210m10 217r17 225r17
+22a4 Buffers(16R9) 35m10 36m10 64m10 65m10 96m21 96r21 152r29 154m16 177r29
+. 180m19
+23i4 Current{natural} 79m10 85r14 90r10 90r50 91r13 96r30 101r25 102r25 102r48
+. 104r25 106r25 106r48 124r10 124r50 125r25 138r10 138r50 139r13 152r38 154r25
+. 164r10 164r50 165r13 177r38 180r28
+26U14 Init_Devices 26b14 41l8 41t20 46s7 232s4
+28i11 I{integer} 29r19 29r28 30r19 31r19 32r19 33r19 34r19 35r19 36r19
+44U14 Initialize 44b14 47l8 47t18 50r25
+99i14 I{integer} 100r22 103r25
+142a16 Line{string} 145m26 146r23
+143i16 Last{natural} 145m32 146r34
+151a16 Result{string} 155r23
+168e16 C{character} 170m31 171r23
+176a16 Result{string} 179r19 181r42 181r50 181r70 182r26 182r34
+X 22 system.ads
+67M9*Address
+X 29 s-memory.ads
+51V13*Alloc{22|67M9} 101i<c,__gnat_malloc>22
+66U14*Free 102i<c,__gnat_free>22
+74V13*Realloc{22|67M9} 103i<c,__gnat_realloc>22
+X 39 s-stalib.adb
+87U14 Break_Start 88i<c,__gnat_break_start>22
+

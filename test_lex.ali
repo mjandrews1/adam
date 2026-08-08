@@ -1,0 +1,72 @@
+V "GNAT Lib v16"
+M P W=b
+P ZX
+
+RN
+RV NO_ENUMERATION_MAPS
+RV NO_IO
+RV NO_DYNAMIC_SIZED_OBJECTS
+
+U test_lex%b		test_lex.adb		bbc1b526 NE OO SU
+W ada%s			ada.ads			ada.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W lexer%s		lexer.adb		lexer.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+
+D ada.ads		20260610194523 76789da1 ada%s
+D a-except.ads		20260610194523 8699d7ff ada.exceptions%s
+D a-ioexce.ads		20260610194523 40018c65 ada.io_exceptions%s
+D a-stream.ads		20260610194523 cb01a8f8 ada.streams%s
+D a-string.ads		20260610194523 90ac6797 ada.strings%s
+D a-sttebu.ads		20260610194523 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20260610194523 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260610194523 2dbf449c ada.tags%s
+D a-textio.ads		20260610194523 34ef47de ada.text_io%s
+D a-unccon.ads		20260610194523 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20260610194523 9111f9c1 interfaces%s
+D i-cstrea.ads		20260610194523 ffd01b9d interfaces.c_streams%s
+D lexer.ads		20260808212940 d47ed521 lexer%s
+D system.ads		20260610194523 8a611ac3 system%s
+D s-conca2.ads		20260610194523 b5fb73f7 system.concat_2%s
+D s-conca3.ads		20260610194523 8a7a19a2 system.concat_3%s
+D s-crtl.ads		20260610194523 823b6536 system.crtl%s
+D s-exctab.ads		20260610194523 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260610194523 dc5161d4 system.file_control_block%s
+D s-parame.ads		20260610194523 a1aeab5c system.parameters%s
+D s-putima.ads		20260610194523 1b989439 system.put_images%s
+D s-secsta.ads		20260610194523 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260610194523 5d88fdea system.soft_links%s
+D s-stache.ads		20260610194523 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260610194523 1c9580f6 system.standard_library%s
+D s-stoele.ads		20260610194523 ccded4e8 system.storage_elements%s
+D s-traent.ads		20260610194523 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260610194523 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260610194523 d9032363 system.wch_con%s
+D test_lex.adb		20260808214224 5b5027d9 test_lex%b
+G a e
+G c Z b b [test_lex standard 3 11 none]
+G r c none [test_lex standard 3 11 none] [create_lexer lexer 75 13 none]
+G r c none [test_lex standard 3 11 none] [next_token lexer 78 13 none]
+X 1 ada.ads
+18K9*Ada 22e8 30|1r6 1r23
+X 9 a-textio.ads
+58K13*Text_IO 785e16 30|1w10 1r27
+565U14*Put_Line 30|9s4 10s4
+X 13 lexer.ads
+8K9*Lexer 97e10 30|2w6 2r17
+11E9*Token_Type 60e5 30|9r26
+63R9*Token 69e14 30|5r10
+64e7*Kind{11E9} 30|9r48
+65a7*Value{string} 30|10r31
+66i7*Val_Len{natural} 30|10r47
+72R9*Lexer_State 95e14 30|4r10
+75V13*Create_Lexer{72R9} 30|7s11
+78V13*Next_Token{63R9} 30|8s11
+X 30 test_lex.adb
+3U11*Test_Lex 3b11 11l5 11t13
+4r4 Lex{13|72R9} 7m4 8m23 8r23
+5r4 Tok{13|63R9} 8m4 9r44 10r27 10r43
+

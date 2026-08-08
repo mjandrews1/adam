@@ -478,6 +478,206 @@ begin
 
     New_Line;
 
+    -- Expression Evaluator Tests
+    Put_Line ("Expression Evaluator Tests:");
+    Put_Line ("===========================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Arithmetic: Addition
+        P := Create_Parser ("SET X = 3 + 4");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "7",
+                "Arithmetic: 3 + 4");
+        Destroy_AST (Prog);
+
+        -- Arithmetic: Subtraction
+        P := Create_Parser ("SET X = 10 - 3");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "7",
+                "Arithmetic: 10 - 3");
+        Destroy_AST (Prog);
+
+        -- Arithmetic: Multiplication
+        P := Create_Parser ("SET X = 4 * 5");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "20",
+                "Arithmetic: 4 * 5");
+        Destroy_AST (Prog);
+
+        -- Arithmetic: Division
+        P := Create_Parser ("SET X = 10 / 2");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "5",
+                "Arithmetic: 10 / 2");
+        Destroy_AST (Prog);
+
+        -- Arithmetic: Left-to-right (MUMPS has no precedence)
+        P := Create_Parser ("SET X = 3 + 4 * 2");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "14",
+                "Arithmetic: 3 + 4 * 2 = 14 (left-to-right)");
+        Destroy_AST (Prog);
+
+        -- String concatenation
+        P := Create_Parser ("SET X = ""hello"" _ "" "" _ ""world""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "hello world",
+                "String concat: hello _ world");
+        Destroy_AST (Prog);
+
+        -- Comparison: equal
+        P := Create_Parser ("SET X = 3 = 3");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Comparison: 3 = 3");
+        Destroy_AST (Prog);
+
+        -- Comparison: not equal
+        P := Create_Parser ("SET X = 3 = 4");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "0",
+                "Comparison: 3 = 4");
+        Destroy_AST (Prog);
+
+        -- Comparison: less than
+        P := Create_Parser ("SET X = 3 < 5");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Comparison: 3 < 5");
+        Destroy_AST (Prog);
+
+        -- Comparison: greater than
+        P := Create_Parser ("SET X = 5 > 3");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Comparison: 5 > 3");
+        Destroy_AST (Prog);
+
+        -- Logical AND
+        P := Create_Parser ("SET X = 1 & 1");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Logical: 1 & 1");
+        Destroy_AST (Prog);
+
+        -- Logical OR
+        P := Create_Parser ("SET X = 0 ! 1");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Logical: 0 ! 1");
+        Destroy_AST (Prog);
+
+        -- Logical NOT
+        P := Create_Parser ("SET X = '0");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Logical: '0 = 1");
+        Destroy_AST (Prog);
+
+        -- String function: $LENGTH
+        P := Create_Parser ("SET X = $LENGTH(""hello"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = " 5",
+                "Function: $LENGTH(hello) = 5");
+        Destroy_AST (Prog);
+
+        -- String function: $EXTRACT
+        P := Create_Parser ("SET X = $EXTRACT(""abcde"", 2, 3)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "bc",
+                "Function: $EXTRACT(abcde,2,3) = bc");
+        Destroy_AST (Prog);
+
+        -- String function: $PIECE
+        P := Create_Parser ("SET X = $PIECE(""a^b^c"", ""^"", 2)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "b",
+                "Function: $PIECE(a^b^c,^,2) = b");
+        Destroy_AST (Prog);
+
+        -- String function: $ASCII
+        P := Create_Parser ("SET X = $ASCII(""A"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = " 65",
+                "Function: $ASCII(A) = 65");
+        Destroy_AST (Prog);
+
+        -- String function: $CHAR
+        P := Create_Parser ("SET X = $CHAR(65)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "A",
+                "Function: $CHAR(65) = A");
+        Destroy_AST (Prog);
+
+        -- $DATA function
+        Symbol_Table.Set_Var ("DT", "value");
+        P := Create_Parser ("SET X = $DATA(DT)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = " 1" or else
+                To_String (Symbol_Table.Get_Var ("X")) = "1",
+                "Function: $DATA(DT) = 1");
+        Destroy_AST (Prog);
+
+        -- $GET function
+        Symbol_Table.Set_Var ("GT", "hello");
+        P := Create_Parser ("SET X = $GET(GT)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "hello",
+                "Function: $GET(GT) = hello");
+        Destroy_AST (Prog);
+
+        -- $GET with default
+        P := Create_Parser ("SET X = $GET(NONEXIST, ""default"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "default",
+                "Function: $GET(NONEXIST,default) = default");
+        Destroy_AST (Prog);
+
+        -- Subscripted variable via runtime
+        P := Create_Parser ("SET A(1) = ""first""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Subscript ("A", "1")) = "first",
+                "Runtime: SET A(1) = first");
+        Destroy_AST (Prog);
+
+        -- READ subscripted variable
+        P := Create_Parser ("SET X = A(1)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "first",
+                "Runtime: SET X = A(1)");
+         Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
     -- Summary
    Put_Line ("Test Results:");
    Put_Line ("=============");

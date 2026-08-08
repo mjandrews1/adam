@@ -122,18 +122,9 @@ begin
       Execute (R, Prog);
       Put_Line ("  Executed: SET DEMO = Hello");
       Put_Line ("  DEMO = " & To_String (Symbol_Table.Get_Var ("DEMO")));
-      Destroy_AST (Prog);
-
-      -- Execute WRITE command
-      P := Create_Parser ("WRITE Hello");
-      Prog := Parse_Program (P);
-      R := Create_Runtime;
-      Put ("  Executed: WRITE Hello -> ");
-      Execute (R, Prog);
-      New_Line;
-      Destroy_AST (Prog);
-   end;
-   New_Line;
+       Destroy_AST (Prog);
+    end;
+    New_Line;
 
    -- Summary
    Put_Line ("Summary");

@@ -1,0 +1,54 @@
+V "GNAT Lib v16"
+P ZX
+
+RN
+RV NO_DYNAMIC_SIZED_OBJECTS
+
+U pattern%b		pattern.adb		671e843d NE OO PK
+
+U pattern%s		pattern.ads		60461d7d EE NE OO PK
+
+D pattern.ads		20260808202425 60461d7d pattern%s
+D pattern.adb		20260808202543 07589940 pattern%b
+D system.ads		20260610194523 8a611ac3 system%s
+G a e
+G c Z s b [match pattern 16 13 none]
+X 1 pattern.ads
+8K9*Pattern 18l5 18e12 2|8b14 173l5 173t12
+16V13*Match{boolean} 16>20 16>34 2|128b13 171l8 171t13
+16a20 Str{string} 2|128b20 129r28 152r30 154r33 170r24
+16a34 Pat{string} 2|128b34 130r28 136r24 138r23 141r23 146r42
+X 2 pattern.adb
+11V13 Is_Alpha{boolean} 11b13 11>23 15l8 15t16 59s29
+11e23 C{character} 13r15 13r33 14r15 14r33
+18V13 Is_Digit{boolean} 18b13 18>23 21l8 21t16 60s29 87s43 95s40 97s43 105s43
+. 107s49
+18e23 C{character} 20r14 20r32
+24V13 Is_Upper{boolean} 24b13 24>23 27l8 27t16 62s29
+24e23 C{character} 26r14 26r32
+30V13 Is_Lower{boolean} 30b13 30>23 33l8 33t16 63s29
+30e23 C{character} 32r14 32r32
+36V13 Is_Punct{boolean} 36b13 36>23 47l8 47t16 64s29
+36e23 C{character} 38r12
+50V13 Is_Control{boolean} 50b13 50>25 53l8 53t18 65s29
+50e25 C{character} 52r29 52r60
+56V13 Matches_Code{boolean} 56b13 56>27 56>42 68l8 68t20 154s19
+56e27 C{character} 59r39 60r39 62r39 63r39 64r39 65r41
+56e42 Code{character} 58r12
+72U14 Parse_Count 72b14 72>27 73=27 74<27 75<27 125l8 125t19 138s10
+72a27 Pat{string} 82r17 82r37 87r23 87r53 89r31 95r20 95r50 97r23 97r53 99r31
+. 102r20 102r40 105r23 105r53 107r29 107r59 109r37
+73i27 Pos{natural} 82r10 82r42 84m10 84r17 87r16 87r58 89r36 90m13 90r20
+. 95r13 95r55 97r16 97r58 99r36 100m13 100r20 102r13 102r45 104m13 104r20
+. 105r16 105r58 107r22 107r64 109r42 110m19 110r26
+74i27 Min_Count{natural} 78m7 86m10 98m13 98r26 118r26 122m10
+75i27 Max_Count{natural} 79m7 88m13 88r26 92r13 93m13 108m19 108r32 114m16
+. 118m13 123m10
+76b7 Has_Dot{boolean} 83m10 103m13
+129i7 Str_Pos{natural} 152r19 154r38 156m19 156r30 170r14
+130i7 Pat_Pos{natural} 136r13 138m28 138r28 141r13 146r47 148m13 148r24
+131i7 Min_Count{natural} 138m37 163r26
+132i7 Max_Count{natural} 138m48 153r16 153r59
+133i7 Matched{natural} 151m13 153r49 155m19 155r30 163r16
+146e13 Code{character} 154r48
+

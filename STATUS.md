@@ -3,20 +3,35 @@
 **Last Updated:** 2026-08-08
 
 ## Current Sprint
-**All Sprints Complete!** 🎉
+**P2-S1: Expression Evaluator** ✅ COMPLETE
 
-## Progress
+## Phase 1 Progress
 
-| Sprint | Status | Start | End | Notes |
-|--------|--------|-------|-----|-------|
-| S0: Environment | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | GNAT 16.1.0 + gprbuild 26.0.1 via Alire |
-| S1: Types & Symbol Table | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 23 tests passing |
-| S2: Database | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 46 tests passing |
-| S3: Pattern Matching | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 67 tests passing |
-| S4: I/O | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 82 tests passing |
-| S5: String Functions | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 104 tests passing |
-| S6: Runtime | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 113 tests passing |
-| S7: Integration | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 113 tests passing |
+| Sprint | Status | Tests |
+|--------|--------|-------|
+| S0: Environment | ✅ COMPLETE | - |
+| S1: Types & Symbol Table | ✅ COMPLETE | 23 |
+| S2: Database | ✅ COMPLETE | 46 |
+| S3: Pattern Matching | ✅ COMPLETE | 67 |
+| S4: I/O | ✅ COMPLETE | 82 |
+| S5: String Functions | ✅ COMPLETE | 104 |
+| S6: Runtime | ✅ COMPLETE | 113 |
+| S7: Integration | ✅ COMPLETE | 113 |
+
+## Phase 2 Progress
+
+| Sprint | Status | Tests | Notes |
+|--------|--------|-------|-------|
+| P2-S1: Expression Evaluator | ✅ COMPLETE | 136 | Arithmetic, string, comparison, logical ops; function dispatch |
+| P2-S2: Control Flow | ⬜ NOT STARTED | - | FOR, DO, NEW, GOTO, QUIT |
+| P2-S3: Command Execution | ⬜ NOT STARTED | - | KILL, READ, MERGE, HANG |
+| P2-S4: Runtime String/Math Functions | ⬜ NOT STARTED | - | $EXTRACT, $LENGTH callable from MUMPS |
+| P2-S5: Special Variables | ⬜ NOT STARTED | - | $T, $X, $Y, $H, $I |
+| P2-S6: File I/O | ⬜ NOT STARTED | - | OPEN/CLOSE/USE |
+| P2-S7: NEW Scoping & Error Handling | ⬜ NOT STARTED | - | Variable scoping |
+| P2-S8: Indirection (@) | ⬜ NOT STARTED | - | Variable indirection |
+| P2-S9: Thread Safety & LOCK | ⬜ NOT STARTED | - | Concurrent access |
+| P2-S10: Test Expansion | ⬜ NOT STARTED | - | 136 → 400+ |
 
 ## Task Counts
 

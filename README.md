@@ -135,12 +135,13 @@ adam/
 
 ## Status
 
-**Version 0.1.0** - Initial release
+**Version 0.2.0** - Expression Evaluator
 
-- **113 conformance tests passing**
+- **136 conformance tests passing**
 - **100% test success rate**
-- **16 source modules, ~3,500 lines of Ada**
-- **All core MUMPS operations implemented**
+- **16 source modules, ~4,000 lines of Ada**
+- **Expression evaluator with arithmetic, string, comparison, logical operators**
+- **Function dispatch for $DATA, $GET, $ORDER, string functions**
 
 ## Sprint History
 
@@ -154,6 +155,7 @@ adam/
 | S5: String Functions | ✅ Complete | 104 |
 | S6: Runtime / Interpreter | ✅ Complete | 113 |
 | S7: Integration & Conformance | ✅ Complete | 113 |
+| P2-S1: Expression Evaluator | ✅ Complete | 136 |
 
 ## References
 

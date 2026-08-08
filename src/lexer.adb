@@ -326,6 +326,7 @@ package body Lexer is
          when '!' => Result := (Tok_Or, (1 => '!', others => ' '), 1, State.Line, State.Col);
          when '_' => Result := (Tok_Concat, (1 => '_', others => ' '), 1, State.Line, State.Col);
          when '@' => Result := (Tok_AtSign, (1 => '@', others => ' '), 1, State.Line, State.Col);
+         when '$' => Result := (Tok_Dollar, (1 => '$', others => ' '), 1, State.Line, State.Col);
          when '(' => Result := (Tok_LParen, (1 => '(', others => ' '), 1, State.Line, State.Col);
          when ')' => Result := (Tok_RParen, (1 => ')', others => ' '), 1, State.Line, State.Col);
          when ',' => Result := (Tok_Comma, (1 => ',', others => ' '), 1, State.Line, State.Col);
