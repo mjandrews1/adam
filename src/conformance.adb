@@ -8,6 +8,7 @@
 with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
+with Database;
 
 procedure Conformance is
    Total  : Natural := 0;
@@ -124,9 +125,104 @@ begin
    Assert (To_String (Symbol_Table.Get_Subscript ("DST", "2")) = "src_sub2",
            "MERGE copies subscript 2");
 
-   New_Line;
+    New_Line;
 
-   -- Summary
+    -- Database Tests
+    Put_Line ("Database Tests:");
+    Put_Line ("===============");
+
+    -- SET and GET
+    Database.Set_Global ("GTEST1", "gvalue1");
+    Assert (To_String (Database.Get_Global ("GTEST1")) = "gvalue1",
+            "SET and GET basic global");
+
+    -- Global exists
+    Assert (Database.Global_Exists ("GTEST1"),
+            "Global exists check");
+    Assert (not Database.Global_Exists ("GNONEXIST"),
+            "Global does not exist check");
+
+    -- KILL
+    Database.Kill_Global ("GTEST1");
+    Assert (not Database.Global_Exists ("GTEST1"),
+            "KILL global");
+
+    -- $DATA
+    Database.Set_Global ("GDATA_TEST", "gvalue");
+    Assert (Database.Global_Data ("GDATA_TEST") = 1,
+            "$DATA with global value");
+    Assert (Database.Global_Data ("GNONEXIST") = 0,
+            "$DATA without global value");
+
+    -- Subscripted globals
+    Database.Set_Global_Subscript ("GARR", "1", "gfirst");
+    Database.Set_Global_Subscript ("GARR", "2", "gsecond");
+    Database.Set_Global_Subscript ("GARR", "3", "gthird");
+    Assert (To_String (Database.Get_Global_Subscript ("GARR", "1")) = "gfirst",
+            "SET and GET subscripted global");
+    Assert (To_String (Database.Get_Global_Subscript ("GARR", "2")) = "gsecond",
+            "GET second subscript global");
+    Assert (To_String (Database.Get_Global_Subscript ("GARR", "3")) = "gthird",
+            "GET third subscript global");
+
+    -- $DATA with subscripts only (code 10)
+    Assert (Database.Global_Data ("GARR") = 10,
+            "$DATA with subscripts only global");
+
+    -- $DATA with data and subscripts (code 11)
+    Database.Set_Global ("GARR", "groot_value");
+    Assert (Database.Global_Data ("GARR") = 11,
+            "$DATA with data and subscripts global");
+
+    -- $DATA on subscripted node
+    Assert (Database.Global_Subscript_Data ("GARR", "1") = 1,
+            "$DATA on subscripted global with value");
+    Assert (Database.Global_Subscript_Data ("GARR", "99") = 0,
+            "$DATA on non-existent global subscript");
+
+    -- $ORDER - get first subscript
+    Assert (To_String (Database.Global_Order ("GARR")) = "1",
+            "$ORDER returns first global subscript");
+
+    -- $ORDER - get next subscript
+    Assert (To_String (Database.Global_Order ("GARR", "1")) = "2",
+            "$ORDER returns next global subscript");
+
+    -- $ORDER - get next subscript again
+    Assert (To_String (Database.Global_Order ("GARR", "2")) = "3",
+            "$ORDER returns third global subscript");
+
+    -- $ORDER - no more subscripts
+    Assert (To_String (Database.Global_Order ("GARR", "3")) = "",
+            "$ORDER returns empty at end global");
+
+    -- KILL with subscripts
+    Database.Kill_Global_Subscript ("GARR", "2");
+    Assert (not Database.Global_Subscript_Exists ("GARR", "2"),
+            "KILL subscripted global");
+    Assert (Database.Global_Subscript_Exists ("GARR", "1"),
+            "Other global subscripts still exist");
+
+    -- KILL all subscripts
+    Database.Kill_Global ("GARR");
+    Assert (Database.Global_Data ("GARR") = 0,
+            "KILL removes all global subscripts");
+
+    -- MERGE
+    Database.Set_Global ("GSRC", "gsrc_value");
+    Database.Set_Global_Subscript ("GSRC", "1", "gsrc_sub1");
+    Database.Set_Global_Subscript ("GSRC", "2", "gsrc_sub2");
+    Database.Merge_Global ("GDST", "GSRC");
+    Assert (To_String (Database.Get_Global ("GDST")) = "gsrc_value",
+            "MERGE copies global root value");
+    Assert (To_String (Database.Get_Global_Subscript ("GDST", "1")) = "gsrc_sub1",
+            "MERGE copies global subscript 1");
+    Assert (To_String (Database.Get_Global_Subscript ("GDST", "2")) = "gsrc_sub2",
+            "MERGE copies global subscript 2");
+
+    New_Line;
+
+    -- Summary
    Put_Line ("Test Results:");
    Put_Line ("=============");
    Put_Line ("Total tests: " & Natural'Image (Total));

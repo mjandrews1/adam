@@ -8,6 +8,7 @@
 with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Symbol_Table;
+with Database;
 with Conformance;
 
 procedure Main is
@@ -52,6 +53,33 @@ begin
    -- List all variables
    Put_Line ("All Variables:");
    Symbol_Table.List_All;
+   New_Line;
+
+   -- Test Database
+   Put_Line ("Database Operations:");
+   Put_Line ("--------------------");
+   Database.Set_Global ("TEST", "value1");
+   Database.Set_Global ("DATA", "value2");
+   Put_Line ("  ^TEST = " & To_String (Database.Get_Global ("TEST")));
+   Put_Line ("  ^DATA = " & To_String (Database.Get_Global ("DATA")));
+   New_Line;
+
+   -- Test subscripted globals
+   Put_Line ("Subscripted Globals:");
+   Database.Set_Global_Subscript ("GARR", "1", "gfirst");
+   Database.Set_Global_Subscript ("GARR", "2", "gsecond");
+   Database.Set_Global ("GARR", "groot");
+   Put_Line ("  ^GARR = " & To_String (Database.Get_Global ("GARR")));
+   Put_Line ("  ^GARR(1) = " & To_String (Database.Get_Global_Subscript ("GARR", "1")));
+   Put_Line ("  ^GARR(2) = " & To_String (Database.Get_Global_Subscript ("GARR", "2")));
+   Put_Line ("  $DATA(^GARR) = " & Natural'Image (Database.Global_Data ("GARR")));
+   Put_Line ("  $ORDER(^GARR, ) = " &
+             To_String (Database.Global_Order ("GARR")));
+   New_Line;
+
+   -- List all globals
+   Put_Line ("All Globals:");
+   Database.List_All_Globals;
    New_Line;
 
    Put_Line ("adam is ready for MUMPS development!");
