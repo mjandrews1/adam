@@ -39,6 +39,17 @@ package Runtime is
    -- Get current quit value
    function Get_Quit_Value (State : Runtime_State) return String;
 
+   -- Set error trap ($ZTRAP)
+   procedure Set_Error_Trap (State : in out Runtime_State; Label : String);
+
+   -- Get error trap label
+   function Get_Error_Trap (State : Runtime_State) return String;
+
+   -- Raise a MUMPS error
+   procedure Raise_Error (State : in out Runtime_State;
+                          Code  : Integer;
+                          Msg   : String);
+
 private
 
    -- Label entry for DO/GOTO
@@ -65,6 +76,7 @@ private
       Test_Result   : Boolean;
       Error_Code    : Integer;
       Error_Msg     : Unbounded_String;
+      Error_Trap    : Unbounded_String;  -- $ETRAP label
       Halted        : Boolean;
       Quit_Value    : Unbounded_String;  -- QUIT return value
       Skip_Remainder : Boolean;  -- Skip remaining commands on line (for ELSE)

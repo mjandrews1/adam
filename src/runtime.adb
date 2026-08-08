@@ -31,6 +31,7 @@ package body Runtime is
       State.Halted := False;
       State.Quit_Value := Null_Unbounded_String;
       State.Skip_Remainder := False;
+      State.Error_Trap := Null_Unbounded_String;
       State.Label_Count := 0;
       State.Scope_Top := 0;
       Ada.Numerics.Float_Random.Reset (Gen);
@@ -1137,5 +1138,36 @@ package body Runtime is
    begin
       return To_String (State.Quit_Value);
    end Get_Quit_Value;
+
+   procedure Set_Error_Trap (State : in out Runtime_State; Label : String) is
+   begin
+      State.Error_Trap := To_Unbounded_String (Label);
+   end Set_Error_Trap;
+
+   function Get_Error_Trap (State : Runtime_State) return String is
+   begin
+      return To_String (State.Error_Trap);
+   end Get_Error_Trap;
+
+   procedure Raise_Error (State : in out Runtime_State;
+                          Code  : Integer;
+                          Msg   : String) is
+   begin
+      State.Error_Code := Code;
+      State.Error_Msg := To_Unbounded_String (Msg);
+      -- If error trap is set, jump to it
+      if State.Error_Trap /= Null_Unbounded_String then
+         declare
+            Label : constant String := To_String (State.Error_Trap);
+            Target : AST_Node_Ptr;
+         begin
+            Target := Find_Label (State, Label);
+            if Target /= null then
+               -- Jump to error handler (simplified: just set halted)
+               State.Halted := True;
+            end if;
+         end;
+      end if;
+   end Raise_Error;
 
 end Runtime;

@@ -1024,6 +1024,79 @@ begin
 
     New_Line;
 
+    -- NEW Scoping Tests
+    Put_Line ("NEW Scoping Tests:");
+    Put_Line ("==================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test NEW with variable preservation
+        Symbol_Table.Set_Var ("NS", "original");
+        P := Create_Parser ("NEW NS SET NS = ""modified""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        -- After NEW, NS should be modified
+        Assert (To_String (Symbol_Table.Get_Var ("NS")) = "modified",
+                "NEW: Variable modified in new scope");
+        Destroy_AST (Prog);
+
+        -- Test NEW with multiple variables
+        Symbol_Table.Set_Var ("NA", "a_original");
+        Symbol_Table.Set_Var ("NB", "b_original");
+        P := Create_Parser ("NEW NA,NB SET NA = ""a_new"" SET NB = ""b_new""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("NA")) = "a_new",
+                "NEW: First variable modified");
+        Assert (To_String (Symbol_Table.Get_Var ("NB")) = "b_new",
+                "NEW: Second variable modified");
+        Destroy_AST (Prog);
+
+        -- Test NEW clears variable
+        Symbol_Table.Set_Var ("NC", "exists");
+        P := Create_Parser ("NEW NC");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("NC")) = "",
+                "NEW: Variable cleared in new scope");
+        Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
+    -- Error Handling Tests
+    Put_Line ("Error Handling Tests:");
+    Put_Line ("====================");
+    declare
+        R    : Runtime_State;
+    begin
+        R := Create_Runtime;
+
+        -- Test error code initialization
+        Assert (Get_Error_Code (R) = 0, "Error: Initial code is 0");
+        Assert (Get_Error_Message (R) = "", "Error: Initial message is empty");
+
+        -- Test error setting
+        Raise_Error (R, 100, "Test error");
+        Assert (Get_Error_Code (R) = 100, "Error: Code set to 100");
+        Assert (Get_Error_Message (R) = "Test error", "Error: Message set");
+
+        -- Test error trap
+        Set_Error_Trap (R, "ERR");
+        Assert (Get_Error_Trap (R) = "ERR", "Error: Trap set to ERR");
+
+        -- Test error clearing
+        Raise_Error (R, 0, "");
+        Assert (Get_Error_Code (R) = 0, "Error: Code cleared");
+        Assert (Get_Error_Message (R) = "", "Error: Message cleared");
+    end;
+
+    New_Line;
+
     -- Summary
    Put_Line ("Test Results:");
    Put_Line ("=============");
