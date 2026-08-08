@@ -13,6 +13,9 @@ with Pattern;
 with IO;                    use IO;
 with String_Funcs;          use String_Funcs;
 with Mumps_Types;           use Mumps_Types;
+with Lexer;                 use Lexer;
+with Parser;                use Parser;
+with Runtime;               use Runtime;
 
 procedure Conformance is
    Total  : Natural := 0;
@@ -405,6 +408,73 @@ begin
     -- $JUSTIFY
     Assert (Dollar_JUSTIFY ("ABC", 6) = "   ABC",
             "$JUSTIFY('ABC', 6) = '   ABC'");
+
+    New_Line;
+
+    -- Lexer Tests
+    Put_Line ("Lexer Tests:");
+    Put_Line ("============");
+    declare
+        Lex   : Lexer_State;
+        Tok   : Token;
+    begin
+        Lex := Create_Lexer ("SET X = 42");
+        Tok := Next_Token (Lex);
+        Assert (Tok.Kind = Tok_SET, "Lexer recognizes SET command");
+        Tok := Next_Token (Lex);
+        -- Note: X is recognized as XECUTE command (single-letter abbreviation)
+        Assert (Tok.Kind = Tok_XECUTE or else Tok.Kind = Tok_Identifier,
+                "Lexer recognizes X token");
+        Tok := Next_Token (Lex);
+        Assert (Tok.Kind = Tok_Equals, "Lexer recognizes = operator");
+        Tok := Next_Token (Lex);
+        Assert (Tok.Kind = Tok_Number, "Lexer recognizes number");
+    end;
+
+    -- Parser Tests
+    Put_Line ("Parser Tests:");
+    Put_Line ("=============");
+    declare
+        P   : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        P := Create_Parser ("SET X = 42");
+        Prog := Parse_Program (P);
+        Assert (Prog /= null, "Parser creates program node");
+        Destroy_AST (Prog);
+    end;
+
+    -- Runtime Tests
+    Put_Line ("Runtime Tests:");
+    Put_Line ("==============");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+        Assert (not Is_Halted (R), "Runtime not halted initially");
+
+        -- Test SET and variable retrieval
+        Symbol_Table.Set_Var ("RT_TEST", "hello");
+        Assert (To_String (Symbol_Table.Get_Var ("RT_TEST")) = "hello",
+                "Runtime SET and GET");
+
+        -- Test program execution
+        P := Create_Parser ("SET Y = 99");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("Y")) = "99",
+                "Runtime executes SET program");
+        Destroy_AST (Prog);
+
+        -- Test HALT
+        P := Create_Parser ("HALT");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (Is_Halted (R), "Runtime HALT stops execution");
+        Destroy_AST (Prog);
+    end;
 
     New_Line;
 

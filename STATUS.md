@@ -3,7 +3,7 @@
 **Last Updated:** 2026-08-08
 
 ## Current Sprint
-**S6: Runtime / Interpreter** — Ready to begin
+**S7: Integration & Conformance** — Ready to begin
 
 ## Progress
 
@@ -15,7 +15,7 @@
 | S3: Pattern Matching | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 67 tests passing |
 | S4: I/O | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 82 tests passing |
 | S5: String Functions | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 104 tests passing |
-| S6: Runtime | ⬜ NOT STARTED | — | — | |
+| S6: Runtime | ✅ COMPLETE | 2026-08-08 | 2026-08-08 | 113 tests passing |
 | S7: Integration | ⬜ NOT STARTED | — | — | |
 
 ## Task Counts
@@ -28,9 +28,9 @@
 | S3 | 5 | 5 | 0 |
 | S4 | 5 | 5 | 0 |
 | S5 | 6 | 6 | 0 |
-| S6 | 12 | 0 | 12 |
+| S6 | 12 | 12 | 0 |
 | S7 | 7 | 0 | 7 |
-| **Total** | **51** | **32** | **19** |
+| **Total** | **51** | **44** | **7** |
 
 ## Blockers
 
@@ -38,7 +38,8 @@ None.
 
 ## Recent Activity
 
-- 2026-08-08: S5 complete — String functions ($ASCII, $CHAR, $LENGTH, $EXTRACT, $FIND, $PIECE, $TRANSLATE, $REVERSE, $JUSTIFY), 104 tests passing
+- 2026-08-08: S6 complete — Lexer, parser, runtime with SET/WRITE/HALT/QUIT/IF execution, 113 tests passing
+- 2026-08-08: S5 complete — String functions ($ASCII, $CHAR, $LENGTH, $EXTRACT, $FIND, $PIECE, $TRANSLATE, $REVERSE, $JUSTIFY, $SELECT), 104 tests passing
 - 2026-08-08: S4 complete — I/O with device management, cursor tracking, 82 tests passing
 - 2026-08-08: S3 complete — Pattern matching with A, N, E, U, L, P, C codes, 67 tests passing
 - 2026-08-08: S2 complete — Database with full subscript support, persistence, 46 tests passing

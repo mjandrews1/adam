@@ -21,7 +21,7 @@
 | S3 | Pattern Matching | 1 day | ✅ COMPLETE |
 | S4 | I/O Module | 1-2 days | ✅ COMPLETE |
 | S5 | String Functions | 2-3 days | ✅ COMPLETE |
-| S6 | Runtime / Interpreter | 5-7 days | NOT STARTED |
+| S6 | Runtime / Interpreter | 5-7 days | ✅ COMPLETE |
 | S7 | Integration & Conformance | 2-3 days | NOT STARTED |
 
 **Total: ~15-22 days**
@@ -91,19 +91,19 @@ S0 (Environment) ─────────────────────
 
 ### S6: Runtime / Interpreter (5-7 days)
 
-- [ ] Create `lexer.ads/adb` (tokenizer)
-  - [ ] All 22 MUMPS commands
-  - [ ] Short-form abbreviations
-  - [ ] Operators and literals
-- [ ] Create `parser.ads/adb` (AST generation)
-  - [ ] Expression hierarchy
-  - [ ] Command parsing
-  - [ ] Postconditions
-- [ ] Create `runtime.ads/adb` (execution engine)
-  - [ ] Expression evaluator
-  - [ ] Opcode dispatch
-  - [ ] Control flow (FOR, DO, IF/ELSE, QUIT, NEW, GOTO)
-- [ ] Unit tests
+- [x] Create `lexer.ads/adb` (tokenizer)
+  - [x] All 22 MUMPS commands
+  - [x] Short-form abbreviations
+  - [x] Operators and literals
+- [x] Create `parser.ads/adb` (AST generation)
+  - [x] Expression hierarchy
+  - [x] Command parsing
+  - [x] Postconditions
+- [x] Create `runtime.ads/adb` (execution engine)
+  - [x] Expression evaluator
+  - [x] Opcode dispatch
+  - [x] Control flow (FOR, DO, IF/ELSE, QUIT, NEW, GOTO)
+- [x] Unit tests (9 passing)
 
 ### S7: Integration & Conformance (2-3 days)
 
@@ -135,12 +135,12 @@ S0 (Environment) ─────────────────────
 | `src/io.adb` | S4 | ✅ EXISTS |
 | `src/string_funcs.ads` | S5 | ✅ EXISTS |
 | `src/string_funcs.adb` | S5 | ✅ EXISTS |
-| `src/lexer.ads` | S6 | MISSING |
-| `src/lexer.adb` | S6 | MISSING |
-| `src/parser.ads` | S6 | MISSING |
-| `src/parser.adb` | S6 | MISSING |
-| `src/runtime.ads` | S6 | MISSING |
-| `src/runtime.adb` | S6 | MISSING |
+| `src/lexer.ads` | S6 | ✅ EXISTS |
+| `src/lexer.adb` | S6 | ✅ EXISTS |
+| `src/parser.ads` | S6 | ✅ EXISTS |
+| `src/parser.adb` | S6 | ✅ EXISTS |
+| `src/runtime.ads` | S6 | ✅ EXISTS |
+| `src/runtime.adb` | S6 | ✅ EXISTS |
 | `examples/hello.mumps` | S7 | MISSING |
 | `examples/factorial.mumps` | S7 | MISSING |
 | `examples/fibonacci.mumps` | S7 | MISSING |

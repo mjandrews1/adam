@@ -13,6 +13,9 @@ with Pattern;
 with IO;
 with String_Funcs;          use String_Funcs;
 with Mumps_Types;           use Mumps_Types;
+with Lexer;                 use Lexer;
+with Parser;                use Parser;
+with Runtime;               use Runtime;
 with Conformance;
 
 procedure Main is
@@ -126,6 +129,41 @@ begin
    Put_Line ("  $TRANSLATE('ABC', 'AC', 'XY') = " & Dollar_TRANSLATE ("ABC", "AC", "XY"));
    Put_Line ("  $REVERSE('ABC') = " & Dollar_REVERSE ("ABC"));
    Put_Line ("  $JUSTIFY('ABC', 6) = " & Dollar_JUSTIFY ("ABC", 6));
+   New_Line;
+
+   -- Test Lexer
+   Put_Line ("Lexer:");
+   Put_Line ("------");
+   declare
+      Lex : Lexer_State;
+      Tok : Token;
+   begin
+      Lex := Create_Lexer ("SET X = 42");
+      loop
+         Tok := Next_Token (Lex);
+         exit when Tok.Kind = Tok_EOF;
+         Put_Line ("  Token: " & Token_Type'Image (Tok.Kind) &
+                   " = " & Tok.Value (1 .. Tok.Val_Len));
+      end loop;
+   end;
+   New_Line;
+
+   -- Test Parser and Runtime
+   Put_Line ("Parser & Runtime:");
+   Put_Line ("-----------------");
+   declare
+      P    : Parser_State;
+      R    : Runtime_State;
+      Prog : AST_Node_Ptr;
+   begin
+      P := Create_Parser ("SET DEMO = Hello");
+      Prog := Parse_Program (P);
+      R := Create_Runtime;
+      Execute (R, Prog);
+      Put_Line ("  Executed: SET DEMO = Hello");
+      Put_Line ("  DEMO = " & To_String (Symbol_Table.Get_Var ("DEMO")));
+      Destroy_AST (Prog);
+   end;
    New_Line;
 
    Put_Line ("adam is ready for MUMPS development!");
