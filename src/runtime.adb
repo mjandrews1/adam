@@ -597,6 +597,112 @@ package body Runtime is
                         return To_String (Val);
                      end;
                   end if;
+               elsif Func_Name = "ORDER" or else Func_Name = "order" or else
+                 Func_Name = "O" or else Func_Name = "o" then
+                  if Arg_Count >= 1 then
+                     -- $ORDER takes a variable reference
+                     declare
+                        Arg_Node_Ref : constant AST_Node_Ptr := Node.left;
+                        Vname : Unbounded_String;
+                        Cur   : String (1 .. 1000);
+                        Cur_Len : Natural := 0;
+                     begin
+                        if Arg_Node_Ref /= null and then
+                          Arg_Node_Ref.Kind = N_Variable then
+                           Vname := Arg_Node_Ref.Value;
+                        else
+                           Vname := To_Unbounded_String (Args (1) (1 .. Arg_Lens (1)));
+                        end if;
+                        if Arg_Count >= 2 then
+                           Cur (1 .. Arg_Lens (2)) := Args (2) (1 .. Arg_Lens (2));
+                           Cur_Len := Arg_Lens (2);
+                        end if;
+                        if Length (Vname) > 0 and then
+                          Element (Vname, 1) = '^' then
+                           return To_String (Database.Global_Order
+                             (Slice (Vname, 2, Length (Vname)), Cur (1 .. Cur_Len)));
+                        else
+                           return To_String (Symbol_Table.Var_Order
+                             (To_String (Vname), Cur (1 .. Cur_Len)));
+                        end if;
+                     end;
+                  end if;
+               elsif Func_Name = "TRANSLATE" or else Func_Name = "translate" or else
+                 Func_Name = "T" or else Func_Name = "t" then
+                  if Arg_Count >= 2 then
+                     if Arg_Count >= 3 then
+                        return Dollar_TRANSLATE
+                          (Args (1) (1 .. Arg_Lens (1)),
+                           Args (2) (1 .. Arg_Lens (2)),
+                           Args (3) (1 .. Arg_Lens (3)));
+                     else
+                        return Dollar_TRANSLATE
+                          (Args (1) (1 .. Arg_Lens (1)),
+                           Args (2) (1 .. Arg_Lens (2)));
+                     end if;
+                  end if;
+               elsif Func_Name = "REVERSE" or else Func_Name = "reverse" then
+                  if Arg_Count >= 1 then
+                     return Dollar_REVERSE
+                       (Args (1) (1 .. Arg_Lens (1)));
+                  end if;
+               elsif Func_Name = "JUSTIFY" or else Func_Name = "justify" or else
+                 Func_Name = "J" or else Func_Name = "j" then
+                  if Arg_Count >= 2 then
+                     if Arg_Count >= 3 then
+                        return Dollar_JUSTIFY
+                          (Args (1) (1 .. Arg_Lens (1)),
+                           Natural'Value (Args (2) (1 .. Arg_Lens (2))),
+                           Natural'Value (Args (3) (1 .. Arg_Lens (3))));
+                     else
+                        return Dollar_JUSTIFY
+                          (Args (1) (1 .. Arg_Lens (1)),
+                           Natural'Value (Args (2) (1 .. Arg_Lens (2))));
+                     end if;
+                  end if;
+               elsif Func_Name = "FIND" or else Func_Name = "find" or else
+                 Func_Name = "F" or else Func_Name = "f" then
+                  if Arg_Count >= 2 then
+                     if Arg_Count >= 3 then
+                        return Integer'Image (Dollar_FIND
+                          (Args (1) (1 .. Arg_Lens (1)),
+                           Args (2) (1 .. Arg_Lens (2)),
+                           Integer'Value (Args (3) (1 .. Arg_Lens (3)))));
+                     else
+                        return Integer'Image (Dollar_FIND
+                          (Args (1) (1 .. Arg_Lens (1)),
+                           Args (2) (1 .. Arg_Lens (2))));
+                     end if;
+                  end if;
+               elsif Func_Name = "RANDOM" or else Func_Name = "random" or else
+                 Func_Name = "R" or else Func_Name = "r" then
+                  if Arg_Count >= 1 then
+                     declare
+                        Max : constant Integer :=
+                          Integer'Value (Args (1) (1 .. Arg_Lens (1)));
+                        use Ada.Numerics.Float_Random;
+                     begin
+                        if Max > 0 then
+                           return Integer'Image
+                             (Integer (Random (Gen) * Float (Max)));
+                        end if;
+                        return "0";
+                     end;
+                  end if;
+               elsif Func_Name = "SELECT" or else Func_Name = "select" or else
+                 Func_Name = "S" or else Func_Name = "s" then
+                  -- $SELECT(cond1:expr1, cond2:expr2, ...)
+                  declare
+                     I : Natural := 1;
+                  begin
+                     while I + 1 <= Arg_Count loop
+                        if Args (I) (1 .. Arg_Lens (I)) /= "0" and then
+                          Args (I) (1 .. Arg_Lens (I)) /= "" then
+                           return Args (I + 1) (1 .. Arg_Lens (I + 1));
+                        end if;
+                        I := I + 2;
+                     end loop;
+                  end;
                end if;
                return "";
             end;

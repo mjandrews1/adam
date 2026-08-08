@@ -135,13 +135,13 @@ adam/
 
 ## Status
 
-**Version 0.4.0** - Command Execution
+**Version 0.5.0** - String/Math Functions
 
-- **152 conformance tests passing**
+- **158 conformance tests passing**
 - **100% test success rate**
-- **16 source modules, ~5,000 lines of Ada**
+- **16 source modules, ~5,500 lines of Ada**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
-- **Function dispatch for $DATA, $GET, $ORDER, string functions**
+- **Function dispatch for $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $ASCII, $CHAR, $REVERSE, $JUSTIFY, $FIND, $DATA, $GET, $ORDER, $RANDOM, $SELECT**
 - **Control flow: FOR loops, NEW scoping, ELSE, QUIT with return values**
 - **Command execution: KILL, READ, MERGE, XECUTE**
 
@@ -160,6 +160,7 @@ adam/
 | P2-S1: Expression Evaluator | ✅ Complete | 136 |
 | P2-S2: Control Flow | ✅ Complete | 141 |
 | P2-S3: Command Execution | ✅ Complete | 152 |
+| P2-S4: Runtime String/Math Functions | ✅ Complete | 158 |
 
 ## References
 

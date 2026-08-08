@@ -659,6 +659,65 @@ begin
                 "Function: $GET(NONEXIST,default) = default");
         Destroy_AST (Prog);
 
+        -- String function: $TRANSLATE
+        P := Create_Parser ("SET X = $TRANSLATE(""ABC"", ""AC"", ""XY"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "XBY",
+                "Function: $TRANSLATE(ABC,AC,XY) = XBY");
+        Destroy_AST (Prog);
+
+        -- String function: $REVERSE
+        P := Create_Parser ("SET X = $REVERSE(""ABC"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "CBA",
+                "Function: $REVERSE(ABC) = CBA");
+        Destroy_AST (Prog);
+
+        -- String function: $FIND
+        P := Create_Parser ("SET X = $FIND(""ABCDEF"", ""CD"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = " 5",
+                "Function: $FIND(ABCDEF,CD) = 5");
+        Destroy_AST (Prog);
+
+        -- String function: $JUSTIFY
+        P := Create_Parser ("SET X = $JUSTIFY(""ABC"", 6)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = "   ABC",
+                "Function: $JUSTIFY(ABC,6) = '   ABC'");
+        Destroy_AST (Prog);
+
+        -- String function: $LENGTH with delimiter
+        P := Create_Parser ("SET X = $LENGTH(""A^B^C"", ""^"")");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("X")) = " 3",
+                "Function: $LENGTH(A^B^C,^) = 3");
+        Destroy_AST (Prog);
+
+        -- Math function: $RANDOM
+        P := Create_Parser ("SET X = $RANDOM(100)");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        -- $RANDOM should return a number between 0 and 99
+        declare
+            Rand_Val : Integer;
+        begin
+            begin
+               Rand_Val := Integer'Value (To_String (Symbol_Table.Get_Var ("X")));
+               Assert (Rand_Val >= 0 and then Rand_Val < 100,
+                       "Function: $RANDOM(100) returns 0-99");
+            exception
+               when others =>
+                  Assert (False, "Function: $RANDOM(100) returns valid number");
+            end;
+         end;
+         Destroy_AST (Prog);
+
         -- Subscripted variable via runtime
         P := Create_Parser ("SET A(1) = ""first""");
         Prog := Parse_Program (P);
