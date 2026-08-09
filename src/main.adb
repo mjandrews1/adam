@@ -17,6 +17,7 @@ with Lexer;                 use Lexer;
 with Parser;                use Parser;
 with Runtime;               use Runtime;
 with Conformance;
+with Conformance_Expanded;
 
 procedure Main is
 begin
@@ -28,6 +29,11 @@ begin
    -- Run conformance tests
    Put_Line ("Running conformance tests...");
    Conformance;
+   New_Line;
+
+   -- Run expanded conformance tests
+   Put_Line ("Running expanded conformance tests...");
+   Conformance_Expanded;
    New_Line;
 
    -- Demo: Symbol Table

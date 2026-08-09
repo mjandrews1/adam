@@ -31,7 +31,7 @@
 | P2-S7: NEW Scoping & Error Handling | ✅ COMPLETE | 185 | NEW scoping, error traps |
 | P2-S8: Indirection (@) | ✅ COMPLETE | 188 | @X variable indirection |
 | P2-S9: Thread Safety & LOCK | ✅ COMPLETE | 192 | Thread-safe wrappers, LOCK command |
-| P2-S10: Test Expansion | ⬜ NOT STARTED | - | 136 → 400+ |
+| P2-S10: Test Expansion | ✅ COMPLETE | 253 | Expanded test suite |
 
 ## Task Counts
 

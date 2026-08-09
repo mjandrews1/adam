@@ -135,11 +135,11 @@ adam/
 
 ## Status
 
-**Version 1.0.0** - Thread Safety & LOCK
+**Version 1.1.0** - Test Expansion
 
-- **192 conformance tests passing**
+- **253 conformance tests passing**
 - **100% test success rate**
-- **18 source modules, ~7,500 lines of Ada**
+- **18 source modules, ~8,000 lines of Ada**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
 - **Function dispatch for $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $ASCII, $CHAR, $REVERSE, $JUSTIFY, $FIND, $DATA, $GET, $ORDER, $RANDOM, $SELECT**
 - **Special variables: $T, $X, $Y, $H, $I, $J, $K, $S, $SYSTEM, $ECODE, $ETRAP**
@@ -173,6 +173,7 @@ adam/
 | P2-S7: NEW Scoping & Error Handling | ✅ Complete | 185 |
 | P2-S8: Indirection (@) | ✅ Complete | 188 |
 | P2-S9: Thread Safety & LOCK | ✅ Complete | 192 |
+| P2-S10: Test Expansion | ✅ Complete | 253 |
 
 ## References
 

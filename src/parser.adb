@@ -256,6 +256,7 @@ package body Parser is
         State.Current.Kind = Tok_Plus or else
         State.Current.Kind = Tok_Minus or else
         State.Current.Kind = Tok_Star or else
+        State.Current.Kind = Tok_StarStar or else
         State.Current.Kind = Tok_Slash or else
         State.Current.Kind = Tok_Backslash or else
         State.Current.Kind = Tok_Hash or else
