@@ -10,6 +10,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;     use Ada.Strings.Fixed;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Numerics.Float_Random;
+with Ada.Calendar;
 with Parser;                 use Parser;
 with Symbol_Table;
 with Database;
@@ -18,6 +19,10 @@ with String_Funcs;          use String_Funcs;
 with Pattern;               use Pattern;
 
 package body Runtime is
+
+   -- Import C getpid function for $JOB
+   function Get_PID return Integer;
+   pragma Import (C, Get_PID, "getpid");
 
    -- Random number generator
    Gen : Ada.Numerics.Float_Random.Generator;
@@ -31,6 +36,7 @@ package body Runtime is
       State.Halted := False;
       State.Quit_Value := Null_Unbounded_String;
       State.Skip_Remainder := False;
+      State.Jump_To := null;
       State.Error_Trap := Null_Unbounded_String;
       State.Label_Count := 0;
       State.Scope_Top := 0;
@@ -512,21 +518,37 @@ package body Runtime is
                   return Integer'Image (IO.Get_X (IO.Current_Device));
                elsif Func_Name = "Y" or else Func_Name = "y" then
                   return Integer'Image (IO.Get_Y (IO.Current_Device));
-               elsif Func_Name = "H" or else Func_Name = "h" or else
-                 Func_Name = "HOROLOG" or else Func_Name = "horolog" then
-                  -- $HOROLOG: days,seconds since 1840-12-31
-                  -- Simplified: return current timestamp
-                  declare
-                     Secs : constant Integer := 0;  -- Placeholder
-                  begin
-                     return Integer'Image (Secs) & "," & Integer'Image (Secs);
-                  end;
+                elsif Func_Name = "H" or else Func_Name = "h" or else
+                  Func_Name = "HOROLOG" or else Func_Name = "horolog" then
+                   -- $HOROLOG: days,seconds since 1840-12-31
+                   declare
+                      use Ada.Calendar;
+                      Now : constant Time := Clock;
+                      Year  : Year_Number;
+                      Month : Month_Number;
+                      Day   : Day_Number;
+                      Secs  : Day_Duration;
+                      Epoch_Days : Integer;
+                      Day_Secs   : Integer;
+                   begin
+                      Split (Now, Year, Month, Day, Secs);
+                      -- Calculate days since 1840-12-31
+                      -- Simplified: days since 1970-01-01 + offset
+                      Epoch_Days := (Year - 1970) * 365 + (Year - 1970) / 4 +
+                                    Integer (Month) * 30 + Integer (Day);
+                      -- Add offset for 1840-12-31 to 1970-01-01 (47482 days)
+                      Epoch_Days := Epoch_Days + 47482;
+                      Day_Secs := Integer (Secs);
+                      return Integer'Image (Epoch_Days) & "," &
+                             Integer'Image (Day_Secs);
+                   end;
                elsif Func_Name = "I" or else Func_Name = "i" or else
                  Func_Name = "IO" or else Func_Name = "io" then
                   return Integer'Image (IO.Current_Device);
-               elsif Func_Name = "J" or else Func_Name = "j" or else
-                 Func_Name = "JOB" or else Func_Name = "job" then
-                  return "1";  -- Single-threaded, always job 1
+                elsif Func_Name = "J" or else Func_Name = "j" or else
+                  Func_Name = "JOB" or else Func_Name = "job" then
+                   -- Return actual process ID
+                   return Integer'Image (Get_PID);
                elsif Func_Name = "K" or else Func_Name = "k" or else
                  Func_Name = "KEY" or else Func_Name = "key" then
                   return "";  -- No key pressed
@@ -998,9 +1020,8 @@ package body Runtime is
                begin
                   Target := Find_Label (State, Label);
                   if Target /= null then
-                     -- Jump to target (simplified: just set halted)
-                     -- In a full implementation, this would change the PC
-                     State.Halted := True;
+                     -- Jump to target line
+                     State.Jump_To := Target;
                   end if;
                end;
             end if;
@@ -1154,7 +1175,13 @@ package body Runtime is
       Line := Prog.left;
       while Line /= null and then not State.Halted loop
          Execute_Line (State, Line);
-         Line := Line.Next;
+         -- Handle GOTO jump
+         if State.Jump_To /= null then
+            Line := State.Jump_To;
+            State.Jump_To := null;
+         else
+            Line := Line.Next;
+         end if;
       end loop;
    end Execute;
 

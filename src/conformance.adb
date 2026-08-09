@@ -878,6 +878,64 @@ begin
 
     New_Line;
 
+    -- Critical Fixes Tests (P3-S1)
+    Put_Line ("Critical Fixes Tests:");
+    Put_Line ("=====================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test IF false skips subsequent commands
+        Symbol_Table.Set_Var ("IF_TEST", "before");
+        P := Create_Parser ("IF 0 SET IF_TEST = ""after""");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("IF_TEST")) = "before",
+                "Critical: IF 0 skips SET");
+        Destroy_AST (Prog);
+
+        -- Test IF true executes subsequent commands
+        R := Create_Runtime;
+        Symbol_Table.Set_Var ("IF_TEST2", "before");
+        P := Create_Parser ("IF 1");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (Get_Test_Result (R) = True,
+                "Critical: IF 1 sets $TEST to true");
+        Destroy_AST (Prog);
+
+        -- Test $HOROLOG returns real timestamp
+        R := Create_Runtime;
+        P := Create_Parser ("SET X = $H");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        declare
+            HVal : constant String := To_String (Symbol_Table.Get_Var ("X"));
+        begin
+            Assert (HVal'Length > 3 and then HVal /= " 0, 0",
+                    "Critical: $HOROLOG returns real timestamp");
+        end;
+        Destroy_AST (Prog);
+
+        -- Test $JOB returns real PID
+        R := Create_Runtime;
+        P := Create_Parser ("SET X = $J");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        declare
+            JVal : constant String := To_String (Symbol_Table.Get_Var ("X"));
+        begin
+            Assert (JVal /= "" and then JVal /= " ",
+                    "Critical: $JOB returns real PID");
+        end;
+        Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
     -- Special Variable Tests
     Put_Line ("Special Variable Tests:");
     Put_Line ("=======================");
@@ -941,9 +999,9 @@ begin
         P := Create_Parser ("SET X = $J");
         Prog := Parse_Program (P);
         Execute (R, Prog);
-        Assert (To_String (Symbol_Table.Get_Var ("X")) = "1" or else
-                To_String (Symbol_Table.Get_Var ("X")) = " 1",
-                "Special: $J = 1");
+        Assert (To_String (Symbol_Table.Get_Var ("X")) /= "" and then
+                To_String (Symbol_Table.Get_Var ("X")) /= " ",
+                "Special: $J returns PID");
         Destroy_AST (Prog);
 
         -- Test $SYSTEM

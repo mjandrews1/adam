@@ -449,9 +449,9 @@ begin
       P := Create_Parser ("SET X = $J");
       Prog := Parse_Program (P);
       Execute (R, Prog);
-      Assert (To_String (Symbol_Table.Get_Var ("X")) = "1" or else To_String (Symbol_Table.Get_Var ("X")) = " 1" or else
-              To_String (Symbol_Table.Get_Var ("X")) = " 1",
-              "Special: $J = 1");
+      Assert (To_String (Symbol_Table.Get_Var ("X")) /= "" and then
+              To_String (Symbol_Table.Get_Var ("X")) /= " ",
+              "Special: $J returns PID");
       Destroy_AST (Prog);
 
       -- $K Key

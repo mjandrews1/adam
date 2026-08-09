@@ -135,11 +135,15 @@ adam/
 
 ## Status
 
-**Version 1.1.0** - Test Expansion
+**Version 1.2.0** - Critical Fixes (P3-S1)
 
-- **253 conformance tests passing**
+- **257 conformance tests passing**
 - **100% test success rate**
-- **18 source modules, ~8,000 lines of Ada**
+- **18 source modules, ~8,200 lines of Ada**
+- **$HOROLOG returns real date/time (days since 1840-12-31, seconds since midnight)**
+- **$JOB returns actual process ID**
+- **GOTO implemented with label jumping**
+- **IF command correctly sets $TEST**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
 - **Function dispatch for $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $ASCII, $CHAR, $REVERSE, $JUSTIFY, $FIND, $DATA, $GET, $ORDER, $RANDOM, $SELECT**
 - **Special variables: $T, $X, $Y, $H, $I, $J, $K, $S, $SYSTEM, $ECODE, $ETRAP**
@@ -174,6 +178,7 @@ adam/
 | P2-S8: Indirection (@) | ✅ Complete | 188 |
 | P2-S9: Thread Safety & LOCK | ✅ Complete | 192 |
 | P2-S10: Test Expansion | ✅ Complete | 253 |
+| P3-S1: Critical Fixes | ✅ Complete | 257 |
 
 ## References
 

@@ -80,6 +80,7 @@ private
       Halted        : Boolean;
       Quit_Value    : Unbounded_String;  -- QUIT return value
       Skip_Remainder : Boolean;  -- Skip remaining commands on line (for ELSE)
+      Jump_To       : AST_Node_Ptr;  -- For GOTO: jump to this line
       Labels        : Label_Array;
       Label_Count   : Natural;
       Scope_Stack   : Scope_Array;
