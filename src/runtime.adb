@@ -475,6 +475,23 @@ package body Runtime is
             end if;
             return "0";
 
+         -- Indirection: @var
+         when N_Indirect =>
+            declare
+               Var_Name : constant String := To_String (Node.Value);
+               Indirect_Name : constant String :=
+                 To_String (Symbol_Table.Get_Var (Var_Name));
+            begin
+               -- Look up the value of the variable, use it as a variable name
+               if Indirect_Name'Length > 0 and then
+                 Indirect_Name (1) = '^' then
+                  return To_String (Database.Get_Global
+                    (Indirect_Name (2 .. Indirect_Name'Last)));
+               else
+                  return To_String (Symbol_Table.Get_Var (Indirect_Name));
+               end if;
+            end;
+
          -- Function calls and special variables
          when N_Function_Call =>
             declare
@@ -760,38 +777,65 @@ package body Runtime is
       Value    : String (1 .. 10000);
       Val_Len  : Natural := 0;
    begin
-      if Node.left /= null and then Node.left.Kind = N_Variable then
-         Var_Name := Node.left.Value;
-         if Node.right /= null then
+      if Node.left /= null then
+         -- Handle indirect assignment: SET @X = value
+         if Node.left.Kind = N_Indirect then
+            -- Get the indirect variable name
             declare
-               Val : constant String := Eval_Expr (State, Node.right);
+               Indirect_Var : constant String := To_String (Node.left.Value);
+               Actual_Name : constant String :=
+                 To_String (Symbol_Table.Get_Var (Indirect_Var));
             begin
-               Value (1 .. Val'Length) := Val;
-               Val_Len := Val'Length;
+               if Actual_Name'Length > 0 and then Node.right /= null then
+                  declare
+                     Val : constant String := Eval_Expr (State, Node.right);
+                  begin
+                     Value (1 .. Val'Length) := Val;
+                     Val_Len := Val'Length;
+                  end;
+                  if Actual_Name (1) = '^' then
+                     Database.Set_Global
+                       (Actual_Name (2 .. Actual_Name'Last),
+                        Value (1 .. Val_Len));
+                  else
+                     Symbol_Table.Set_Var
+                       (Actual_Name, Value (1 .. Val_Len));
+                  end if;
+               end if;
             end;
-            if Node.left.left /= null then
+         elsif Node.left.Kind = N_Variable then
+            Var_Name := Node.left.Value;
+            if Node.right /= null then
                declare
-                  Sub : constant String := Eval_Expr (State, Node.left.left);
+                  Val : constant String := Eval_Expr (State, Node.right);
                begin
+                  Value (1 .. Val'Length) := Val;
+                  Val_Len := Val'Length;
+               end;
+               if Node.left.left /= null then
+                  declare
+                     Sub : constant String := Eval_Expr (State, Node.left.left);
+                  begin
+                     if To_String (Var_Name)'Length > 0 and then
+                       To_String (Var_Name) (1) = '^' then
+                        Database.Set_Global_Subscript
+                          (To_String (Var_Name) (2 .. To_String (Var_Name)'Length),
+                           Sub, Value (1 .. Val_Len));
+                     else
+                        Symbol_Table.Set_Subscript
+                          (To_String (Var_Name), Sub, Value (1 .. Val_Len));
+                     end if;
+                  end;
+               else
                   if To_String (Var_Name)'Length > 0 and then
                     To_String (Var_Name) (1) = '^' then
-                     Database.Set_Global_Subscript
+                     Database.Set_Global
                        (To_String (Var_Name) (2 .. To_String (Var_Name)'Length),
-                        Sub, Value (1 .. Val_Len));
+                        Value (1 .. Val_Len));
                   else
-                     Symbol_Table.Set_Subscript
-                       (To_String (Var_Name), Sub, Value (1 .. Val_Len));
+                     Symbol_Table.Set_Var
+                       (To_String (Var_Name), Value (1 .. Val_Len));
                   end if;
-               end;
-            else
-               if To_String (Var_Name)'Length > 0 and then
-                 To_String (Var_Name) (1) = '^' then
-                  Database.Set_Global
-                    (To_String (Var_Name) (2 .. To_String (Var_Name)'Length),
-                     Value (1 .. Val_Len));
-               else
-                  Symbol_Table.Set_Var
-                    (To_String (Var_Name), Value (1 .. Val_Len));
                end if;
             end if;
          end if;

@@ -1092,7 +1092,49 @@ begin
         -- Test error clearing
         Raise_Error (R, 0, "");
         Assert (Get_Error_Code (R) = 0, "Error: Code cleared");
-        Assert (Get_Error_Message (R) = "", "Error: Message cleared");
+         Assert (Get_Error_Message (R) = "", "Error: Message cleared");
+     end;
+
+    New_Line;
+
+    -- Indirection Tests
+    Put_Line ("Indirection Tests:");
+    Put_Line ("==================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test basic indirection: SET X="Y" SET @X=42 WRITE Y
+        Symbol_Table.Set_Var ("X", "Y");
+        P := Create_Parser ("SET @X = 42");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("Y")) = "42",
+                "Indirect: SET @X = 42 sets Y");
+        Destroy_AST (Prog);
+
+        -- Test indirection read: SET X="Y" SET Y=99 WRITE @X
+        Symbol_Table.Set_Var ("X", "Y");
+        Symbol_Table.Set_Var ("Y", "99");
+        P := Create_Parser ("SET Z = @X");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("Z")) = "99",
+                "Indirect: READ @X returns Y value");
+        Destroy_AST (Prog);
+
+        -- Test indirection with different variable names
+        Symbol_Table.Set_Var ("PTR", "MYVAR");
+        Symbol_Table.Set_Var ("MYVAR", "hello");
+        P := Create_Parser ("SET RESULT = @PTR");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("RESULT")) = "hello",
+                "Indirect: @PTR reads MYVAR");
+        Destroy_AST (Prog);
     end;
 
     New_Line;

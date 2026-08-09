@@ -135,11 +135,11 @@ adam/
 
 ## Status
 
-**Version 0.8.0** - NEW Scoping & Error Handling
+**Version 0.9.0** - Indirection
 
-- **185 conformance tests passing**
+- **188 conformance tests passing**
 - **100% test success rate**
-- **16 source modules, ~6,500 lines of Ada**
+- **16 source modules, ~7,000 lines of Ada**
 - **Expression evaluator with arithmetic, string, comparison, logical operators**
 - **Function dispatch for $EXTRACT, $LENGTH, $PIECE, $TRANSLATE, $ASCII, $CHAR, $REVERSE, $JUSTIFY, $FIND, $DATA, $GET, $ORDER, $RANDOM, $SELECT**
 - **Special variables: $T, $X, $Y, $H, $I, $J, $K, $S, $SYSTEM, $ECODE, $ETRAP**
@@ -148,6 +148,7 @@ adam/
 - **File I/O: OPEN/CLOSE/USE with real file operations, EOF detection**
 - **NEW scoping with variable preservation**
 - **Error handling with $ECODE, $ETRAP, $ZTRAP**
+- **Indirection: @X variable indirection**
 
 ## Sprint History
 
@@ -168,6 +169,7 @@ adam/
 | P2-S5: Special Variables | ✅ Complete | 167 |
 | P2-S6: File I/O | ✅ Complete | 174 |
 | P2-S7: NEW Scoping & Error Handling | ✅ Complete | 185 |
+| P2-S8: Indirection (@) | ✅ Complete | 188 |
 
 ## References
 

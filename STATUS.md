@@ -29,7 +29,7 @@
 | P2-S5: Special Variables | ✅ COMPLETE | 167 | $T, $X, $Y, $H, $I, $J, $SYSTEM, $STORAGE |
 | P2-S6: File I/O | ✅ COMPLETE | 174 | OPEN/CLOSE/USE, file read/write, EOF |
 | P2-S7: NEW Scoping & Error Handling | ✅ COMPLETE | 185 | NEW scoping, error traps |
-| P2-S8: Indirection (@) | ⬜ NOT STARTED | - | Variable indirection |
+| P2-S8: Indirection (@) | ✅ COMPLETE | 188 | @X variable indirection |
 | P2-S9: Thread Safety & LOCK | ⬜ NOT STARTED | - | Concurrent access |
 | P2-S10: Test Expansion | ⬜ NOT STARTED | - | 136 → 400+ |
 

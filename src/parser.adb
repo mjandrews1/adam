@@ -182,6 +182,20 @@ package body Parser is
             Node := Create_Node (N_Not, "", State.Current.Line);
             Node.left := Parse_Primary (State);
 
+         when Tok_AtSign =>
+            -- @ indirection
+            Advance (State);
+            Node := Create_Node (N_Indirect, "", State.Current.Line);
+            -- Parse the variable to be dereferenced
+            if State.Current.Kind = Tok_Identifier or else
+              (State.Current.Kind >= Tok_BREAK and then
+               State.Current.Kind <= Tok_XECUTE and then
+               State.Current.Val_Len = 1) then
+               Node.Value := To_Unbounded_String
+                 (State.Current.Value (1 .. State.Current.Val_Len));
+               Advance (State);
+            end if;
+
          when Tok_Dollar =>
             -- $ function call or special variable
             Advance (State);
@@ -304,8 +318,22 @@ package body Parser is
    begin
       Node := Create_Node (N_Set, "", State.Current.Line);
       Advance (State); -- Skip S/SET
-      -- Parse variable
-      Var := Parse_Variable (State);
+      -- Check for indirection: SET @X = ...
+      if State.Current.Kind = Tok_AtSign then
+         Advance (State); -- Skip @
+         Var := Create_Node (N_Indirect, "", State.Current.Line);
+         if State.Current.Kind = Tok_Identifier or else
+           (State.Current.Kind >= Tok_BREAK and then
+            State.Current.Kind <= Tok_XECUTE and then
+            State.Current.Val_Len = 1) then
+            Var.Value := To_Unbounded_String
+              (State.Current.Value (1 .. State.Current.Val_Len));
+            Advance (State);
+         end if;
+      else
+         -- Parse variable
+         Var := Parse_Variable (State);
+      end if;
       Node.Left := Var;
       -- Expect =
       if State.Current.Kind = Tok_Equals then

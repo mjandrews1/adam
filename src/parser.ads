@@ -29,6 +29,7 @@ package Parser is
       N_Variable,
       N_Global,
       N_Subscript,
+      N_Indirect,         -- @var (name indirection)
 
       -- Binary operators (left op right)
       N_Add,            -- +
