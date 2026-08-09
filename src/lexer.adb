@@ -37,7 +37,7 @@ package body Lexer is
    -- Check if character is alphanumeric
    function Is_Alnum (C : Character) return Boolean is
    begin
-      return Is_Alpha (C) or else Is_Digit (C);
+      return Is_Alpha (C) or else Is_Digit (C) or else C = '_';
    end Is_Alnum;
 
    -- Skip whitespace (not newlines)

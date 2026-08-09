@@ -936,6 +936,61 @@ begin
 
     New_Line;
 
+    -- DO/QUIT Call Stack Tests
+    Put_Line ("DO/QUIT Call Stack Tests:");
+    Put_Line ("=========================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test basic DO with QUIT
+        Symbol_Table.Set_Var ("DO_RESULT", "before");
+        P := Create_Parser ("DO SUB1" & ASCII.LF &
+                           "SET DO_RESULT = ""after""" & ASCII.LF &
+                           "QUIT" & ASCII.LF &
+                           "SUB1" & ASCII.LF &
+                           "SET DO_RESULT = ""in_sub""" & ASCII.LF &
+                           "QUIT");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("DO_RESULT")) = "after",
+                "DO/QUIT: Returns to caller");
+        Destroy_AST (Prog);
+
+        -- Test DO with variable preservation
+        Symbol_Table.Set_Var ("DO_VAR", "original");
+        P := Create_Parser ("DO SUB2" & ASCII.LF &
+                           "QUIT" & ASCII.LF &
+                           "SUB2" & ASCII.LF &
+                           "SET DO_VAR = ""changed""" & ASCII.LF &
+                           "QUIT");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("DO_VAR")) = "changed",
+                "DO/QUIT: Modifies caller variable");
+        Destroy_AST (Prog);
+
+        -- Test DO returns to correct position
+        Symbol_Table.Set_Var ("DO_POS", "");
+        P := Create_Parser ("SET DO_POS = ""before""" & ASCII.LF &
+                           "DO SUB3" & ASCII.LF &
+                           "SET DO_POS = DO_POS _ ""_after""" & ASCII.LF &
+                           "QUIT" & ASCII.LF &
+                           "SUB3" & ASCII.LF &
+                           "SET DO_POS = DO_POS _ ""_sub""" & ASCII.LF &
+                           "QUIT");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (To_String (Symbol_Table.Get_Var ("DO_POS")) = "before_sub_after",
+                "DO/QUIT: Returns to correct position");
+        Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
     -- Special Variable Tests
     Put_Line ("Special Variable Tests:");
     Put_Line ("=======================");

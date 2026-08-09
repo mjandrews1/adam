@@ -541,6 +541,7 @@ package body Parser is
       Line : AST_Node_Ptr;
       Cmd  : AST_Node_Ptr;
       Last : AST_Node_Ptr;
+      Is_Label : Boolean;
    begin
       -- Skip newlines
       while State.Current.Kind = Tok_Newline loop
@@ -550,13 +551,40 @@ package body Parser is
          return null;
       end if;
       Line := Create_Node (N_Line, "", State.Current.Line);
+      -- Check for label (identifier at start of line, not a command)
+      -- Labels are identifiers that are NOT single-letter command abbreviations
+      if State.Current.Kind = Tok_Identifier then
+         Is_Label := True;
+         -- Check if this is a single-letter command abbreviation
+         if State.Current.Val_Len = 1 then
+            case State.Current.Value (1) is
+               when 'B' | 'b' | 'C' | 'c' | 'D' | 'd' | 'E' | 'e' |
+                    'F' | 'f' | 'G' | 'g' | 'H' | 'h' | 'I' | 'i' |
+                    'J' | 'j' | 'K' | 'k' | 'L' | 'l' | 'M' | 'm' |
+                    'N' | 'n' | 'O' | 'o' | 'Q' | 'q' | 'R' | 'r' |
+                    'S' | 's' | 'U' | 'u' | 'V' | 'v' | 'W' | 'w' |
+                    'X' | 'x' =>
+                  Is_Label := False;  -- This is a command, not a label
+               when others =>
+                  Is_Label := True;   -- Single letter, not a command
+            end case;
+         end if;
+         if Is_Label then
+            -- This is a label
+            Line.Value := To_Unbounded_String
+              (State.Current.Value (1 .. State.Current.Val_Len));
+            Advance (State);
+            -- Skip newline after label (label is on its own line)
+            if State.Current.Kind = Tok_Newline then
+               Advance (State);
+            end if;
+         end if;
+      end if;
       -- Parse commands on this line
       Cmd := Parse_Command (State);
       Line.left := Cmd;
       Last := Cmd;
       -- Parse additional commands on same line
-      -- MUMPS allows multiple commands on same line separated by spaces
-      -- The lexer skips spaces, so we check if next token is a command
       while State.Current.Kind /= Tok_Newline and then
         State.Current.Kind /= Tok_EOF loop
          -- Check if next token is a command keyword

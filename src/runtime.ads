@@ -72,6 +72,16 @@ private
    Max_Scope_Depth : constant Natural := 100;
    type Scope_Array is array (1 .. Max_Scope_Depth) of Scope_Entry;
 
+   -- DO call stack entry
+   type Call_Frame is record
+      Return_Line : AST_Node_Ptr;  -- Line to return to after DO
+      Return_Cmd  : AST_Node_Ptr;  -- Command to return to within line
+      Quit_Value  : Unbounded_String;  -- QUIT return value for $$ functions
+   end record;
+
+   Max_Call_Depth : constant Natural := 100;
+   type Call_Stack_Array is array (1 .. Max_Call_Depth) of Call_Frame;
+
    type Runtime_State is record
       Test_Result   : Boolean;
       Error_Code    : Integer;
@@ -85,6 +95,8 @@ private
       Label_Count   : Natural;
       Scope_Stack   : Scope_Array;
       Scope_Top     : Natural;
+      Call_Stack    : Call_Stack_Array;
+      Call_Top      : Natural;
    end record;
 
 end Runtime;

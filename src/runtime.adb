@@ -40,6 +40,7 @@ package body Runtime is
       State.Error_Trap := Null_Unbounded_String;
       State.Label_Count := 0;
       State.Scope_Top := 0;
+      State.Call_Top := 0;
       Ada.Numerics.Float_Random.Reset (Gen);
       return State;
    end Create_Runtime;
@@ -139,6 +140,40 @@ package body Runtime is
          State.Scope_Top := State.Scope_Top - 1;
       end if;
    end Pop_Scope;
+
+   -- Push a call frame onto the call stack (for DO)
+   procedure Push_Call (State       : in out Runtime_State;
+                        Return_Line : AST_Node_Ptr;
+                        Return_Cmd  : AST_Node_Ptr) is
+   begin
+      if State.Call_Top < Max_Call_Depth then
+         State.Call_Top := State.Call_Top + 1;
+         State.Call_Stack (State.Call_Top).Return_Line := Return_Line;
+         State.Call_Stack (State.Call_Top).Return_Cmd := Return_Cmd;
+         State.Call_Stack (State.Call_Top).Quit_Value := Null_Unbounded_String;
+      end if;
+   end Push_Call;
+
+   -- Pop a call frame from the call stack (for QUIT)
+   procedure Pop_Call (State       : in out Runtime_State;
+                       Return_Line : out AST_Node_Ptr;
+                       Return_Cmd  : out AST_Node_Ptr) is
+   begin
+      if State.Call_Top > 0 then
+         Return_Line := State.Call_Stack (State.Call_Top).Return_Line;
+         Return_Cmd := State.Call_Stack (State.Call_Top).Return_Cmd;
+         State.Call_Top := State.Call_Top - 1;
+      else
+         Return_Line := null;
+         Return_Cmd := null;
+      end if;
+   end Pop_Call;
+
+   -- Get the current call depth
+   function Call_Depth (State : Runtime_State) return Natural is
+   begin
+      return State.Call_Top;
+   end Call_Depth;
 
    -- Build label table from AST
    procedure Build_Label_Table (State : in out Runtime_State;
@@ -903,7 +938,14 @@ package body Runtime is
             end if;
             -- Pop scope if in DO context
             Pop_Scope (State);
-            State.Halted := True;
+            -- If we're in a DO call, pop the call stack
+            -- (the DO handler will check this and stop executing)
+            if State.Call_Top > 0 then
+               State.Call_Top := State.Call_Top - 1;
+            else
+               -- Not in a DO context, halt execution
+               State.Halted := True;
+            end if;
          when N_If =>
             if Node.left /= null then
                declare
@@ -977,7 +1019,7 @@ package body Runtime is
                end;
             end if;
          when N_Do =>
-            -- DO label: call subroutine
+            -- DO label: call subroutine with proper call stack
             if Node.Value /= Null_Unbounded_String then
                declare
                   Label : constant String := To_String (Node.Value);
@@ -985,8 +1027,14 @@ package body Runtime is
                begin
                   Target := Find_Label (State, Label);
                   if Target /= null then
-                     -- Save current state and jump
+                     -- Push current execution point onto call stack
+                     Push_Call (State, null, null);
+                     -- Execute the target line
                      Execute_Line (State, Target);
+                     -- Pop call stack (QUIT will handle this in the future)
+                     if State.Call_Top > 0 then
+                        State.Call_Top := State.Call_Top - 1;
+                     end if;
                   end if;
                end;
             end if;
@@ -1141,12 +1189,15 @@ package body Runtime is
    procedure Execute_Line (State : in out Runtime_State;
                            Line  : AST_Node_Ptr) is
       Cmd : AST_Node_Ptr;
+      Call_Depth_Before : Natural;
    begin
       if Line = null or else State.Halted then
          return;
       end if;
       -- Reset skip flag for new line
       State.Skip_Remainder := False;
+      -- Remember call depth before executing (to detect QUIT from DO)
+      Call_Depth_Before := State.Call_Top;
       Cmd := Line.left;
       while Cmd /= null and then not State.Halted loop
          -- If this is a FOR command, execute it with the rest of the line as body
@@ -1156,6 +1207,11 @@ package body Runtime is
             exit;
          else
             Execute_Command (State, Cmd);
+         end if;
+         -- Check if call depth decreased (QUIT from DO)
+         if State.Call_Top < Call_Depth_Before then
+            -- QUIT was called inside a DO, stop executing this line
+            exit;
          end if;
          Cmd := Cmd.Next;
       end loop;
