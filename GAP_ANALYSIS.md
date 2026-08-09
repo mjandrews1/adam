@@ -1,94 +1,129 @@
 # adam Gap Analysis
 
 **Date:** 2026-08-08
-**Status:** ~15-20% functionally complete vs. zigm reference
+**Status:** ~50-60% functionally complete vs. zigm reference
 
 ## Executive Summary
 
-The lexer/parser infrastructure is solid, but the runtime barely executes anything. Only 5 of 22 commands actually execute. The expression evaluator is a stub — no arithmetic, no string concatenation, no function calls from MUMPS code.
+adam has solid foundations (parser, expression evaluator, symbol table, database) but several critical gaps prevent running real MUMPS programs. The parser recognizes all 22 commands but only ~12 actually execute end-to-end. Several special variables return fake values, GOTO is broken, DO/QUIT call stack is incomplete, and WRITE doesn't handle MUMPS format codes.
 
-## What Actually Works End-to-End
+## Source Inventory
 
-```mumps
-SET X = "hello"
-SET Y = 42
-WRITE X
-HALT
-```
+| File | Lines | Purpose |
+|------|------:|---------|
+| lexer.ads/adb | 97+387 | Tokenizer |
+| parser.ads/adb | 105+608 | AST generation |
+| runtime.ads/adb | 89+1217 | Execution engine |
+| symbol_table.ads/adb | 68+380 | Local variables |
+| database.ads/adb | 73+423 | Global variables |
+| io.ads/adb | 81+318 | Device management |
+| string_funcs.ads/adb | 65+249 | $-functions |
+| pattern.ads/adb | 18+173 | Pattern matching |
+| thread_safe.ads/adb | 51+149 | Protected types |
+| mumps_types.ads | 36 | Type definitions |
+| main.adb | 148 | Entry point |
+| conformance.adb | 1191 | Test suite |
+| conformance_expanded.adb | 638 | Extended tests |
+| **Total** | **~6,500** | |
 
-That is essentially it.
+## Command Status
+
+| # | Command | Status | Notes |
+|---|---------|--------|-------|
+| 1 | SET | ✅ Working | Subscripts, globals, indirection |
+| 2 | WRITE | ⚠️ Partial | No `!`, `#`, `?col` format codes |
+| 3 | READ | ⚠️ Basic | Terminal only, no timeout |
+| 4 | FOR | ⚠️ Partial | Single body command, no argumentless FOR |
+| 5 | IF | ⚠️ Partial | Sets $TEST but doesn't skip subsequent commands |
+| 6 | ELSE | ✅ Working | |
+| 7 | DO | ⚠️ Partial | Single label, no args, no $$ extrinsics |
+| 8 | QUIT | ⚠️ Partial | No proper scope pop or return-to-caller |
+| 9 | NEW | ✅ Working | Missing NEW ALL (no args) |
+| 10 | KILL | ✅ Working | |
+| 11 | GOTO | ❌ Broken | Sets halted, doesn't actually jump |
+| 12 | MERGE | ✅ Working | |
+| 13 | XECUTE | ✅ Working | |
+| 14 | HALT | ✅ Working | |
+| 15 | HANG | ✅ Working | |
+| 16 | OPEN | ⚠️ Stub | Parser stub only |
+| 17 | CLOSE | ⚠️ Stub | Parser stub only |
+| 18 | USE | ⚠️ Stub | Parser stub only |
+| 19 | LOCK | ⚠️ Broken | Doesn't track per-variable locks |
+| 20 | BREAK | ❌ No-op | |
+| 21 | JOB | ❌ No-op | |
+| 22 | VIEW | ❌ No-op | |
 
 ## Critical Gaps
 
-### 1. Expression Evaluator (CRITICAL)
-- `Parse_Expression` only calls `Parse_Primary` — no operator parsing
-- `Eval_Expr` returns strings for literals/variables only
-- `N_Binary_Op` and `N_Unary_Op` fall through to `return ""`
-- **Impact:** `SET X = 3 + 4` does NOT work
+### 1. GOTO is Broken
+- Just sets `Halted := True`
+- Doesn't actually jump to label
+- **Fix:** Change line pointer instead of halting
 
-### 2. Command Execution (CRITICAL)
-Only 5 of 22 commands execute:
+### 2. DO/QUIT Call Stack Incomplete
+- DO works for single-line labels
+- No args, no offset, no $$ extrinsics
+- QUIT doesn't always pop scope correctly
+- **Fix:** Implement proper call/return with scope push/pop
 
-| Command | Status |
-|---------|--------|
-| SET | Partial (simple var=value only) |
-| WRITE | Partial (no !, #, ?col format codes) |
-| HALT | Complete |
-| QUIT | Partial (sets halted flag, no return values, no NEW scope pop) |
-| IF | Partial (sets $TEST, doesn't skip subsequent commands) |
-| FOR, DO, NEW, GOTO, KILL, READ, MERGE, OPEN, CLOSE, USE, BREAK, HANG, JOB, LOCK, XECUTE, VIEW, ELSE | **Not executed** (null in runtime) |
+### 3. IF Doesn't Skip Commands
+- IF 0 should skip remaining commands on same line
+- Currently just sets $TEST flag
+- **Fix:** Add Skip_Remainder flag like ELSE
 
-### 3. No Arithmetic
-Tokens are parsed but not evaluated:
-- `+`, `-`, `*`, `/`, `\`, `#`, `**` — all ignored
-- `_` (string concat) — ignored
-- `&`, `!`, `'` (logical) — ignored
+### 4. WRITE Format Codes Missing
+- `!` (newline), `#` (formfeed), `?col` (tab) exist in IO module
+- Parser doesn't handle them in WRITE arguments
+- **Fix:** Wire format codes in WRITE parser/exec
 
-### 4. No Subscripted Variable Execution
-Symbol table supports subscripts via Ada API, but:
-- `SET X(1) = "foo"` doesn't work through runtime
-- `SET ^GLOB = "bar"` doesn't work through runtime
+### 5. $HOROLOG Returns Fake Data
+- Returns "0,0" instead of real time
+- **Fix:** Implement days since 1840-12-31, seconds since midnight
 
-### 5. String Functions Not Callable from MUMPS
-- 10 functions exist as Ada library (`Dollar_EXTRACT`, etc.)
-- Parser/runtime has no `$` function dispatch
-- `$LENGTH("hello")` in MUMPS code does nothing
+### 6. $JOB Returns Hardcoded "1"
+- **Fix:** Return actual PID
 
-### 6. No Special Variables
-- `$T`, `$X`, `$Y`, `$H`, `$I`, `$D`, `$O`, `$S`, `$J`, `$K` — none accessible
-- Lexer has no `$` prefix handling for special variables
-
-### 7. No Control Flow
-- FOR: Parser stub (`Advance; -- Skip for now`)
-- DO: Parser discards label reference
-- NEW: AST node exists, no scope management
-- GOTO: AST node exists, no label table
-- ELSE: AST node exists, no $TEST check
+### 7. Thread Safety Not Integrated
+- Protected types exist but runtime bypasses them
+- Lock_Table doesn't track per-variable locks
+- **Fix:** Make runtime use protected types
 
 ### 8. Database Persistence Untested
-- `Save()` and `Load()` implemented but zero tests
-- Text-based tab-delimited format (fragile)
-- No journal/WAL
+- Save/Load implemented but zero tests
+- Tab-delimited format is fragile
+- **Fix:** Add tests, improve format
 
-### 9. No Thread Safety
-- All global data structures are unprotected
-- No mutex, semaphore, or protected objects
+## Priority Order
 
-### 10. No Error Handling
-- `$ECODE`, `$ESTACK`, `$ZERROR`, `$ETRAP` — not implemented
-- Division by zero not handled
-- Undefined variable returns empty string silently
+### P1 - Critical (blocks real MUMPS programs)
+1. Fix GOTO (actual label jump)
+2. Fix DO/QUIT call stack
+3. Fix IF command chaining
+4. Wire WRITE format codes (!, #, ?col)
+5. Fix $HOROLOG (real time)
+6. Fix $JOB (real PID)
 
-## Recommended Priority
+### P2 - High (quality/completeness)
+7. Integrate thread safety
+8. Fix Lock_Table
+9. Test database persistence
+10. Implement $$ extrinsic functions
+11. Implement OPEN parameters
+12. Wire $ZA/$ZEOF
 
-1. **Expression evaluator** — arithmetic, string ops, function dispatch, operator precedence
-2. **FOR, DO, NEW, QUIT-with-return, GOTO** — core control flow
-3. **KILL, READ, MERGE via runtime** — data manipulation
-4. **Subscripted variables/globals in runtime** — MUMPS array access
-5. **$DATA, $ORDER, $SELECT callable from MUMPS**
-6. **Special variables** ($T, $X, $Y, $H, $I)
-7. **OPEN/CLOSE/USE with real file I/O**
-8. **Indirection (@)**
-9. **NEW scoping and error handling**
-10. **Thread safety**
-11. **Expand tests to 400+**
+### P3 - Medium (feature completeness)
+13. Argumentless FOR
+14. FOR with $ORDER
+15. Command postconditionals
+16. Socket/pipe I/O
+17. $FNUMBER
+18. $TEXT
+19. Fix error handling (trap dispatch)
+
+### P4 - Low (parity)
+20. Expand tests to 400+
+21. JOB (process spawning)
+22. BREAK
+23. VIEW
+24. NEW ALL
+25. Real $STORAGE
