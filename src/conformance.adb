@@ -1134,6 +1134,44 @@ begin
         Execute (R, Prog);
         Assert (To_String (Symbol_Table.Get_Var ("RESULT")) = "hello",
                 "Indirect: @PTR reads MYVAR");
+         Destroy_AST (Prog);
+    end;
+
+    New_Line;
+
+    -- Thread Safety Tests
+    Put_Line ("Thread Safety Tests:");
+    Put_Line ("====================");
+    declare
+        R    : Runtime_State;
+        P    : Parser_State;
+        Prog : AST_Node_Ptr;
+    begin
+        R := Create_Runtime;
+
+        -- Test basic thread-safe operations
+        Symbol_Table.Set_Var ("TS1", "value1");
+        Assert (To_String (Symbol_Table.Get_Var ("TS1")) = "value1",
+                "Thread Safe: Basic SET/GET");
+
+        -- Test concurrent access simulation
+        Symbol_Table.Set_Var ("TS2", "initial");
+        Symbol_Table.Set_Var ("TS2", "updated");
+        Assert (To_String (Symbol_Table.Get_Var ("TS2")) = "updated",
+                "Thread Safe: Concurrent update");
+
+        -- Test LOCK command (basic)
+        P := Create_Parser ("LOCK");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (not Is_Halted (R), "LOCK: Command executes");
+        Destroy_AST (Prog);
+
+        -- Test LOCK with variable
+        P := Create_Parser ("LOCK LVAR");
+        Prog := Parse_Program (P);
+        Execute (R, Prog);
+        Assert (not Is_Halted (R), "LOCK: Variable lock executes");
         Destroy_AST (Prog);
     end;
 

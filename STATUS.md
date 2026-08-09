@@ -30,7 +30,7 @@
 | P2-S6: File I/O | ✅ COMPLETE | 174 | OPEN/CLOSE/USE, file read/write, EOF |
 | P2-S7: NEW Scoping & Error Handling | ✅ COMPLETE | 185 | NEW scoping, error traps |
 | P2-S8: Indirection (@) | ✅ COMPLETE | 188 | @X variable indirection |
-| P2-S9: Thread Safety & LOCK | ⬜ NOT STARTED | - | Concurrent access |
+| P2-S9: Thread Safety & LOCK | ✅ COMPLETE | 192 | Thread-safe wrappers, LOCK command |
 | P2-S10: Test Expansion | ⬜ NOT STARTED | - | 136 → 400+ |
 
 ## Task Counts
